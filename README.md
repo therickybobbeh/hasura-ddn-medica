@@ -1,415 +1,190 @@
-# Hasura DDN v3 On-Premises Template
+# Hasura DDN v3 On-Premises Kubernetes Template
 
-A **production-ready template** for deploying [Hasura DDN v3](https://hasura.io/docs/3.0/) (Data Delivery Network) to on-premises Kubernetes clusters.
+A production-ready template for deploying Hasura DDN (Data Delivery Network) v3 on Kubernetes infrastructure with multi-database support, GitOps workflows, and comprehensive security controls.
 
-This template provides a complete reference implementation with:
-- ✅ DDN v3 architecture (Rust-based engine, immutable deployments)
-- ✅ PostgreSQL database integration with auto-generated GraphQL API
-- ✅ OAuth/OIDC authentication (Keycloak, Auth0, Azure AD, Okta)
-- ✅ Kubernetes deployment manifests and Helm charts
-- ✅ GitHub Actions CI/CD pipelines
-- ✅ OpenTelemetry observability
-- ✅ Comprehensive documentation and examples
+## What This Template Provides
 
----
+### Core Infrastructure
+- **Hasura DDN v3 Engine**: Modern GraphQL API layer with compiled metadata
+- **Multi-Database Support**: Pre-configured for 2+ PostgreSQL databases (Neon, RDS, etc.)
+- **Kubernetes Deployment**: Production-grade K8s manifests and deployment automation
+- **Docker Hub Integration**: Ready-to-use image building and pushing to `rickybobbeh/*` repositories
 
-## 🚀 Quick Start
+### Development Workflow
+- **GitOps Pipeline**: Automated CI/CD with GitHub Actions
+- **Database Introspection**: Auto-generate GraphQL schema from database changes
+- **Hot Reload**: Local development with instant feedback
+- **Multi-Environment**: Separate configs for local, dev, staging, and production
 
-**Get running in 15 minutes**:
+### Security & Auth
+- **OAuth 2.0 / OIDC**: Pre-configured authentication patterns
+- **Role-Based Access Control (RBAC)**: Fine-grained permissions system
+- **Secrets Management**: Environment-based secret handling
+- **Network Policies**: Kubernetes-level security controls
 
-1. **Prerequisites**:
-   ```bash
-   # Install DDN CLI
-   npm install -g @hasura/ddn-cli
+### Observability
+- **OpenTelemetry**: Built-in tracing and metrics
+- **Health Checks**: Automated monitoring endpoints
+- **Deployment Validation**: Smoke tests and rollback automation
 
-   # Verify installation
-   ddn version
-   docker --version
-   kubectl version
-   ```
+## Quick Start
 
-2. **Clone and configure**:
-   ```bash
-   git clone https://github.com/your-org/onprem-hasura-k8s.git
-   cd onprem-hasura-k8s
+### Prerequisites
+- **Hasura DDN CLI**: `npm install -g @hasura/ddn`
+- **Docker**: For building container images
+- **Kubernetes**: Access to a K8s cluster (local or cloud)
+- **kubectl**: Configured with cluster access
+- **Database(s)**: PostgreSQL database URLs (Neon, RDS, etc.)
 
-   # Copy environment template
-   cp .env.local.template .env.local
+### 1. Initialize Your Project
 
-   # Edit with your database URL, OAuth provider, etc.
-   nano .env.local
-   ```
+```bash
+# Clone this template
+git clone https://github.com/yourusername/onprem-hasura-k8s.git my-hasura-project
+cd my-hasura-project
 
-3. **Follow the guide**:
+# Run the initialization script
+./scripts/init-template.sh
+```
 
-   See **[QUICKSTART.md](QUICKSTART.md)** for step-by-step instructions.
+This will guide you through:
+- Project naming and configuration
+- Database connection setup
+- Docker Hub repository configuration
+- Environment file creation
 
----
+### 2. Configure Your Databases
 
-## 📚 Documentation
+Edit `.env.local.template` and save as `.env.local`:
 
-### Getting Started
+```bash
+# Database 1 (Primary)
+DATABASE_1_URL=postgresql://user:password@host1.neon.tech/database1?sslmode=require
 
-- **[QUICKSTART.md](QUICKSTART.md)** - Get up and running in 15 minutes
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Understand DDN v3 architecture and design decisions
-- **[.env.local.template](.env.local.template)** - Environment variable configuration guide
+# Database 2 (Secondary)
+DATABASE_2_URL=postgresql://user:password@host2.neon.tech/database2?sslmode=require
+```
 
-### Core Components
+### 3. Introspect Your Databases
 
-- **[globals/](globals/README.md)** - Authentication and GraphQL API configuration
-- **[subgraphs/](subgraphs/README.md)** - Understanding subgraphs and when to create them
-- **[subgraphs/database/](subgraphs/database/README.md)** - PostgreSQL connector setup and tuning
-- **[scripts/](scripts/README.md)** - Deployment scripts documentation
-- **[.github/](.github/README.md)** - CI/CD workflows and GitHub Actions setup
+```bash
+# Generate GraphQL schema from database schemas
+./scripts/introspect-db.sh database-1
+./scripts/introspect-db.sh database-2
+```
 
-### Examples and Guides
+### 4. Build and Deploy
 
-- **[examples/](examples/README.md)** - Overview of all example implementations
-- **[examples/sample-models/](examples/sample-models/README.md)** - HML file format and permission patterns
-- **[examples/typescript-connector/](examples/typescript-connector/README.md)** - Custom business logic connector
+```bash
+# Build the supergraph (compile metadata)
+./scripts/build-supergraph.sh
 
----
+# Build Docker image
+./scripts/build-engine.sh
 
-## 📂 Repository Structure
+# Push to Docker Hub
+docker push rickybobbeh/ddn-engine:latest
+
+# Deploy to Kubernetes
+./scripts/deploy-metadata.sh local
+```
+
+## Repository Structure
 
 ```
-onprem-hasura-k8s/
-├── README.md                           # You are here
-├── QUICKSTART.md                       # 15-minute getting started guide
-├── ARCHITECTURE.md                     # Deep dive into DDN v3 architecture
-├── hasura.yaml                         # DDN v3 project declaration
-├── supergraph.yaml                     # Supergraph composition (main config)
+.
+├── README.md                    # This file
+├── SETUP.md                     # Detailed setup instructions
+├── BUSINESS_LOGIC.md            # Guide to implementing business logic
+├── SECURITY.md                  # Security best practices and patterns
+├── DOCKER_HUB_SETUP.md          # Docker Hub configuration guide
+├── TEMPLATE_INITIALIZATION.md   # Step-by-step initialization walkthrough
 │
-├── .env.local.template                 # Environment variable template
+├── docs/                        # Technical documentation
+│   ├── ARCHITECTURE.md          # DDN v3 architecture deep dive
+│   └── QUICKSTART.md            # 15-minute getting started guide
 │
-├── engine/                             # DDN v3 Engine
-│   ├── Dockerfile.engine               # Builds engine with baked-in metadata
-│   └── build/                          # Compiled metadata (committed for audit)
-│       ├── auth_config.json
-│       ├── metadata.json
-│       └── open_dd.json
-│
-├── globals/                            # Global configuration subgraph
-│   ├── README.md                       # Authentication & GraphQL config docs
+├── globals/                     # Global configuration subgraph
 │   └── metadata/
-│       ├── AuthConfig.hml              # OAuth/OIDC setup
-│       └── GraphqlConfig.hml           # API settings (CORS, rate limiting, etc.)
+│       ├── AuthConfig.hml       # OAuth/OIDC authentication
+│       └── GraphqlConfig.hml    # GraphQL API settings
 │
-├── subgraphs/                          # Data source subgraphs
-│   ├── README.md                       # Subgraph concepts and patterns
-│   └── database/                       # PostgreSQL subgraph
-│       ├── README.md                   # Database connector documentation
-│       ├── subgraph.yaml
-│       ├── connector/postgres/         # PostgreSQL connector config
-│       └── metadata/                   # Generated .hml model files
+├── subgraphs/                   # Data source subgraphs
+│   ├── database-1/              # First database connection
+│   │   ├── connector/
+│   │   └── metadata/            # Auto-generated HML models
+│   └── database-2/              # Second database connection
+│       ├── connector/
+│       └── metadata/
 │
-├── examples/                           # Example implementations
-│   ├── README.md                       # Overview of examples
-│   ├── sample-models/                  # Example .hml files with permissions
-│   │   ├── README.md                   # Complete HML guide
-│   │   └── User.hml                    # Fully commented example
-│   └── typescript-connector/           # Custom connector example
-│       ├── README.md                   # Connector overview
-│       └── HOW_TO_USE.md               # Step-by-step integration guide
+├── engine/                      # DDN v3 engine
+│   └── Dockerfile.engine        # Engine container build
 │
-├── scripts/                            # Deployment automation
-│   ├── README.md                       # Scripts documentation
-│   ├── introspect-db.sh                # Database schema discovery
-│   ├── build-supergraph.sh             # Compile .hml to JSON
-│   ├── build-engine.sh                 # Build Docker image
-│   └── deploy-metadata.sh              # Deploy to Kubernetes
+├── scripts/                     # Automation scripts
+│   ├── init-template.sh         # Initialize new project
+│   ├── introspect-db.sh         # Database schema introspection
+│   ├── build-supergraph.sh      # Compile metadata
+│   ├── build-engine.sh          # Build Docker image
+│   └── deploy-metadata.sh       # Deploy to Kubernetes
 │
-└── .github/workflows/                  # CI/CD automation
-    ├── README.md                       # GitHub Actions setup guide
-    ├── introspect-and-build.yml        # Auto-sync database schema
-    ├── build-custom-connector.yml      # Build custom connectors
-    └── deploy-metadata.yml             # Automated deployments
+├── .github/workflows/           # CI/CD automation
+│   ├── introspect-and-build.yml # Auto-sync database changes
+│   ├── deploy-metadata.yml      # Automated deployments
+│   └── build-custom-connector.yml
+│
+└── examples/                    # Example implementations
+    ├── sample-models/           # Example HML models
+    └── typescript-connector/    # Custom connector example
 ```
 
----
+## Docker Hub Repositories
 
-## 🎯 What is Hasura DDN v3?
+This template is configured to use the following Docker Hub repositories:
 
-Hasura DDN (Data Delivery Network) v3 is a complete rewrite of Hasura in Rust, designed for:
+- **`rickybobbeh/ddn-engine`**: Hasura DDN v3 engine with compiled metadata
+- **`rickybobbeh/ddn-connector-1`**: PostgreSQL connector for database 1
+- **`rickybobbeh/ddn-connector-2`**: PostgreSQL connector for database 2
 
-### Key Features
+See [DOCKER_HUB_SETUP.md](./DOCKER_HUB_SETUP.md) for detailed configuration instructions.
 
-**Immutable Deployments**
-- Metadata is compiled and baked into Docker images
-- No runtime mutations (unlike v2)
-- Zero-downtime rolling updates
-- Easy rollbacks (just deploy previous version)
+## Key Features
 
-**Microservices Architecture**
-- Supergraph = unified GraphQL API
-- Subgraphs = independent domains (database, business logic, APIs)
-- Cross-subgraph relationships
-- Independent scaling per subgraph
+### Immutable Deployments
+Metadata is compiled into Docker images for consistent, reproducible deployments with instant rollback capability.
 
-**Native Data Connectors (NDC)**
-- Pluggable data sources
-- PostgreSQL, MongoDB, MySQL, REST APIs, custom functions
-- Standardized protocol
-- Community-contributed connectors
+### Multi-Database Architecture
+Connect to multiple PostgreSQL databases with separate connectors, enabling microservices patterns and data federation.
 
-**On-Premises First**
-- Designed for self-hosted deployments
-- No external dependencies required
-- Complete audit trail (source + compiled metadata in Git)
-- Compliance-friendly (HIPAA, SOC 2, etc.)
+### GitOps Friendly
+All configuration in Git. Changes trigger automated builds, tests, and deployments through GitHub Actions.
 
-### vs Hasura v2
+### Zero-Downtime Updates
+Kubernetes rolling updates ensure continuous availability during deployments.
 
-| Aspect | Hasura v2 | DDN v3 (This Template) |
-|--------|-----------|------------------------|
-| **Language** | Haskell | Rust |
-| **Metadata** | Runtime mutations via API | Immutable, compiled into images |
-| **Deployment** | POST to /v1/metadata | Docker image rollout |
-| **Architecture** | Monolithic | Microservices (supergraph + subgraphs) |
-| **Data Sources** | Built-in only | Native Data Connectors (extensible) |
-| **Versioning** | Manual | Git-based with compiled artifacts |
+### Comprehensive Permissions
+Fine-grained RBAC with role-based filtering, field-level security, and relationship permissions.
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed comparison.
+## Documentation
 
----
+- **[SETUP.md](./SETUP.md)**: Detailed setup instructions
+- **[BUSINESS_LOGIC.md](./BUSINESS_LOGIC.md)**: Implementing business logic, models, and custom functions
+- **[SECURITY.md](./SECURITY.md)**: Security best practices and authentication patterns
+- **[DOCKER_HUB_SETUP.md](./DOCKER_HUB_SETUP.md)**: Docker Hub configuration
+- **[TEMPLATE_INITIALIZATION.md](./TEMPLATE_INITIALIZATION.md)**: Step-by-step initialization
+- **[docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)**: DDN v3 architecture details
+- **[docs/QUICKSTART.md](./docs/QUICKSTART.md)**: 15-minute getting started guide
 
-## 🛠 How to Use This Template
+## Support & Resources
 
-### 1. Customize for Your Project
+- **Hasura DDN Docs**: https://hasura.io/docs/3.0/
+- **DDN CLI Reference**: https://hasura.io/docs/3.0/cli/overview/
+- **GraphQL Schema Reference**: https://hasura.io/docs/3.0/data-domain-modeling/
+- **Issues**: Report issues in your forked repository
 
-**Replace generic names with your project name**:
+## License
 
-```yaml
-# supergraph.yaml
-definition:
-  name: my-api  # TODO: Change to your project name
-```
-
-**Update database configuration**:
-
-```bash
-# .env.local
-DATABASE_URL=postgresql://...  # TODO: Your database URL
-```
-
-**Configure authentication**:
-
-See [globals/README.md](globals/README.md) for provider-specific setup guides.
-
-### 2. Add Your Database Schema
-
-```bash
-# Introspect database and generate models
-./scripts/introspect-db.sh
-
-# Add permissions to generated .hml files
-# See examples/sample-models/User.hml for patterns
-
-# Build and deploy
-./scripts/build-supergraph.sh
-./scripts/build-engine.sh v1.0.0
-./scripts/deploy-metadata.sh local v1.0.0
-```
-
-### 3. Add Custom Business Logic (Optional)
-
-```bash
-# Copy TypeScript connector example
-cp -r examples/typescript-connector subgraphs/my-logic/connector/typescript
-
-# Follow examples/typescript-connector/HOW_TO_USE.md
-```
-
-### 4. Set Up CI/CD
-
-See [.github/README.md](.github/README.md) for GitHub Actions setup.
+MIT License - See [LICENSE](./LICENSE) for details.
 
 ---
 
-## 🏗 Deployment Workflow
-
-The complete DDN v3 deployment workflow:
-
-```
-1. Database Schema
-   ↓
-2. Introspect (ddn connector introspect postgres)
-   ↓
-3. Generate Models (ddn model add postgres '*')
-   ↓
-4. Add Permissions (.hml files)
-   ↓
-5. Build Supergraph (ddn supergraph build local)
-   ↓
-6. Compile Metadata (.hml → engine/build/*.json)
-   ↓
-7. Build Docker Image (./scripts/build-engine.sh v1.0.0)
-   ↓
-8. Push to Registry (docker push ...)
-   ↓
-9. Deploy to Kubernetes (./scripts/deploy-metadata.sh prod v1.0.0)
-   ↓
-10. Rolling Update (zero downtime)
-```
-
-See [QUICKSTART.md](QUICKSTART.md) for hands-on walkthrough.
-
----
-
-## 🔐 Security Features
-
-**Authentication & Authorization**:
-- OAuth/OIDC integration (JWT validation)
-- Row-level permissions
-- Column-level permissions
-- Role-based access control
-
-**API Security**:
-- CORS configuration
-- Rate limiting (global + per-user)
-- Query depth limits
-- Query complexity limits
-- HSTS, CSP headers
-
-**Infrastructure Security**:
-- Secrets management (Kubernetes Secrets)
-- TLS/SSL termination
-- Network policies
-- Pod security policies
-
-See [globals/README.md](globals/README.md) for security configuration.
-
----
-
-## 📊 Observability
-
-**Built-in support for**:
-- OpenTelemetry (distributed tracing)
-- Structured logging
-- Metrics export
-- Dynatrace integration (optional)
-
-**Monitoring DDN v3**:
-- Request duration
-- Query complexity
-- Database query performance
-- Error rates
-- Custom metrics from connectors
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for observability setup.
-
----
-
-## 🧪 Testing
-
-**Run locally**:
-
-```bash
-# Start local Kubernetes (microk8s, k3s, or Docker Desktop)
-kubectl cluster-info
-
-# Deploy to local cluster
-source .env.local
-./scripts/build-supergraph.sh
-./scripts/build-engine.sh v0.0.1-local
-./scripts/deploy-metadata.sh local v0.0.1-local
-
-# Test GraphQL API
-kubectl port-forward -n hasura-local deployment/hasura-ddn-engine 3000:3000
-curl http://localhost:3000/healthz
-```
-
----
-
-## 🤝 Two-Repository Architecture
-
-This template is designed to work with a separate infrastructure repository:
-
-1. **`infra-k8s`** (infrastructure): Kubernetes cluster setup, monitoring, ingress
-2. **`onprem-hasura-k8s`** (this template): Hasura application configuration
-
-**Rationale**:
-- Separation of concerns (platform team vs application team)
-- Different lifecycles (infrastructure changes less frequently)
-- Different access controls (infra is more restricted)
-- Reusability (same infra can host multiple applications)
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed explanation.
-
----
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-**"Cannot connect to database"**
-- Check `DATABASE_URL` in `.env.local`
-- Test: `psql "$DATABASE_URL" -c "SELECT 1"`
-- See: [subgraphs/database/README.md](subgraphs/database/README.md)
-
-**"Table not showing in GraphQL"**
-- Run: `./scripts/introspect-db.sh`
-- Add permissions to `.hml` file
-- See: [examples/sample-models/README.md](examples/sample-models/README.md)
-
-**"Permission denied" in GraphQL query**
-- Add `ModelPermissions` to `.hml` file
-- See: [examples/sample-models/User.hml](examples/sample-models/User.hml)
-
-**More troubleshooting**:
-- [QUICKSTART.md](QUICKSTART.md) - Common setup issues
-- [subgraphs/database/README.md](subgraphs/database/README.md) - Database issues
-- [.github/README.md](.github/README.md) - CI/CD issues
-
----
-
-## 📖 Further Reading
-
-### Official Hasura Documentation
-
-- [Hasura DDN v3 Overview](https://hasura.io/docs/3.0/)
-- [DDN Architecture](https://hasura.io/docs/3.0/getting-started/architecture/)
-- [Native Data Connectors](https://hasura.io/docs/3.0/connectors/introduction/)
-- [Authentication Guide](https://hasura.io/docs/3.0/auth/overview/)
-
-### Community
-
-- [Hasura Discord](https://discord.com/invite/hasura)
-- [GitHub Discussions](https://github.com/hasura/graphql-engine/discussions)
-- [Blog](https://hasura.io/blog/)
-
----
-
-## 📝 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-This template is provided as-is, without warranty. Feel free to adapt it for your use case.
-
----
-
-## 🎉 Getting Help
-
-**Where to get help**:
-1. Check the documentation in this repository (start with [QUICKSTART.md](QUICKSTART.md))
-2. Review the [examples/](examples/) directory for patterns and best practices
-3. Join [Hasura Discord](https://discord.com/invite/hasura) (#ddn channel)
-4. Open an issue on GitHub
-
-**Contributing**:
-- Contributions welcome! Please open issues for bugs or feature requests
-- PRs should include documentation updates
-- Follow existing code style and patterns
-
----
-
-## 🚀 What's Next?
-
-1. **First time?** Start with [QUICKSTART.md](QUICKSTART.md)
-2. **Want to understand DDN v3?** Read [ARCHITECTURE.md](ARCHITECTURE.md)
-3. **Setting up authentication?** See [globals/README.md](globals/README.md)
-4. **Working with database?** Check [subgraphs/database/README.md](subgraphs/database/README.md)
-5. **Adding custom logic?** Explore [examples/typescript-connector/](examples/typescript-connector/)
-6. **Deploying to production?** Review [.github/README.md](.github/README.md) and [scripts/README.md](scripts/README.md)
-
-**Happy building! 🎯**
+**Ready to get started?** Follow the [SETUP.md](./SETUP.md) guide to initialize your Hasura DDN project.

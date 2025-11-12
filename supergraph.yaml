@@ -38,11 +38,12 @@ definition:
   # - mongodb: NoSQL database connector
   # - analytics: Analytics database connector
   subgraphs:
-    - globals    # Global config (keep this)
-    - database   # Your primary database (rename/customize as needed)
+    - globals/subgraph.yaml      # Global config (keep this)
+    - subgraphs/database-1/subgraph.yaml   # First database
+    - subgraphs/database-2/subgraph.yaml   # Second database
     # Add more subgraphs below:
-    # - my-business-logic
-    # - my-api-wrapper
+    # - subgraphs/my-business-logic/subgraph.yaml
+    # - subgraphs/my-api-wrapper/subgraph.yaml
 
   # Environment variable mapping
   # Maps environment variables from your .env files to the supergraph

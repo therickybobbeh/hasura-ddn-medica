@@ -17,12 +17,12 @@
 kind: Subgraph
 version: v2
 definition:
-  # TODO: Keep this as "database" or rename to match your use case
-  # Examples: "database", "postgres-primary", "analytics-db"
-  name: database
+  # TODO: Keep this as "database-1" or rename to match your use case
+  # Examples: "users-db", "postgres-primary", "main-db"
+  name: database-1
 
   # TODO: Update description for your database
-  description: "Primary PostgreSQL database subgraph"
+  description: "First PostgreSQL database subgraph"
 
   generator:
     # Naming convention for GraphQL types
@@ -69,7 +69,7 @@ definition:
     #   - POSTGRES_URL (provider-specific)
     #   - PRIMARY_DB_URL (multiple databases)
     DATABASE_URL:
-      fromEnv: DATABASE_URL
+      fromEnv: DATABASE_1_URL
 
     # Read replica connection strings (optional)
     # TODO: Uncomment and configure if using read replicas

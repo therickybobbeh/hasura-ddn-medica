@@ -58,8 +58,9 @@ for file in "${REQUIRED_FILES[@]}"; do
 done
 
 # Get Docker registry from environment or use default
-REGISTRY=${DOCKER_REGISTRY:-"docker.io/$(whoami)"}
-IMAGE_NAME="${REGISTRY}/hasura-ddn-engine"
+# Template configured for rickybobbeh/ddn-engine
+REGISTRY=${DOCKER_REGISTRY:-"docker.io/rickybobbeh"}
+IMAGE_NAME="${REGISTRY}/ddn-engine"
 FULL_IMAGE="${IMAGE_NAME}:${VERSION}"
 
 echo "🐳 Docker image details:"

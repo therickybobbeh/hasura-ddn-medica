@@ -1,0 +1,128 @@
+---
+# Database Subgraph Configuration
+#
+# This subgraph provides GraphQL access to your PostgreSQL database.
+# It uses the Hasura PostgreSQL Native Data Connector (NDC).
+#
+# WHAT IS THIS FILE?
+# - Defines the database subgraph that exposes your database as GraphQL
+# - Configures how tables are converted to GraphQL types
+# - Maps environment variables for database connection
+#
+# TODO: Customize this file for your project
+# 1. Update description if using a different database provider
+# 2. Adjust naming convention if needed
+# 3. Add/remove environment variable mappings
+
+kind: Subgraph
+version: v2
+definition:
+  # TODO: Keep this as "database-2" or rename to match your use case
+  # Examples: "orders-db", "analytics-db", "secondary-db"
+  name: database-2
+
+  # TODO: Update description for your database
+  description: "Second PostgreSQL database subgraph"
+
+  generator:
+    # Naming convention for GraphQL types
+    # Options:
+    #   - none: Keep original database names (e.g., user_profile → user_profile)
+    #   - camelCase: Convert to camelCase (e.g., user_profile → userProfile)
+    #   - PascalCase: Convert to PascalCase (e.g., user_profile → UserProfile)
+    #
+    # TODO: Change if you want automatic name conversion
+    # Recommendation: "none" for SQL-style, "camelCase" for JavaScript-style
+    namingConvention: none
+
+    # GraphQL type name prefix
+    # Use this to avoid naming conflicts with other subgraphs
+    #
+    # Example: If you have "User" type in multiple subgraphs:
+    #   graphqlTypeNamePrefix: "Db"
+    #   Result: DbUser, DbOrder, etc.
+    #
+    # TODO: Add prefix if you have multiple subgraphs with same type names
+    # Leave empty ("") if not needed
+    graphqlTypeNamePrefix: ""
+
+  # Include paths for metadata files
+  # These directories are scanned for .hml and connector configuration files
+  includePaths:
+    - metadata    # Model files (.hml)
+    - connector   # Connector configuration
+
+  # Environment variable mappings
+  # Maps environment variables from your .env files to the subgraph
+  #
+  # HOW IT WORKS:
+  # 1. You set DATABASE_URL in .env.local
+  # 2. This mapping makes it available to the connector
+  # 3. Connector uses it to connect to database
+  #
+  # TODO: Update variable names to match your .env files
+  envMapping:
+    # Primary database connection string
+    # TODO: Update the environment variable name if different
+    # Examples:
+    #   - DATABASE_URL (generic)
+    #   - POSTGRES_URL (provider-specific)
+    #   - PRIMARY_DB_URL (multiple databases)
+    DATABASE_URL:
+      fromEnv: DATABASE_2_URL
+
+    # Read replica connection strings (optional)
+    # TODO: Uncomment and configure if using read replicas
+    # Read replicas improve read performance by distributing queries
+    # See: subgraphs/database/README.md for setup guide
+    #
+    # READ_REPLICA_1_URL:
+    #   fromEnv: READ_REPLICA_1_URL
+    # READ_REPLICA_2_URL:
+    #   fromEnv: READ_REPLICA_2_URL
+
+    # Database connection pool settings
+    # TODO: Adjust these based on your database capacity and traffic
+    # See: subgraphs/database/README.md for tuning guide
+    #
+    # Recommendations:
+    #   - Development: maxConnections=10, timeout=10
+    #   - Production: maxConnections=50-100, timeout=30
+    POSTGRES_POOL_MAX_CONNECTIONS:
+      fromEnv: POSTGRES_POOL_MAX_CONNECTIONS
+    POSTGRES_POOL_TIMEOUT:
+      fromEnv: POSTGRES_POOL_TIMEOUT
+    POSTGRES_POOL_IDLE_TIMEOUT:
+      fromEnv: POSTGRES_POOL_IDLE_TIMEOUT
+
+    # TODO: Add any custom environment variables your connector needs
+    # Examples:
+    #   # For SSL connections
+    #   POSTGRES_SSL_MODE:
+    #     fromEnv: POSTGRES_SSL_MODE
+    #
+    #   # For schema-specific connections
+    #   POSTGRES_SCHEMA:
+    #     fromEnv: POSTGRES_SCHEMA
+
+---
+# USAGE NOTES:
+#
+# 1. Introspecting database:
+#    $ ddn connector introspect postgres --subgraph database
+#
+# 2. Generating models:
+#    $ ddn model add postgres '*' --subgraph database
+#
+# 3. Building supergraph:
+#    $ ddn supergraph build local
+#
+# 4. Common customizations:
+#    - Multiple databases: Create database-prod, database-analytics subgraphs
+#    - Different naming: Set namingConvention to camelCase
+#    - Type conflicts: Add graphqlTypeNamePrefix
+#
+# FURTHER READING:
+# - Subgraph docs: https://hasura.io/docs/3.0/project-configuration/subgraphs/
+# - PostgreSQL connector: https://hasura.io/docs/3.0/connectors/postgresql/
+# - This subgraph's README: README.md

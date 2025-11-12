@@ -56,25 +56,24 @@ jobs:
 
       - name: Setup environment variables
         env:
-          NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL_DEV }}
+          DATABASE_1_URL: ${{ secrets.DATABASE_1_URL }}
+          DATABASE_2_URL: ${{ secrets.DATABASE_2_URL }}
           HASURA_DDN_PAT: ${{ secrets.HASURA_DDN_PAT }}
           OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
         run: |
           # Create environment file for DDN CLI
           cat > .env.${ENVIRONMENT} <<EOF
-          NEON_DATABASE_URL=${NEON_DATABASE_URL}
+          DATABASE_1_URL=${DATABASE_1_URL}
+          DATABASE_2_URL=${DATABASE_2_URL}
           HASURA_DDN_PAT=${HASURA_DDN_PAT}
           OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
           EOF
 
-      - name: Introspect PostgreSQL database
+      - name: Introspect databases
         run: |
-          ddn context use ${ENVIRONMENT}
-          ddn connector introspect neon_postgres --verbose
-
-      - name: Generate models from database
-        run: |
-          ddn model add neon_postgres '*'
+          # Use the introspection script to handle both databases
+          chmod +x scripts/introspect-db.sh
+          ./scripts/introspect-db.sh all
 
       - name: Build supergraph (DDN v3)
         run: |
