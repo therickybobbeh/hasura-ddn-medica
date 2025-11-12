@@ -1,0 +1,69 @@
+# Hasura DDN / Node.js / TypeScript
+
+# Environment variables (DO NOT commit real credentials)
+.env
+.env.local
+.env.*.local
+.env.production
+*.env
+
+# Hasura DDN
+.hasura/.data/
+.hasura/cache/
+*.hml.lock
+
+# DDN v3 Engine Build Output
+# For on-prem deployments, we COMMIT engine/build/ for complete audit trail
+# Only ignore environment-specific config
+engine/.env.engine
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+dist/
+build/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build outputs
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Docker
+docker-compose.override.yml
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Kubernetes
+*.kubeconfig
+
+# Secrets (extra safety)
+*secret*
+*credentials*
+*password*
+*token*
+*key.pem
+*key.json
+*.p12
+*.pfx

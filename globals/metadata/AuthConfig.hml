@@ -1,0 +1,191 @@
+---
+# Authentication Configuration for Hasura DDN
+# OAuth/OIDC Integration with configurable identity provider
+
+kind: AuthConfig
+version: v2
+definition:
+  # Authentication mode: JWT-based OAuth/OIDC
+  mode: jwt
+
+  # JWT Configuration
+  jwt:
+    # JWT token location (from Authorization header)
+    tokenLocation:
+      type: BearerAuthorization
+
+    # JWT Claims mapping
+    claimsConfig:
+      namespace:
+        # Claims namespace (adjust based on your IdP)
+        # Examples:
+        # - Keycloak: "https://hasura.io/jwt/claims"
+        # - Auth0: "https://hasura.io/jwt/claims"
+        # - Azure AD: "https://hasura.io/jwt/claims"
+        claimsFormat: Json
+        location: "https://hasura.io/jwt/claims"
+
+      # Role claim configuration
+      audience:
+        - valueFromEnv: OAUTH_AUDIENCE
+
+    # JWKS Configuration for token verification
+    jwksConfig:
+      # JWKS URI from your OAuth/OIDC provider
+      # Examples:
+      # - Keycloak: https://keycloak.example.com/realms/my-realm/.well-known/jwks.json
+      # - Auth0: https://YOUR_DOMAIN.auth0.com/.well-known/jwks.json
+      # - Azure AD: https://login.microsoftonline.com/TENANT_ID/discovery/v2.0/keys
+      # - Okta: https://YOUR_DOMAIN.okta.com/oauth2/default/v1/keys
+      jwksUrl:
+        valueFromEnv: OAUTH_JWKS_URL
+
+    # Token issuer validation
+    issuer:
+      valueFromEnv: OAUTH_ISSUER_URL
+
+  # Session variables from JWT claims
+  # These variables are available in permission rules
+  # Customize based on your JWT claims structure
+  allowedSessionVariableNames:
+    - x-hasura-user-id
+    - x-hasura-role
+    - x-hasura-org-id
+    - x-hasura-allowed-roles
+    - x-hasura-default-role
+    - x-hasura-email
+    - x-hasura-user-name
+
+  # Unauthenticated access configuration
+  # Set allowUnauthenticatedAccess to true if you want to allow
+  # public access to certain fields/models
+  allowUnauthenticatedAccess: false
+
+  # Unauthorized role configuration
+  # Role assigned to unauthenticated requests (if allowed)
+  # unauthorizedRole: anonymous
+
+---
+# Alternative: Webhook-based Authentication (commented out)
+# Uncomment and configure if you prefer webhook authentication over JWT
+
+# kind: AuthConfig
+# version: v2
+# definition:
+#   mode: webhook
+#
+#   webhook:
+#     # Webhook URL that validates authentication
+#     url:
+#       valueFromEnv: AUTH_WEBHOOK_URL
+#
+#     # HTTP method for webhook
+#     method: POST
+#
+#     # Headers to forward to webhook
+#     forwardHeaders:
+#       - Authorization
+#       - X-Custom-Header
+#
+#   # Session variables returned by webhook
+#   allowedSessionVariableNames:
+#     - x-hasura-user-id
+#     - x-hasura-role
+#     - x-hasura-org-id
+#
+#   allowUnauthenticatedAccess: false
+
+---
+# OAuth/OIDC Provider Setup Instructions
+#
+# The following environment variables need to be configured:
+#
+# 1. OAUTH_JWKS_URL
+#    - The JWKS endpoint URL from your OAuth/OIDC provider
+#    - Used to fetch public keys for JWT signature verification
+#
+# 2. OAUTH_ISSUER_URL
+#    - The issuer URL from your OAuth/OIDC provider
+#    - Must match the "iss" claim in the JWT token
+#
+# 3. OAUTH_AUDIENCE
+#    - The expected audience for JWT tokens
+#    - Must match the "aud" claim in the JWT token
+#
+# 4. OAUTH_CLIENT_ID (optional, for token exchange)
+#    - Your OAuth client ID
+#
+# Example JWT Token Structure:
+# {
+#   "iss": "https://auth.example.com",
+#   "aud": "https://hasura.example.com",
+#   "sub": "user-123",
+#   "exp": 1234567890,
+#   "iat": 1234567890,
+#   "https://hasura.io/jwt/claims": {
+#     "x-hasura-user-id": "user-123",
+#     "x-hasura-role": "user",
+#     "x-hasura-allowed-roles": ["user", "admin"],
+#     "x-hasura-default-role": "user",
+#     "x-hasura-org-id": "org-456",
+#     "x-hasura-email": "user@example.com",
+#     "x-hasura-user-name": "John Doe"
+#   }
+# }
+#
+# Provider-Specific Setup:
+#
+# KEYCLOAK:
+# ---------
+# 1. Create a Realm: "my-realm"
+# 2. Create a Client: "hasura-ddn"
+#    - Client Protocol: openid-connect
+#    - Access Type: confidential
+#    - Valid Redirect URIs: https://hasura.example.com/*
+# 3. Create Client Scope: "hasura"
+#    - Add Protocol Mapper: "hasura-claims"
+#      - Mapper Type: User Attribute
+#      - Token Claim Name: https://hasura.io/jwt/claims
+#      - Claim JSON Type: JSON
+# 4. Environment Variables:
+#    OAUTH_JWKS_URL=https://keycloak.example.com/realms/my-realm/protocol/openid-connect/certs
+#    OAUTH_ISSUER_URL=https://keycloak.example.com/realms/my-realm
+#    OAUTH_AUDIENCE=hasura-ddn
+#
+# AUTH0:
+# ------
+# 1. Create an Application (Single Page App or Regular Web App)
+# 2. Add "https://hasura.io/jwt/claims" namespace in Rules:
+#    function (user, context, callback) {
+#      const namespace = "https://hasura.io/jwt/claims";
+#      context.idToken[namespace] = {
+#        'x-hasura-user-id': user.user_id,
+#        'x-hasura-role': user.role || 'user',
+#        'x-hasura-allowed-roles': user.roles || ['user'],
+#        'x-hasura-default-role': 'user'
+#      };
+#      callback(null, user, context);
+#    }
+# 3. Environment Variables:
+#    OAUTH_JWKS_URL=https://YOUR_DOMAIN.auth0.com/.well-known/jwks.json
+#    OAUTH_ISSUER_URL=https://YOUR_DOMAIN.auth0.com/
+#    OAUTH_AUDIENCE=YOUR_API_IDENTIFIER
+#
+# AZURE AD:
+# ---------
+# 1. Register an App in Azure Portal
+# 2. Configure App Roles in manifest
+# 3. Add claims mapping policy
+# 4. Environment Variables:
+#    OAUTH_JWKS_URL=https://login.microsoftonline.com/TENANT_ID/discovery/v2.0/keys
+#    OAUTH_ISSUER_URL=https://login.microsoftonline.com/TENANT_ID/v2.0
+#    OAUTH_AUDIENCE=YOUR_CLIENT_ID
+#
+# OKTA:
+# -----
+# 1. Create an Application (Web, SPA, or Native)
+# 2. Add Custom Claims in Authorization Server
+# 3. Environment Variables:
+#    OAUTH_JWKS_URL=https://YOUR_DOMAIN.okta.com/oauth2/default/v1/keys
+#    OAUTH_ISSUER_URL=https://YOUR_DOMAIN.okta.com/oauth2/default
+#    OAUTH_AUDIENCE=api://default

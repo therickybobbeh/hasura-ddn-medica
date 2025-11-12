@@ -1,0 +1,244 @@
+---
+# GraphQL Configuration for Hasura DDN
+# Controls GraphQL API behavior, features, and settings
+
+kind: GraphqlConfig
+version: v1
+definition:
+  # GraphQL Query settings
+  query:
+    # Root operation type name
+    rootOperationTypeName: Query
+
+    # Allow aggregation queries
+    aggregateFunctionsEnabled: true
+
+    # Nested array filtering in where clauses
+    nestedFilteringEnabled: true
+
+  # GraphQL Mutation settings
+  mutation:
+    # Root operation type name
+    rootOperationTypeName: Mutation
+
+  # GraphQL Subscription settings
+  subscription:
+    # Root operation type name
+    rootOperationTypeName: Subscription
+
+    # Enable live queries (real-time data updates)
+    liveQueriesEnabled: true
+
+    # Enable streaming subscriptions
+    streamingEnabled: true
+
+  # Query depth limiting (prevent deeply nested malicious queries)
+  # Recommended: 10-15 for production
+  depthLimit:
+    enabled: true
+    maxDepth: 15
+
+  # Node limiting (prevent overly complex queries)
+  nodeLimit:
+    enabled: true
+    maxNodes: 1000
+
+  # Apollo Federation support
+  apolloFederation:
+    enabled: false
+
+  # GraphQL Features
+  features:
+    # Enable introspection (disable in production for security)
+    # Keep enabled for development
+    introspection:
+      enabled: true
+
+    # GraphQL Playground / GraphiQL
+    # Disable in production for security
+    playground:
+      enabled: true
+
+    # Batch queries (multiple operations in one request)
+    batchQueries:
+      enabled: true
+      maxBatchSize: 10
+
+  # CORS Configuration
+  cors:
+    # Allowed origins
+    # Use specific domains in production, not "*"
+    allowedOrigins:
+      - "*"  # REPLACE WITH SPECIFIC ORIGINS IN PRODUCTION
+      # Examples:
+      # - "https://app.example.com"
+      # - "https://admin.example.com"
+
+    # Allowed HTTP methods
+    allowedMethods:
+      - GET
+      - POST
+      - OPTIONS
+
+    # Allowed headers
+    allowedHeaders:
+      - Content-Type
+      - Authorization
+      - X-Hasura-Role
+      - X-Hasura-User-Id
+
+    # Expose headers to client
+    exposedHeaders:
+      - X-Request-Id
+
+    # Allow credentials (cookies, auth headers)
+    allowCredentials: true
+
+    # Preflight cache duration (in seconds)
+    maxAge: 3600
+
+  # Request/Response settings
+  request:
+    # Maximum request size (in bytes)
+    # 1MB = 1048576 bytes
+    maxSize: 1048576
+
+    # Request timeout (in milliseconds)
+    timeout: 30000
+
+  # Response caching
+  cache:
+    # Enable response caching
+    enabled: true
+
+    # Default TTL for cached responses (in seconds)
+    defaultTtl: 60
+
+    # Maximum TTL
+    maxTtl: 3600
+
+  # Rate limiting
+  # Note: This is application-level rate limiting
+  # Consider also implementing rate limiting at ingress/load balancer level
+  rateLimit:
+    # Enable rate limiting
+    enabled: true
+
+    # Global rate limit
+    global:
+      # Maximum requests per minute
+      maxRequests: 1000
+      # Time window in seconds
+      windowSeconds: 60
+
+    # Per-user rate limit (based on session variable)
+    perUser:
+      # Maximum requests per minute per user
+      maxRequests: 100
+      # Time window in seconds
+      windowSeconds: 60
+      # Session variable to identify user
+      sessionVariable: x-hasura-user-id
+
+  # Error handling
+  errors:
+    # Include detailed error messages
+    # Set to false in production for security
+    includeStackTrace: false
+
+    # Include extension fields in error responses
+    includeExtensions: true
+
+  # Observability
+  observability:
+    # OpenTelemetry integration
+    openTelemetry:
+      enabled: true
+      # Trace sampling rate (0.0 to 1.0)
+      # 1.0 = trace all requests (high overhead)
+      # 0.1 = trace 10% of requests (recommended for production)
+      samplingRate: 0.1
+
+    # Request logging
+    logging:
+      enabled: true
+      # Log level: debug, info, warn, error
+      level: info
+      # Log query operations
+      logQueries: false  # Set to true for debugging
+      # Log mutations
+      logMutations: true
+      # Log subscriptions
+      logSubscriptions: false
+
+  # Security headers
+  security:
+    # Content Security Policy
+    contentSecurityPolicy:
+      enabled: true
+      directives:
+        - "default-src 'self'"
+        - "script-src 'self' 'unsafe-inline'"
+        - "style-src 'self' 'unsafe-inline'"
+
+    # X-Frame-Options
+    frameOptions: DENY
+
+    # X-Content-Type-Options
+    contentTypeOptions: nosniff
+
+    # Strict-Transport-Security (HSTS)
+    strictTransportSecurity:
+      enabled: true
+      maxAge: 31536000  # 1 year in seconds
+      includeSubDomains: true
+      preload: true
+
+---
+# Production Recommendations:
+#
+# 1. CORS Origins:
+#    Replace "*" with specific allowed origins:
+#    allowedOrigins:
+#      - "https://app.example.com"
+#      - "https://admin.example.com"
+#
+# 2. Introspection:
+#    Disable in production:
+#    introspection:
+#      enabled: false
+#
+# 3. Playground:
+#    Disable in production:
+#    playground:
+#      enabled: false
+#
+# 4. Error Handling:
+#    Hide stack traces in production:
+#    errors:
+#      includeStackTrace: false
+#
+# 5. Rate Limiting:
+#    Adjust based on your traffic patterns:
+#    - Monitor actual usage
+#    - Set appropriate limits per tier
+#    - Consider implementing at multiple levels (ingress + application)
+#
+# 6. Query Complexity:
+#    Monitor query patterns and adjust:
+#    - maxDepth: Lower for simpler APIs (5-10)
+#    - maxNodes: Based on largest legitimate queries
+#
+# 7. Observability:
+#    Production settings:
+#    logging:
+#      level: warn  # or error
+#      logQueries: false  # Only enable for debugging
+#    openTelemetry:
+#      samplingRate: 0.1  # Sample 10% of requests
+#
+# 8. Caching:
+#    Tune based on data volatility:
+#    - High-volatility data: lower TTL (30-60s)
+#    - Low-volatility data: higher TTL (300-3600s)
+#    - Consider using @cached directive on specific fields

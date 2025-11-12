@@ -1,0 +1,50 @@
+---
+# Hasura DDN Project Configuration
+#
+# This file declares that this project uses Hasura DDN v3.
+#
+# WHAT IS THIS FILE?
+# - Root configuration file for Hasura DDN CLI
+# - Declares DDN version (v3)
+# - Enables DDN v3 features and commands
+#
+# WHY v3?
+# - DDN v3 = Complete rewrite in Rust (vs v2 in Haskell)
+# - Immutable metadata deployments (no runtime mutations)
+# - Microservices architecture (supergraphs + subgraphs)
+# - Native Data Connectors (NDC) protocol
+# - On-premises first design
+#
+# DO NOT MODIFY unless:
+# - Upgrading to a newer DDN version
+# - Hasura releases v4 (unlikely in near future)
+#
+# See ARCHITECTURE.md for detailed comparison between v2 and v3
+
+version: v3
+
+---
+# WHAT v3 ENABLES:
+#
+# Commands:
+#   - ddn supergraph build local       (NOT: ddn supergraph build <environment>)
+#   - ddn connector introspect         (improved introspection)
+#   - ddn model add                    (better model generation)
+#
+# Architecture:
+#   - engine/build/*.json              (compiled metadata)
+#   - Immutable Docker images          (metadata baked in)
+#   - Zero-downtime rolling updates    (Kubernetes-native)
+#
+# Files:
+#   - supergraph.yaml                  (supergraph definition)
+#   - globals/ and subgraphs/          (modular organization)
+#   - .hml metadata files              (type-safe source format)
+#
+# MIGRATION FROM v2:
+# If you're coming from Hasura v2, see ARCHITECTURE.md for key differences.
+#
+# FURTHER READING:
+# - DDN v3 Overview: https://hasura.io/docs/3.0/
+# - Architecture: ARCHITECTURE.md
+# - Quick Start: QUICKSTART.md

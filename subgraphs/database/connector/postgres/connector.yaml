@@ -1,0 +1,93 @@
+---
+# PostgreSQL Connector Manifest
+# This connector provides GraphQL access to your PostgreSQL database
+
+kind: ConnectorManifest
+version: v1
+definition:
+  # Connector name (used in GraphQL schema)
+  # TODO: Change if you want a different name
+  name: postgres
+
+  # Connector type: cloud or local
+  # For Kubernetes deployment, we'll build and deploy the connector
+  type: local
+
+# Connector source configuration
+connector:
+  # Use official Hasura PostgreSQL connector from hub
+  type: hub
+  # Latest version of the PostgreSQL connector
+  # Check https://github.com/hasura/ddn-helm-charts for updates
+  name: hasura/postgres
+  version: v0.6.0
+
+# Deployment configuration for cloud (optional, for Hasura DDN Cloud)
+# Uncomment and configure if deploying to Hasura DDN Cloud
+# deployments:
+#   - context: .
+#     mode: ReadWrite
+#     region: gcp-us-west2
+#     env:
+#       CONNECTION_URI:
+#         valueFromEnv: DATABASE_URL
+#
+#   # Read replica deployment (optional)
+#   - context: .
+#     mode: ReadOnly
+#     region: gcp-europe-west1
+#     env:
+#       CONNECTION_URI:
+#         valueFromEnv: READ_REPLICA_1_URL
+
+# Build configuration for local/Kubernetes deployment
+build:
+  # Build context directory
+  context: .
+
+  # Dockerfile for the connector
+  dockerfile: Dockerfile
+
+  # Build arguments
+  args:
+    CONNECTOR_VERSION: v0.6.0
+
+# Environment variables for the connector
+# These are referenced in configuration.json
+env:
+  CONNECTION_URI:
+    valueFromEnv: DATABASE_URL
+
+  # Connection pool settings
+  POOL_MAX_CONNECTIONS:
+    valueFromEnv: POSTGRES_POOL_MAX_CONNECTIONS
+
+  POOL_TIMEOUT:
+    valueFromEnv: POSTGRES_POOL_TIMEOUT
+
+  POOL_IDLE_TIMEOUT:
+    valueFromEnv: POSTGRES_POOL_IDLE_TIMEOUT
+
+# Health check configuration
+healthCheck:
+  enabled: true
+  endpoint: /health
+  interval: 30
+  timeout: 5
+  retries: 3
+
+# Resource requirements (for Kubernetes)
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+# Scaling configuration
+scaling:
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilization: 70
+  targetMemoryUtilization: 80
