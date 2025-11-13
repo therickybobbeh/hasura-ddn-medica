@@ -56,7 +56,8 @@ jobs:
         working-directory: sample-project-1
         run: |
           mkdir -p .hasura
-          cat > .hasura/context.yaml << EOF
+          cat > .hasura/context.yaml << 'EOF'
+          version: v3
           project: hopeful-monkey-8713
           supergraph: ./supergraph.yaml
           EOF
