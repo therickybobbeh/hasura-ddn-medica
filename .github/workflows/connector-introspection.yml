@@ -39,6 +39,17 @@ jobs:
         run: |
           ddn auth login --access-token ${{ secrets.HASURA_DDN_PAT }}
 
+      - name: Initialize DDN context
+        working-directory: sample-project-1
+        run: |
+          mkdir -p .hasura
+          cat > .hasura/context.yaml << EOF
+          project: hopeful-monkey-8713
+          supergraph: ./supergraph.yaml
+          EOF
+          echo "Created context file:"
+          cat .hasura/context.yaml
+
       - name: Introspect specific connector
         if: ${{ inputs.connector_name != '' }}
         working-directory: sample-project-1
