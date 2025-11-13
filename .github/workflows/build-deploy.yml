@@ -54,6 +54,12 @@ jobs:
         env:
           HASURA_DDN_PAT: ${{ secrets.HASURA_DDN_PAT }}
 
+      - name: Set DDN context
+        run: |
+          cd sample-project-1
+          ddn context set project hopeful-monkey-8713
+          ddn context set supergraph ./supergraph.yaml
+
       - name: Set up environment variables
         run: |
           cd sample-project-1
@@ -78,10 +84,10 @@ jobs:
 
           if [ "${{ inputs.build_mode }}" == "release" ]; then
             echo "Creating release build..."
-            BUILD_OUTPUT=$(ddn supergraph build create --supergraph ./supergraph.yaml --mode release)
+            BUILD_OUTPUT=$(ddn supergraph build create --project hopeful-monkey-8713 --supergraph ./supergraph.yaml --mode release)
           else
             echo "Creating standard build..."
-            BUILD_OUTPUT=$(ddn supergraph build create --supergraph ./supergraph.yaml)
+            BUILD_OUTPUT=$(ddn supergraph build create --project hopeful-monkey-8713 --supergraph ./supergraph.yaml)
           fi
 
           echo "$BUILD_OUTPUT"
@@ -96,7 +102,7 @@ jobs:
         run: |
           cd sample-project-1
           echo "Applying metadata to Hasura DDN project..."
-          ddn metadata apply || {
+          ddn metadata apply --project hopeful-monkey-8713 || {
             echo "❌ Metadata apply failed"
             exit 1
           }
