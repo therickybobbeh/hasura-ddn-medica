@@ -76,13 +76,23 @@ jobs:
 
           if [ "${{ inputs.build_mode }}" == "release" ]; then
             echo "Creating release build..."
-            BUILD_OUTPUT=$(ddn supergraph build create --project hopeful-monkey-8713 --supergraph supergraph.yaml --mode release --out build.json 2>&1)
+            ddn supergraph build create --project hopeful-monkey-8713 --supergraph supergraph.yaml --mode release --out build.json
+            BUILD_EXIT_CODE=$?
           else
             echo "Creating standard build..."
-            BUILD_OUTPUT=$(ddn supergraph build create --project hopeful-monkey-8713 --supergraph supergraph.yaml --out build.json 2>&1)
+            ddn supergraph build create --project hopeful-monkey-8713 --supergraph supergraph.yaml --out build.json
+            BUILD_EXIT_CODE=$?
           fi
 
-          echo "$BUILD_OUTPUT"
+          echo "Build exit code: $BUILD_EXIT_CODE"
+
+          if [ $BUILD_EXIT_CODE -ne 0 ]; then
+            echo "Build failed!"
+            exit 1
+          fi
+
+          echo "Build succeeded!"
+          BUILD_OUTPUT="Build completed successfully"
 
           # Extract build version if available
           BUILD_VERSION=$(echo "$BUILD_OUTPUT" | grep -oP 'Build version: \K.*' || echo "unknown")
