@@ -76,11 +76,11 @@ jobs:
 
           if [ "${{ inputs.build_mode }}" == "release" ]; then
             echo "Creating release build..."
-            ddn supergraph build create --project hopeful-monkey-8713 --supergraph supergraph.yaml --mode release --out build.json
+            ddn supergraph build create --ci --project hopeful-monkey-8713 --supergraph supergraph.yaml --mode release --output-dir .
             BUILD_EXIT_CODE=$?
           else
             echo "Creating standard build..."
-            ddn supergraph build create --project hopeful-monkey-8713 --supergraph supergraph.yaml --out build.json
+            ddn supergraph build create --ci --project hopeful-monkey-8713 --supergraph supergraph.yaml --output-dir .
             BUILD_EXIT_CODE=$?
           fi
 
@@ -104,7 +104,7 @@ jobs:
         working-directory: sample-project-1
         run: |
           echo "Applying metadata to Hasura DDN project..."
-          ddn metadata apply --project hopeful-monkey-8713 || {
+          ddn metadata apply --ci --project hopeful-monkey-8713 --subgraph app || {
             echo "❌ Metadata apply failed"
             exit 1
           }
