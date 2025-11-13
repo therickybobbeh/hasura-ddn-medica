@@ -1,0 +1,152 @@
+name: Push to Image Registry
+
+# This workflow is OFF by default - only runs on manual trigger
+# Use this to build and push connector Docker images to Docker Hub
+on:
+  workflow_dispatch:
+    inputs:
+      connectors:
+        description: 'Connectors to build (comma-separated, or "all")'
+        required: true
+        type: string
+        default: 'all'
+      tag:
+        description: 'Docker image tag (e.g., latest, v1.0.0)'
+        required: true
+        type: string
+        default: 'latest'
+      push_to_registry:
+        description: 'Push to Docker Hub (or just build locally)'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: ${{ inputs.push_to_registry == true }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push connector images
+        run: |
+          cd sample-project-1/app/connector
+
+          # Parse connector list
+          if [ "${{ inputs.connectors }}" == "all" ]; then
+            CONNECTORS=$(ls -d */ | sed 's#/##g')
+          else
+            CONNECTORS=$(echo "${{ inputs.connectors }}" | tr ',' ' ')
+          fi
+
+          echo "Building connectors: $CONNECTORS"
+
+          for connector in $CONNECTORS; do
+            if [ -d "$connector" ]; then
+              echo ""
+              echo "========================================="
+              echo "Building: $connector"
+              echo "========================================="
+
+              cd "$connector"
+
+              # Check if Dockerfile exists
+              if [ -f ".hasura-connector/Dockerfile.$connector" ]; then
+                DOCKERFILE=".hasura-connector/Dockerfile.$connector"
+              elif [ -f "Dockerfile" ]; then
+                DOCKERFILE="Dockerfile"
+              else
+                echo "⚠️ No Dockerfile found for $connector, skipping..."
+                cd ..
+                continue
+              fi
+
+              # Build image
+              IMAGE_NAME="rickybobbeh/ddn-connector-$connector"
+              IMAGE_TAG="${{ inputs.tag }}"
+              FULL_IMAGE="$IMAGE_NAME:$IMAGE_TAG"
+
+              echo "Building: $FULL_IMAGE"
+
+              docker buildx build \
+                --platform linux/amd64,linux/arm64 \
+                -f "$DOCKERFILE" \
+                -t "$FULL_IMAGE" \
+                ${{ inputs.push_to_registry == true && '--push' || '--load' }} \
+                .
+
+              if [ $? -eq 0 ]; then
+                echo "✅ Successfully built: $FULL_IMAGE"
+
+                # Also tag as latest if pushing a version tag
+                if [[ "${{ inputs.tag }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] && [ "${{ inputs.push_to_registry }}" == "true" ]; then
+                  echo "Tagging as latest..."
+                  docker tag "$FULL_IMAGE" "$IMAGE_NAME:latest"
+                  docker push "$IMAGE_NAME:latest"
+                fi
+              else
+                echo "❌ Failed to build: $FULL_IMAGE"
+                exit 1
+              fi
+
+              cd ..
+            else
+              echo "⚠️ Connector directory not found: $connector"
+            fi
+          done
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "# 🐳 Docker Image Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- **Connectors:** ${{ inputs.connectors }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag:** ${{ inputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Pushed to Registry:** ${{ inputs.push_to_registry }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ inputs.push_to_registry }}" == "true" ]; then
+            echo "## 📦 Images Pushed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Images are available on Docker Hub:" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            if [ "${{ inputs.connectors }}" == "all" ]; then
+              cd sample-project-1/app/connector
+              for connector in */; do
+                connector_name="${connector%/}"
+                echo "- \`docker pull rickybobbeh/ddn-connector-$connector_name:${{ inputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
+              done
+            else
+              CONNECTORS=$(echo "${{ inputs.connectors }}" | tr ',' ' ')
+              for connector in $CONNECTORS; do
+                echo "- \`docker pull rickybobbeh/ddn-connector-$connector:${{ inputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
+              done
+            fi
+          else
+            echo "## 🔨 Build Only" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Images were built locally but not pushed to Docker Hub." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build process completed successfully" >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "# ❌ Docker Build Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The Docker build process failed. Please check the logs above for details." >> $GITHUB_STEP_SUMMARY

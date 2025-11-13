@@ -86,6 +86,28 @@ Runs every Monday at 9 AM UTC, or can be triggered manually.
 
 ---
 
+### 6. Push to Image Registry
+**File:** `push-to-image-registry.yml`
+**Trigger:** Manual (workflow_dispatch)
+**Status:** OFF by default
+
+Build and push connector Docker images to Docker Hub.
+
+**Parameters:**
+- `connectors`: Which connectors to build (comma-separated names, or "all")
+- `tag`: Docker image tag (e.g., latest, v1.0.0)
+- `push_to_registry`: Whether to push to Docker Hub or just build locally
+
+**Usage:**
+Go to Actions → Push to Image Registry → Run workflow
+
+**Example:**
+- Build all connectors with tag `latest` and push: `connectors: all, tag: latest, push: true`
+- Build specific connector: `connectors: neon_postgres_1, tag: v1.0.0, push: true`
+- Build multiple: `connectors: neon_postgres_1,neon_postgres_2, tag: dev, push: true`
+
+---
+
 ## Required Secrets
 
 Set these secrets in your GitHub repository settings:
@@ -93,6 +115,14 @@ Set these secrets in your GitHub repository settings:
 - `HASURA_DDN_PAT`: Your Hasura DDN Personal Access Token
   - Go to Hasura DDN Console → Settings → Personal Access Tokens
   - Create a new token with appropriate permissions
+  - Add to GitHub: Settings → Secrets and variables → Actions → New repository secret
+
+- `DOCKER_USERNAME`: Your Docker Hub username (required for Push to Image Registry)
+  - Your Docker Hub username (e.g., `rickybobbeh`)
+
+- `DOCKER_PASSWORD`: Your Docker Hub access token (required for Push to Image Registry)
+  - Go to Docker Hub → Account Settings → Security → New Access Token
+  - Create a token with Read & Write permissions
   - Add to GitHub: Settings → Secrets and variables → Actions → New repository secret
 
 ## Environment Variables
