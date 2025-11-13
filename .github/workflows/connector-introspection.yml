@@ -37,7 +37,7 @@ jobs:
 
       - name: Authenticate with Hasura DDN
         run: |
-          ddn auth login --pat ${{ secrets.HASURA_DDN_PAT }}
+          ddn auth login --access-token ${{ secrets.HASURA_DDN_PAT }}
         env:
           HASURA_DDN_PAT: ${{ secrets.HASURA_DDN_PAT }}
 
