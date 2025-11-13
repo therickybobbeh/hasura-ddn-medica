@@ -52,18 +52,6 @@ jobs:
         run: |
           ddn auth login --access-token ${{ secrets.HASURA_DDN_PAT }}
 
-      - name: Initialize DDN context
-        working-directory: sample-project-1
-        run: |
-          mkdir -p .hasura
-          cat > .hasura/context.yaml << 'EOF'
-          version: v3
-          project: hopeful-monkey-8713
-          supergraph: ./supergraph.yaml
-          EOF
-          echo "Created context file:"
-          cat .hasura/context.yaml
-
       - name: Set up environment variables
         working-directory: sample-project-1
         run: |
@@ -77,7 +65,7 @@ jobs:
         working-directory: sample-project-1
         run: |
           echo "Validating supergraph configuration..."
-          ddn supergraph validate --supergraph ./supergraph.yaml || echo "⚠️ Validation warnings detected"
+          echo "Skipping validation - will validate during build"
 
       - name: Build supergraph
         if: ${{ inputs.create_build == true }}
@@ -88,10 +76,10 @@ jobs:
 
           if [ "${{ inputs.build_mode }}" == "release" ]; then
             echo "Creating release build..."
-            BUILD_OUTPUT=$(ddn supergraph build create --project hopeful-monkey-8713 --supergraph ./supergraph.yaml --mode release)
+            BUILD_OUTPUT=$(ddn supergraph build create --project hopeful-monkey-8713 --supergraph supergraph.yaml --mode release --out build.json 2>&1)
           else
             echo "Creating standard build..."
-            BUILD_OUTPUT=$(ddn supergraph build create --project hopeful-monkey-8713 --supergraph ./supergraph.yaml)
+            BUILD_OUTPUT=$(ddn supergraph build create --project hopeful-monkey-8713 --supergraph supergraph.yaml --out build.json 2>&1)
           fi
 
           echo "$BUILD_OUTPUT"
