@@ -1,0 +1,1749 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: neon_postgres_lean
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: APP_NEON_POSTGRES_LEAN_READ_URL
+      write:
+        valueFromEnv: APP_NEON_POSTGRES_LEAN_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: APP_NEON_POSTGRES_LEAN_AUTHORIZATION_HEADER
+  schema:
+    version: v0.2
+    schema:
+      capabilities:
+        query:
+          aggregates:
+            count_scalar_type: int8
+      collections:
+        - arguments: {}
+          name: appointments_appointments
+          type: appointments_appointments
+          uniqueness_constraints:
+            appointments_pkey:
+              unique_columns:
+                - id
+        - arguments: {}
+          name: appointments_billing_records
+          type: appointments_billing_records
+          uniqueness_constraints:
+            billing_records_pkey:
+              unique_columns:
+                - id
+        - arguments: {}
+          name: medications_prescriptions
+          type: medications_prescriptions
+          uniqueness_constraints:
+            prescriptions_pkey:
+              unique_columns:
+                - id
+      functions: []
+      object_types:
+        appointments_appointments:
+          fields:
+            appointment_date:
+              type:
+                name: timestamptz
+                type: named
+            created_at:
+              type:
+                name: timestamptz
+                type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            member_id:
+              type:
+                name: uuid
+                type: named
+            notes:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            provider_id:
+              type:
+                name: uuid
+                type: named
+            status:
+              type:
+                name: text
+                type: named
+            updated_at:
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        appointments_billing_records:
+          fields:
+            amount_billed:
+              type:
+                name: int4
+                type: named
+            amount_paid:
+              type:
+                name: int4
+                type: named
+            claim_id:
+              type:
+                name: uuid
+                type: named
+            created_at:
+              type:
+                name: timestamptz
+                type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            payment_date:
+              type:
+                type: nullable
+                underlying_type:
+                  name: date
+                  type: named
+            payment_method:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            updated_at:
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        delete_appointments_appointments_by_id_response:
+          description: Responses from the 'delete_appointments_appointments_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: appointments_appointments
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_appointments_billing_records_by_id_response:
+          description: Responses from the 'delete_appointments_billing_records_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: appointments_billing_records
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_medications_prescriptions_by_id_response:
+          description: Responses from the 'delete_medications_prescriptions_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: medications_prescriptions
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_appointments_appointments_object:
+          fields:
+            appointment_date:
+              type:
+                name: timestamptz
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            member_id:
+              type:
+                name: uuid
+                type: named
+            notes:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            provider_id:
+              type:
+                name: uuid
+                type: named
+            status:
+              type:
+                name: text
+                type: named
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        insert_appointments_appointments_response:
+          description: Responses from the 'insert_appointments_appointments' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: appointments_appointments
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_appointments_billing_records_object:
+          fields:
+            amount_billed:
+              type:
+                name: int4
+                type: named
+            amount_paid:
+              type:
+                name: int4
+                type: named
+            claim_id:
+              type:
+                name: uuid
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            payment_date:
+              type:
+                type: nullable
+                underlying_type:
+                  name: date
+                  type: named
+            payment_method:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        insert_appointments_billing_records_response:
+          description: Responses from the 'insert_appointments_billing_records' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: appointments_billing_records
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_medications_prescriptions_object:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamp
+                  type: named
+            dosage:
+              type:
+                name: varchar
+                type: named
+            end_date:
+              type:
+                type: nullable
+                underlying_type:
+                  name: date
+                  type: named
+            frequency:
+              type:
+                name: varchar
+                type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            medication_name:
+              type:
+                name: varchar
+                type: named
+            member_id:
+              type:
+                name: uuid
+                type: named
+            notes:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            pharmacy:
+              type:
+                name: varchar
+                type: named
+            provider_id:
+              type:
+                name: uuid
+                type: named
+            refills_remaining:
+              type:
+                type: nullable
+                underlying_type:
+                  name: int4
+                  type: named
+            start_date:
+              type:
+                name: date
+                type: named
+            status:
+              type:
+                name: varchar
+                type: named
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamp
+                  type: named
+          foreign_keys: {}
+        insert_medications_prescriptions_response:
+          description: Responses from the 'insert_medications_prescriptions' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: medications_prescriptions
+                  type: named
+                type: array
+          foreign_keys: {}
+        medications_prescriptions:
+          fields:
+            created_at:
+              type:
+                name: timestamp
+                type: named
+            dosage:
+              type:
+                name: varchar
+                type: named
+            end_date:
+              type:
+                type: nullable
+                underlying_type:
+                  name: date
+                  type: named
+            frequency:
+              type:
+                name: varchar
+                type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            medication_name:
+              type:
+                name: varchar
+                type: named
+            member_id:
+              type:
+                name: uuid
+                type: named
+            notes:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            pharmacy:
+              type:
+                name: varchar
+                type: named
+            provider_id:
+              type:
+                name: uuid
+                type: named
+            refills_remaining:
+              type:
+                name: int4
+                type: named
+            start_date:
+              type:
+                name: date
+                type: named
+            status:
+              type:
+                name: varchar
+                type: named
+            updated_at:
+              type:
+                name: timestamp
+                type: named
+          foreign_keys: {}
+        update_appointments_appointments_by_id_response:
+          description: Responses from the 'update_appointments_appointments_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: appointments_appointments
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_appointments_appointments_by_id_update_columns:
+          description: Update the columns of the 'appointments_appointments' collection
+          fields:
+            appointment_date:
+              description: Update the 'appointment_date' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_appointment_date
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_created_at
+                  type: named
+            id:
+              description: Update the 'id' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_id
+                  type: named
+            member_id:
+              description: Update the 'member_id' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_member_id
+                  type: named
+            notes:
+              description: Update the 'notes' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_notes
+                  type: named
+            provider_id:
+              description: Update the 'provider_id' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_provider_id
+                  type: named
+            status:
+              description: Update the 'status' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_status
+                  type: named
+            updated_at:
+              description: Update the 'updated_at' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_updated_at
+                  type: named
+          foreign_keys: {}
+        update_appointments_billing_records_by_id_response:
+          description: Responses from the 'update_appointments_billing_records_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: appointments_billing_records
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_appointments_billing_records_by_id_update_columns:
+          description: Update the columns of the 'appointments_billing_records' collection
+          fields:
+            amount_billed:
+              description: Update the 'amount_billed' column in the 'appointments_billing_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_billing_records_amount_billed
+                  type: named
+            amount_paid:
+              description: Update the 'amount_paid' column in the 'appointments_billing_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_billing_records_amount_paid
+                  type: named
+            claim_id:
+              description: Update the 'claim_id' column in the 'appointments_billing_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_billing_records_claim_id
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'appointments_billing_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_billing_records_created_at
+                  type: named
+            id:
+              description: Update the 'id' column in the 'appointments_billing_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_billing_records_id
+                  type: named
+            payment_date:
+              description: Update the 'payment_date' column in the 'appointments_billing_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_billing_records_payment_date
+                  type: named
+            payment_method:
+              description: Update the 'payment_method' column in the 'appointments_billing_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_billing_records_payment_method
+                  type: named
+            updated_at:
+              description: Update the 'updated_at' column in the 'appointments_billing_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_billing_records_updated_at
+                  type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_appointment_date:
+          description: Update the 'appointment_date' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_created_at:
+          description: Update the 'created_at' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_id:
+          description: Update the 'id' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_member_id:
+          description: Update the 'member_id' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_notes:
+          description: Update the 'notes' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_provider_id:
+          description: Update the 'provider_id' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_status:
+          description: Update the 'status' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_updated_at:
+          description: Update the 'updated_at' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_appointments_billing_records_amount_billed:
+          description: Update the 'amount_billed' column in the 'appointments_billing_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: int4
+                type: named
+          foreign_keys: {}
+        update_column_appointments_billing_records_amount_paid:
+          description: Update the 'amount_paid' column in the 'appointments_billing_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: int4
+                type: named
+          foreign_keys: {}
+        update_column_appointments_billing_records_claim_id:
+          description: Update the 'claim_id' column in the 'appointments_billing_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_appointments_billing_records_created_at:
+          description: Update the 'created_at' column in the 'appointments_billing_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_appointments_billing_records_id:
+          description: Update the 'id' column in the 'appointments_billing_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_appointments_billing_records_payment_date:
+          description: Update the 'payment_date' column in the 'appointments_billing_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: date
+                  type: named
+          foreign_keys: {}
+        update_column_appointments_billing_records_payment_method:
+          description: Update the 'payment_method' column in the 'appointments_billing_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
+        update_column_appointments_billing_records_updated_at:
+          description: Update the 'updated_at' column in the 'appointments_billing_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_created_at:
+          description: Update the 'created_at' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamp
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_dosage:
+          description: Update the 'dosage' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: varchar
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_end_date:
+          description: Update the 'end_date' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: date
+                  type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_frequency:
+          description: Update the 'frequency' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: varchar
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_id:
+          description: Update the 'id' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_medication_name:
+          description: Update the 'medication_name' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: varchar
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_member_id:
+          description: Update the 'member_id' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_notes:
+          description: Update the 'notes' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_pharmacy:
+          description: Update the 'pharmacy' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: varchar
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_provider_id:
+          description: Update the 'provider_id' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_refills_remaining:
+          description: Update the 'refills_remaining' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: int4
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_start_date:
+          description: Update the 'start_date' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: date
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_status:
+          description: Update the 'status' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: varchar
+                type: named
+          foreign_keys: {}
+        update_column_medications_prescriptions_updated_at:
+          description: Update the 'updated_at' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamp
+                type: named
+          foreign_keys: {}
+        update_medications_prescriptions_by_id_response:
+          description: Responses from the 'update_medications_prescriptions_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: medications_prescriptions
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_medications_prescriptions_by_id_update_columns:
+          description: Update the columns of the 'medications_prescriptions' collection
+          fields:
+            created_at:
+              description: Update the 'created_at' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_created_at
+                  type: named
+            dosage:
+              description: Update the 'dosage' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_dosage
+                  type: named
+            end_date:
+              description: Update the 'end_date' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_end_date
+                  type: named
+            frequency:
+              description: Update the 'frequency' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_frequency
+                  type: named
+            id:
+              description: Update the 'id' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_id
+                  type: named
+            medication_name:
+              description: Update the 'medication_name' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_medication_name
+                  type: named
+            member_id:
+              description: Update the 'member_id' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_member_id
+                  type: named
+            notes:
+              description: Update the 'notes' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_notes
+                  type: named
+            pharmacy:
+              description: Update the 'pharmacy' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_pharmacy
+                  type: named
+            provider_id:
+              description: Update the 'provider_id' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_provider_id
+                  type: named
+            refills_remaining:
+              description: Update the 'refills_remaining' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_refills_remaining
+                  type: named
+            start_date:
+              description: Update the 'start_date' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_start_date
+                  type: named
+            status:
+              description: Update the 'status' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_status
+                  type: named
+            updated_at:
+              description: Update the 'updated_at' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_updated_at
+                  type: named
+          foreign_keys: {}
+      procedures:
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'appointments_appointments' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: appointments_appointments
+                  type: predicate
+          description: Delete any row on the 'appointments_appointments' collection using the 'id' key
+          name: delete_appointments_appointments_by_id
+          result_type:
+            name: delete_appointments_appointments_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'appointments_billing_records' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: appointments_billing_records
+                  type: predicate
+          description: Delete any row on the 'appointments_billing_records' collection using the 'id' key
+          name: delete_appointments_billing_records_by_id
+          result_type:
+            name: delete_appointments_billing_records_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'medications_prescriptions' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: medications_prescriptions
+                  type: predicate
+          description: Delete any row on the 'medications_prescriptions' collection using the 'id' key
+          name: delete_medications_prescriptions_by_id
+          result_type:
+            name: delete_medications_prescriptions_by_id_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_appointments_appointments_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'appointments_appointments' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: appointments_appointments
+                  type: predicate
+          description: Insert into the appointments_appointments table
+          name: insert_appointments_appointments
+          result_type:
+            name: insert_appointments_appointments_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_appointments_billing_records_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'appointments_billing_records' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: appointments_billing_records
+                  type: predicate
+          description: Insert into the appointments_billing_records table
+          name: insert_appointments_billing_records
+          result_type:
+            name: insert_appointments_billing_records_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_medications_prescriptions_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'medications_prescriptions' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: medications_prescriptions
+                  type: predicate
+          description: Insert into the medications_prescriptions table
+          name: insert_medications_prescriptions
+          result_type:
+            name: insert_medications_prescriptions_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'appointments_appointments' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: appointments_appointments
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'appointments_appointments' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: appointments_appointments
+                  type: predicate
+            update_columns:
+              type:
+                name: update_appointments_appointments_by_id_update_columns
+                type: named
+          description: Update any row on the 'appointments_appointments' collection using the 'id' key
+          name: update_appointments_appointments_by_id
+          result_type:
+            name: update_appointments_appointments_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'appointments_billing_records' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: appointments_billing_records
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'appointments_billing_records' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: appointments_billing_records
+                  type: predicate
+            update_columns:
+              type:
+                name: update_appointments_billing_records_by_id_update_columns
+                type: named
+          description: Update any row on the 'appointments_billing_records' collection using the 'id' key
+          name: update_appointments_billing_records_by_id
+          result_type:
+            name: update_appointments_billing_records_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'medications_prescriptions' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: medications_prescriptions
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'medications_prescriptions' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: medications_prescriptions
+                  type: predicate
+            update_columns:
+              type:
+                name: update_medications_prescriptions_by_id_update_columns
+                type: named
+          description: Update any row on the 'medications_prescriptions' collection using the 'id' key
+          name: update_medications_prescriptions_by_id
+          result_type:
+            name: update_medications_prescriptions_by_id_response
+            type: named
+      request_arguments: null
+      scalar_types:
+        date:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: date
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: date
+        int4:
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            bit_and:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int4
+                  type: named
+              type: custom
+            bit_or:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int4
+                  type: named
+              type: custom
+            bit_xor:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int4
+                  type: named
+              type: custom
+            max:
+              type: max
+            min:
+              type: min
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            sum:
+              result_type: int8
+              type: sum
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: int4
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: int32
+        int8:
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            bit_and:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int8
+                  type: named
+              type: custom
+            bit_or:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int8
+                  type: named
+              type: custom
+            bit_xor:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int8
+                  type: named
+              type: custom
+            max:
+              type: max
+            min:
+              type: min
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            sum:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: int8
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: int64
+        numeric:
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            max:
+              type: max
+            min:
+              type: min
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            sum:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: numeric
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: bigdecimal
+        text:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _ilike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _in:
+              type: in
+            _iregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _like:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nilike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _niregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nlike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _regex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            starts_with:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            ts_match_tt:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: string
+        timestamp:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: timestamp
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: timestamp
+        timestamptz:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: timestamptz
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: timestamptz
+        uuid:
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: uuid
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: uuid
+        varchar:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _ilike:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            _in:
+              type: in
+            _iregex:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            _like:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            _nilike:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            _niregex:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            _nlike:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            _nregex:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            _regex:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            starts_with:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+            ts_match_tt:
+              argument_type:
+                name: varchar
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: string
+    capabilities:
+      capabilities:
+        mutation:
+          explain: {}
+          transactional: {}
+        query:
+          aggregates: {}
+          exists:
+            nested_collections: {}
+          explain: {}
+          nested_fields:
+            aggregates: {}
+            filter_by: {}
+            order_by: {}
+          variables: {}
+        relationships:
+          nested:
+            array: {}
+          order_by_aggregate: {}
+          relation_comparisons: {}
+      version: 0.2.4

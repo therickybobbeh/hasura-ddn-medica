@@ -1,0 +1,277 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: MedicationsPrescriptions
+  fields:
+    - name: createdAt
+      type: Timestamp!
+    - name: dosage
+      type: String_1!
+    - name: endDate
+      type: Date
+    - name: frequency
+      type: String_1!
+    - name: id
+      type: Uuid!
+    - name: medicationName
+      type: String_1!
+    - name: memberId
+      type: Uuid!
+    - name: notes
+      type: String_1
+    - name: pharmacy
+      type: String_1!
+    - name: providerId
+      type: Uuid!
+    - name: refillsRemaining
+      type: Int32!
+    - name: startDate
+      type: Date!
+    - name: status
+      type: String_1!
+    - name: updatedAt
+      type: Timestamp!
+  graphql:
+    typeName: MedicationsPrescriptions
+    inputTypeName: MedicationsPrescriptionsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: neon_postgres_lean
+      dataConnectorObjectType: medications_prescriptions
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        dosage:
+          column:
+            name: dosage
+        endDate:
+          column:
+            name: end_date
+        frequency:
+          column:
+            name: frequency
+        id:
+          column:
+            name: id
+        medicationName:
+          column:
+            name: medication_name
+        memberId:
+          column:
+            name: member_id
+        notes:
+          column:
+            name: notes
+        pharmacy:
+          column:
+            name: pharmacy
+        providerId:
+          column:
+            name: provider_id
+        refillsRemaining:
+          column:
+            name: refills_remaining
+        startDate:
+          column:
+            name: start_date
+        status:
+          column:
+            name: status
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: MedicationsPrescriptions
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - dosage
+          - endDate
+          - frequency
+          - id
+          - medicationName
+          - memberId
+          - notes
+          - pharmacy
+          - providerId
+          - refillsRemaining
+          - startDate
+          - status
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: MedicationsPrescriptionsBoolExp
+  operand:
+    object:
+      type: MedicationsPrescriptions
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: dosage
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: endDate
+          booleanExpressionType: DateBoolExp_2
+        - fieldName: frequency
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp_2
+        - fieldName: medicationName
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: memberId
+          booleanExpressionType: UuidBoolExp_2
+        - fieldName: notes
+          booleanExpressionType: TextBoolExp_2
+        - fieldName: pharmacy
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: providerId
+          booleanExpressionType: UuidBoolExp_2
+        - fieldName: refillsRemaining
+          booleanExpressionType: Int4BoolExp_2
+        - fieldName: startDate
+          booleanExpressionType: DateBoolExp_2
+        - fieldName: status
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: updatedAt
+          booleanExpressionType: TimestampBoolExp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: MedicationsPrescriptionsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: MedicationsPrescriptionsAggExp
+  operand:
+    object:
+      aggregatedType: MedicationsPrescriptions
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: dosage
+          aggregateExpression: VarcharAggExp
+        - fieldName: endDate
+          aggregateExpression: DateAggExp_2
+        - fieldName: frequency
+          aggregateExpression: VarcharAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp_2
+        - fieldName: medicationName
+          aggregateExpression: VarcharAggExp
+        - fieldName: memberId
+          aggregateExpression: UuidAggExp_2
+        - fieldName: notes
+          aggregateExpression: TextAggExp_2
+        - fieldName: pharmacy
+          aggregateExpression: VarcharAggExp
+        - fieldName: providerId
+          aggregateExpression: UuidAggExp_2
+        - fieldName: refillsRemaining
+          aggregateExpression: Int4AggExp_2
+        - fieldName: startDate
+          aggregateExpression: DateAggExp_2
+        - fieldName: status
+          aggregateExpression: VarcharAggExp
+        - fieldName: updatedAt
+          aggregateExpression: TimestampAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: MedicationsPrescriptionsAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: MedicationsPrescriptionsOrderByExp
+  operand:
+    object:
+      orderedType: MedicationsPrescriptions
+      orderableFields:
+        - fieldName: createdAt
+          orderByExpression: TimestampOrderByExp
+        - fieldName: dosage
+          orderByExpression: String1OrderByExp
+        - fieldName: endDate
+          orderByExpression: DateOrderByExp
+        - fieldName: frequency
+          orderByExpression: String1OrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: medicationName
+          orderByExpression: String1OrderByExp
+        - fieldName: memberId
+          orderByExpression: UuidOrderByExp
+        - fieldName: notes
+          orderByExpression: String1OrderByExp
+        - fieldName: pharmacy
+          orderByExpression: String1OrderByExp
+        - fieldName: providerId
+          orderByExpression: UuidOrderByExp
+        - fieldName: refillsRemaining
+          orderByExpression: Int32OrderByExp
+        - fieldName: startDate
+          orderByExpression: DateOrderByExp
+        - fieldName: status
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestampOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: MedicationsPrescriptionsOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: MedicationsPrescriptions
+  objectType: MedicationsPrescriptions
+  source:
+    dataConnectorName: neon_postgres_lean
+    collection: medications_prescriptions
+  filterExpressionType: MedicationsPrescriptionsBoolExp
+  aggregateExpression: MedicationsPrescriptionsAggExp
+  orderByExpression: MedicationsPrescriptionsOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: medicationsPrescriptions
+      subscription:
+        rootField: medicationsPrescriptions
+    selectUniques:
+      - queryRootField: medicationsPrescriptionsById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: medicationsPrescriptionsById
+    filterInputTypeName: MedicationsPrescriptionsFilterInput
+    aggregate:
+      queryRootField: medicationsPrescriptionsAggregate
+      subscription:
+        rootField: medicationsPrescriptionsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: MedicationsPrescriptions
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

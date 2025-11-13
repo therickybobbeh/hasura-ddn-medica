@@ -1,0 +1,70 @@
+name: Connector Documentation Sync
+
+# Keep connector documentation in sync with actual connectors
+on:
+  workflow_dispatch:
+  schedule:
+    # Run weekly on Mondays at 9 AM UTC
+    - cron: '0 9 * * 1'
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Hasura DDN CLI
+        run: |
+          curl -L https://graphql-engine-cdn.hasura.io/ddn/cli/v4/get.sh | bash
+          echo "$HOME/.ddn/bin" >> $GITHUB_PATH
+
+      - name: Generate connector documentation
+        run: |
+          cd sample-project-1
+          mkdir -p docs/connectors
+
+          echo "# Connectors Documentation" > docs/connectors/README.md
+          echo "" >> docs/connectors/README.md
+          echo "Auto-generated documentation for all connectors in this project." >> docs/connectors/README.md
+          echo "" >> docs/connectors/README.md
+
+          # List all connectors
+          for subgraph in app globals; do
+            if [ -d "$subgraph/connector" ]; then
+              echo "## $subgraph Subgraph" >> docs/connectors/README.md
+              echo "" >> docs/connectors/README.md
+
+              cd "$subgraph/connector"
+              for connector_dir in */; do
+                connector_name="${connector_dir%/}"
+                echo "### $connector_name" >> ../../docs/connectors/README.md
+
+                if [ -f "$connector_dir/connector.yaml" ]; then
+                  echo "\`\`\`yaml" >> ../../docs/connectors/README.md
+                  head -20 "$connector_dir/connector.yaml" >> ../../docs/connectors/README.md
+                  echo "\`\`\`" >> ../../docs/connectors/README.md
+                fi
+
+                echo "" >> ../../docs/connectors/README.md
+              done
+              cd ../..
+            fi
+          done
+
+      - name: Commit documentation changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add .
+          git diff --staged --quiet || git commit -m "docs: update connector documentation [skip ci]"
+          git push
+
+      - name: Summary
+        run: |
+          echo "### Documentation Sync Complete ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Connector documentation has been updated." >> $GITHUB_STEP_SUMMARY

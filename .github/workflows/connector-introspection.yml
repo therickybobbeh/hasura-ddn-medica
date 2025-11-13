@@ -1,0 +1,88 @@
+name: Connector Introspection & Metadata Update
+
+# This workflow is OFF by default - only runs on manual trigger
+# Use this when adding new connectors or updating existing connector schemas
+on:
+  workflow_dispatch:
+    inputs:
+      connector_name:
+        description: 'Connector name to introspect (leave empty for all)'
+        required: false
+        type: string
+      subgraph:
+        description: 'Subgraph name (app, globals, or leave empty for all)'
+        required: false
+        type: string
+        default: 'app'
+      auto_add_models:
+        description: 'Automatically add all models after introspection'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  introspect-connector:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Hasura DDN CLI
+        run: |
+          curl -L https://graphql-engine-cdn.hasura.io/ddn/cli/v4/get.sh | bash
+          echo "$HOME/.ddn/bin" >> $GITHUB_PATH
+
+      - name: Authenticate with Hasura DDN
+        run: |
+          ddn auth login --pat ${{ secrets.HASURA_DDN_PAT }}
+        env:
+          HASURA_DDN_PAT: ${{ secrets.HASURA_DDN_PAT }}
+
+      - name: Introspect specific connector
+        if: ${{ inputs.connector_name != '' }}
+        run: |
+          echo "Introspecting connector: ${{ inputs.connector_name }}"
+          cd sample-project-1
+          ddn connector introspect ${{ inputs.connector_name }}
+
+      - name: Introspect all connectors in subgraph
+        if: ${{ inputs.connector_name == '' && inputs.subgraph != '' }}
+        run: |
+          echo "Introspecting all connectors in subgraph: ${{ inputs.subgraph }}"
+          cd sample-project-1/${{ inputs.subgraph }}/connector
+          for connector_dir in */; do
+            connector_name="${connector_dir%/}"
+            echo "Introspecting: $connector_name"
+            ddn connector introspect "$connector_name" || echo "Failed to introspect $connector_name"
+          done
+
+      - name: Add models automatically
+        if: ${{ inputs.auto_add_models == true }}
+        run: |
+          echo "Auto-adding models from introspected connectors"
+          cd sample-project-1
+          if [ -n "${{ inputs.connector_name }}" ]; then
+            ddn model add ${{ inputs.connector_name }} "*"
+          else
+            # Add models for all connectors
+            ddn model add "*" "*"
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add .
+          git diff --staged --quiet || git commit -m "chore: update connector metadata after introspection [skip ci]"
+          git push
+
+      - name: Summary
+        run: |
+          echo "### Connector Introspection Complete ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Connector:** ${{ inputs.connector_name || 'All connectors' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Subgraph:** ${{ inputs.subgraph || 'All subgraphs' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Auto-add models:** ${{ inputs.auto_add_models }}" >> $GITHUB_STEP_SUMMARY

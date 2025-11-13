@@ -1,0 +1,205 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: AppointmentsBillingRecords
+  fields:
+    - name: amountBilled
+      type: Int32!
+    - name: amountPaid
+      type: Int32!
+    - name: claimId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamptz!
+    - name: id
+      type: Uuid!
+    - name: paymentDate
+      type: Date
+    - name: paymentMethod
+      type: String_1
+    - name: updatedAt
+      type: Timestamptz!
+  graphql:
+    typeName: AppointmentsBillingRecords
+    inputTypeName: AppointmentsBillingRecordsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: neon_postgres_lean
+      dataConnectorObjectType: appointments_billing_records
+      fieldMapping:
+        amountBilled:
+          column:
+            name: amount_billed
+        amountPaid:
+          column:
+            name: amount_paid
+        claimId:
+          column:
+            name: claim_id
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        paymentDate:
+          column:
+            name: payment_date
+        paymentMethod:
+          column:
+            name: payment_method
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: AppointmentsBillingRecords
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - amountBilled
+          - amountPaid
+          - claimId
+          - createdAt
+          - id
+          - paymentDate
+          - paymentMethod
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: AppointmentsBillingRecordsBoolExp
+  operand:
+    object:
+      type: AppointmentsBillingRecords
+      comparableFields:
+        - fieldName: amountBilled
+          booleanExpressionType: Int4BoolExp_2
+        - fieldName: amountPaid
+          booleanExpressionType: Int4BoolExp_2
+        - fieldName: claimId
+          booleanExpressionType: UuidBoolExp_2
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp_2
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp_2
+        - fieldName: paymentDate
+          booleanExpressionType: DateBoolExp_2
+        - fieldName: paymentMethod
+          booleanExpressionType: TextBoolExp_2
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp_2
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: AppointmentsBillingRecordsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: AppointmentsBillingRecordsAggExp
+  operand:
+    object:
+      aggregatedType: AppointmentsBillingRecords
+      aggregatableFields:
+        - fieldName: amountBilled
+          aggregateExpression: Int4AggExp_2
+        - fieldName: amountPaid
+          aggregateExpression: Int4AggExp_2
+        - fieldName: claimId
+          aggregateExpression: UuidAggExp_2
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp_2
+        - fieldName: id
+          aggregateExpression: UuidAggExp_2
+        - fieldName: paymentDate
+          aggregateExpression: DateAggExp_2
+        - fieldName: paymentMethod
+          aggregateExpression: TextAggExp_2
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp_2
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: AppointmentsBillingRecordsAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: AppointmentsBillingRecordsOrderByExp
+  operand:
+    object:
+      orderedType: AppointmentsBillingRecords
+      orderableFields:
+        - fieldName: amountBilled
+          orderByExpression: Int32OrderByExp
+        - fieldName: amountPaid
+          orderByExpression: Int32OrderByExp
+        - fieldName: claimId
+          orderByExpression: UuidOrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: paymentDate
+          orderByExpression: DateOrderByExp
+        - fieldName: paymentMethod
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestamptzOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: AppointmentsBillingRecordsOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: AppointmentsBillingRecords
+  objectType: AppointmentsBillingRecords
+  source:
+    dataConnectorName: neon_postgres_lean
+    collection: appointments_billing_records
+  filterExpressionType: AppointmentsBillingRecordsBoolExp
+  aggregateExpression: AppointmentsBillingRecordsAggExp
+  orderByExpression: AppointmentsBillingRecordsOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: appointmentsBillingRecords
+      subscription:
+        rootField: appointmentsBillingRecords
+    selectUniques:
+      - queryRootField: appointmentsBillingRecordsById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: appointmentsBillingRecordsById
+    filterInputTypeName: AppointmentsBillingRecordsFilterInput
+    aggregate:
+      queryRootField: appointmentsBillingRecordsAggregate
+      subscription:
+        rootField: appointmentsBillingRecordsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: AppointmentsBillingRecords
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

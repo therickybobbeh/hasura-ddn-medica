@@ -1,0 +1,188 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ProviderRecords_1
+  description: Healthcare providers (doctors, hospitals, etc.)
+  fields:
+    - name: createdAt
+      type: Timestamptz!
+    - name: id
+      type: Uuid!
+    - name: name
+      type: String_1!
+    - name: npi
+      type: String_1!
+    - name: specialty
+      type: String_1!
+    - name: updatedAt
+      type: Timestamptz!
+  graphql:
+    typeName: ProviderRecords1
+    inputTypeName: ProviderRecords1Input
+  dataConnectorTypeMapping:
+    - dataConnectorName: neon_postgres_2
+      dataConnectorObjectType: provider_records
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        name:
+          column:
+            name: name
+        npi:
+          column:
+            name: npi
+        specialty:
+          column:
+            name: specialty
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ProviderRecords_1
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - name
+          - npi
+          - specialty
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ProviderRecordsBoolExp_1
+  operand:
+    object:
+      type: ProviderRecords_1
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp_1
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp_1
+        - fieldName: name
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: npi
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: specialty
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp_1
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ProviderRecordsBoolExp1
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ProviderRecordsAggExp_1
+  operand:
+    object:
+      aggregatedType: ProviderRecords_1
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp_1
+        - fieldName: id
+          aggregateExpression: UuidAggExp_1
+        - fieldName: name
+          aggregateExpression: TextAggExp_1
+        - fieldName: npi
+          aggregateExpression: TextAggExp_1
+        - fieldName: specialty
+          aggregateExpression: TextAggExp_1
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp_1
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: ProviderRecordsAggExp1
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: ProviderRecords1OrderByExp
+  operand:
+    object:
+      orderedType: ProviderRecords_1
+      orderableFields:
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: name
+          orderByExpression: String1OrderByExp
+        - fieldName: npi
+          orderByExpression: String1OrderByExp
+        - fieldName: specialty
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestamptzOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: ProviderRecords1OrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: ProviderRecords_1
+  objectType: ProviderRecords_1
+  source:
+    dataConnectorName: neon_postgres_2
+    collection: provider_records
+  filterExpressionType: ProviderRecordsBoolExp_1
+  aggregateExpression: ProviderRecordsAggExp_1
+  orderByExpression: ProviderRecords1OrderByExp
+  graphql:
+    selectMany:
+      queryRootField: providerRecords1
+      subscription:
+        rootField: providerRecords1
+    selectUniques:
+      - queryRootField: providerRecords1ByNpi
+        uniqueIdentifier:
+          - npi
+        subscription:
+          rootField: providerRecords1ByNpi
+      - queryRootField: providerRecords1ById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: providerRecords1ById
+    filterInputTypeName: ProviderRecords1FilterInput
+    aggregate:
+      queryRootField: providerRecords1Aggregate
+      subscription:
+        rootField: providerRecords1Aggregate
+  description: Healthcare providers (doctors, hospitals, etc.)
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: ProviderRecords_1
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

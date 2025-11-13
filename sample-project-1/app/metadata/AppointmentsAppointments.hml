@@ -1,0 +1,205 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: AppointmentsAppointments
+  fields:
+    - name: appointmentDate
+      type: Timestamptz!
+    - name: createdAt
+      type: Timestamptz!
+    - name: id
+      type: Uuid!
+    - name: memberId
+      type: Uuid!
+    - name: notes
+      type: String_1
+    - name: providerId
+      type: Uuid!
+    - name: status
+      type: String_1!
+    - name: updatedAt
+      type: Timestamptz!
+  graphql:
+    typeName: AppointmentsAppointments
+    inputTypeName: AppointmentsAppointmentsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: neon_postgres_lean
+      dataConnectorObjectType: appointments_appointments
+      fieldMapping:
+        appointmentDate:
+          column:
+            name: appointment_date
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        memberId:
+          column:
+            name: member_id
+        notes:
+          column:
+            name: notes
+        providerId:
+          column:
+            name: provider_id
+        status:
+          column:
+            name: status
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: AppointmentsAppointments
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - appointmentDate
+          - createdAt
+          - id
+          - memberId
+          - notes
+          - providerId
+          - status
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: AppointmentsAppointmentsBoolExp
+  operand:
+    object:
+      type: AppointmentsAppointments
+      comparableFields:
+        - fieldName: appointmentDate
+          booleanExpressionType: TimestamptzBoolExp_2
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp_2
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp_2
+        - fieldName: memberId
+          booleanExpressionType: UuidBoolExp_2
+        - fieldName: notes
+          booleanExpressionType: TextBoolExp_2
+        - fieldName: providerId
+          booleanExpressionType: UuidBoolExp_2
+        - fieldName: status
+          booleanExpressionType: TextBoolExp_2
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp_2
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: AppointmentsAppointmentsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: AppointmentsAppointmentsAggExp
+  operand:
+    object:
+      aggregatedType: AppointmentsAppointments
+      aggregatableFields:
+        - fieldName: appointmentDate
+          aggregateExpression: TimestamptzAggExp_2
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp_2
+        - fieldName: id
+          aggregateExpression: UuidAggExp_2
+        - fieldName: memberId
+          aggregateExpression: UuidAggExp_2
+        - fieldName: notes
+          aggregateExpression: TextAggExp_2
+        - fieldName: providerId
+          aggregateExpression: UuidAggExp_2
+        - fieldName: status
+          aggregateExpression: TextAggExp_2
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp_2
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: AppointmentsAppointmentsAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: AppointmentsAppointmentsOrderByExp
+  operand:
+    object:
+      orderedType: AppointmentsAppointments
+      orderableFields:
+        - fieldName: appointmentDate
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: memberId
+          orderByExpression: UuidOrderByExp
+        - fieldName: notes
+          orderByExpression: String1OrderByExp
+        - fieldName: providerId
+          orderByExpression: UuidOrderByExp
+        - fieldName: status
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestamptzOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: AppointmentsAppointmentsOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: AppointmentsAppointments
+  objectType: AppointmentsAppointments
+  source:
+    dataConnectorName: neon_postgres_lean
+    collection: appointments_appointments
+  filterExpressionType: AppointmentsAppointmentsBoolExp
+  aggregateExpression: AppointmentsAppointmentsAggExp
+  orderByExpression: AppointmentsAppointmentsOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: appointmentsAppointments
+      subscription:
+        rootField: appointmentsAppointments
+    selectUniques:
+      - queryRootField: appointmentsAppointmentsById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: appointmentsAppointmentsById
+    filterInputTypeName: AppointmentsAppointmentsFilterInput
+    aggregate:
+      queryRootField: appointmentsAppointmentsAggregate
+      subscription:
+        rootField: appointmentsAppointmentsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: AppointmentsAppointments
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

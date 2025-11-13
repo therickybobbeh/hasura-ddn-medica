@@ -1,0 +1,171 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: EligibilityChecks_1
+  description: Member eligibility verification results
+  fields:
+    - name: checkedAt
+      type: Timestamptz!
+    - name: createdAt
+      type: Timestamptz!
+    - name: id
+      type: Uuid!
+    - name: memberId
+      type: Uuid!
+    - name: result
+      type: Json!
+  graphql:
+    typeName: EligibilityChecks1
+    inputTypeName: EligibilityChecks1Input
+  dataConnectorTypeMapping:
+    - dataConnectorName: neon_postgres_2
+      dataConnectorObjectType: eligibility_checks
+      fieldMapping:
+        checkedAt:
+          column:
+            name: checked_at
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        memberId:
+          column:
+            name: member_id
+        result:
+          column:
+            name: result
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: EligibilityChecks_1
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - checkedAt
+          - createdAt
+          - id
+          - memberId
+          - result
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: EligibilityChecksBoolExp_1
+  operand:
+    object:
+      type: EligibilityChecks_1
+      comparableFields:
+        - fieldName: checkedAt
+          booleanExpressionType: TimestamptzBoolExp_1
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp_1
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp_1
+        - fieldName: memberId
+          booleanExpressionType: UuidBoolExp_1
+        - fieldName: result
+          booleanExpressionType: JsonbBoolExp_1
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: EligibilityChecksBoolExp1
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: EligibilityChecksAggExp_1
+  operand:
+    object:
+      aggregatedType: EligibilityChecks_1
+      aggregatableFields:
+        - fieldName: checkedAt
+          aggregateExpression: TimestamptzAggExp_1
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp_1
+        - fieldName: id
+          aggregateExpression: UuidAggExp_1
+        - fieldName: memberId
+          aggregateExpression: UuidAggExp_1
+        - fieldName: result
+          aggregateExpression: JsonbAggExp_1
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: EligibilityChecksAggExp1
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: EligibilityChecks1OrderByExp
+  operand:
+    object:
+      orderedType: EligibilityChecks_1
+      orderableFields:
+        - fieldName: checkedAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: memberId
+          orderByExpression: UuidOrderByExp
+        - fieldName: result
+          orderByExpression: JsonOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: EligibilityChecks1OrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: EligibilityChecks_1
+  objectType: EligibilityChecks_1
+  source:
+    dataConnectorName: neon_postgres_2
+    collection: eligibility_checks
+  filterExpressionType: EligibilityChecksBoolExp_1
+  aggregateExpression: EligibilityChecksAggExp_1
+  orderByExpression: EligibilityChecks1OrderByExp
+  graphql:
+    selectMany:
+      queryRootField: eligibilityChecks1
+      subscription:
+        rootField: eligibilityChecks1
+    selectUniques:
+      - queryRootField: eligibilityChecks1ById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: eligibilityChecks1ById
+    filterInputTypeName: EligibilityChecks1FilterInput
+    aggregate:
+      queryRootField: eligibilityChecks1Aggregate
+      subscription:
+        rootField: eligibilityChecks1Aggregate
+  description: Member eligibility verification results
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: EligibilityChecks_1
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

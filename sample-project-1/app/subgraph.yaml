@@ -1,0 +1,35 @@
+kind: Subgraph
+version: v2
+definition:
+  name: app
+  generator:
+    rootPath: .
+    namingConvention: graphql
+  includePaths:
+    - metadata
+  envMapping:
+    APP_NEON_POSTGRES_1_AUTHORIZATION_HEADER:
+      fromEnv: APP_NEON_POSTGRES_1_AUTHORIZATION_HEADER
+    APP_NEON_POSTGRES_1_READ_URL:
+      fromEnv: APP_NEON_POSTGRES_1_READ_URL
+    APP_NEON_POSTGRES_1_WRITE_URL:
+      fromEnv: APP_NEON_POSTGRES_1_WRITE_URL
+    APP_NEON_POSTGRES_2_AUTHORIZATION_HEADER:
+      fromEnv: APP_NEON_POSTGRES_2_AUTHORIZATION_HEADER
+    APP_NEON_POSTGRES_2_READ_URL:
+      fromEnv: APP_NEON_POSTGRES_2_READ_URL
+    APP_NEON_POSTGRES_2_WRITE_URL:
+      fromEnv: APP_NEON_POSTGRES_2_WRITE_URL
+    APP_NEON_POSTGRES_LEAN_AUTHORIZATION_HEADER:
+      fromEnv: APP_NEON_POSTGRES_LEAN_AUTHORIZATION_HEADER
+    APP_NEON_POSTGRES_LEAN_READ_URL:
+      fromEnv: APP_NEON_POSTGRES_LEAN_READ_URL
+    APP_NEON_POSTGRES_LEAN_WRITE_URL:
+      fromEnv: APP_NEON_POSTGRES_LEAN_WRITE_URL
+  connectors:
+    - path: connector/neon_postgres_1/connector.yaml
+      connectorLinkName: neon_postgres_1
+    - path: connector/neon_postgres_2/connector.yaml
+      connectorLinkName: neon_postgres_2
+    - path: connector/neon_postgres_lean/connector.yaml
+      connectorLinkName: neon_postgres_lean

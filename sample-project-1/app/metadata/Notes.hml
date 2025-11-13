@@ -1,0 +1,159 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Notes
+  description: Case management notes for members
+  fields:
+    - name: body
+      type: String_1!
+    - name: createdAt
+      type: Timestamptz!
+    - name: id
+      type: Uuid!
+    - name: memberId
+      type: Uuid!
+  graphql:
+    typeName: Notes
+    inputTypeName: NotesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: neon_postgres_1
+      dataConnectorObjectType: notes
+      fieldMapping:
+        body:
+          column:
+            name: body
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        memberId:
+          column:
+            name: member_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Notes
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - body
+          - createdAt
+          - id
+          - memberId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: NotesBoolExp
+  operand:
+    object:
+      type: Notes
+      comparableFields:
+        - fieldName: body
+          booleanExpressionType: TextBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: memberId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: NotesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: NotesAggExp
+  operand:
+    object:
+      aggregatedType: Notes
+      aggregatableFields:
+        - fieldName: body
+          aggregateExpression: TextAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: memberId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: NotesAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: NotesOrderByExp
+  operand:
+    object:
+      orderedType: Notes
+      orderableFields:
+        - fieldName: body
+          orderByExpression: String1OrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: memberId
+          orderByExpression: UuidOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: NotesOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: Notes
+  objectType: Notes
+  source:
+    dataConnectorName: neon_postgres_1
+    collection: notes
+  filterExpressionType: NotesBoolExp
+  aggregateExpression: NotesAggExp
+  orderByExpression: NotesOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: notes
+      subscription:
+        rootField: notes
+    selectUniques:
+      - queryRootField: notesById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: notesById
+    filterInputTypeName: NotesFilterInput
+    aggregate:
+      queryRootField: notesAggregate
+      subscription:
+        rootField: notesAggregate
+  description: Case management notes for members
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Notes
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

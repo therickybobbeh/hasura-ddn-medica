@@ -1,0 +1,195 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Members_1
+  description: Health plan members/patients
+  fields:
+    - name: createdAt
+      type: Timestamptz!
+    - name: dob
+      type: Date!
+    - name: firstName
+      type: String_1!
+    - name: id
+      type: Uuid!
+    - name: lastName
+      type: String_1!
+    - name: plan
+      type: String_1!
+    - name: updatedAt
+      type: Timestamptz!
+  graphql:
+    typeName: Members1
+    inputTypeName: Members1Input
+  dataConnectorTypeMapping:
+    - dataConnectorName: neon_postgres_2
+      dataConnectorObjectType: members
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        dob:
+          column:
+            name: dob
+        firstName:
+          column:
+            name: first_name
+        id:
+          column:
+            name: id
+        lastName:
+          column:
+            name: last_name
+        plan:
+          column:
+            name: plan
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Members_1
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - dob
+          - firstName
+          - id
+          - lastName
+          - plan
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: MembersBoolExp_1
+  operand:
+    object:
+      type: Members_1
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp_1
+        - fieldName: dob
+          booleanExpressionType: DateBoolExp_1
+        - fieldName: firstName
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp_1
+        - fieldName: lastName
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: plan
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp_1
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: MembersBoolExp1
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: MembersAggExp_1
+  operand:
+    object:
+      aggregatedType: Members_1
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp_1
+        - fieldName: dob
+          aggregateExpression: DateAggExp_1
+        - fieldName: firstName
+          aggregateExpression: TextAggExp_1
+        - fieldName: id
+          aggregateExpression: UuidAggExp_1
+        - fieldName: lastName
+          aggregateExpression: TextAggExp_1
+        - fieldName: plan
+          aggregateExpression: TextAggExp_1
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp_1
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: MembersAggExp1
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: Members1OrderByExp
+  operand:
+    object:
+      orderedType: Members_1
+      orderableFields:
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: dob
+          orderByExpression: DateOrderByExp
+        - fieldName: firstName
+          orderByExpression: String1OrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: lastName
+          orderByExpression: String1OrderByExp
+        - fieldName: plan
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestamptzOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: Members1OrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: Members_1
+  objectType: Members_1
+  source:
+    dataConnectorName: neon_postgres_2
+    collection: members
+  filterExpressionType: MembersBoolExp_1
+  aggregateExpression: MembersAggExp_1
+  orderByExpression: Members1OrderByExp
+  graphql:
+    selectMany:
+      queryRootField: members1
+      subscription:
+        rootField: members1
+    selectUniques:
+      - queryRootField: members1ById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: members1ById
+    filterInputTypeName: Members1FilterInput
+    aggregate:
+      queryRootField: members1Aggregate
+      subscription:
+        rootField: members1Aggregate
+  description: Health plan members/patients
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Members_1
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

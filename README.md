@@ -30,7 +30,7 @@ kubectl cluster-info
 
 ```bash
 # Initialize new project
-ddn project init my-api
+ddn supertraph init my-api && cd my-api
 cd my-api
 ```
 
@@ -38,7 +38,7 @@ cd my-api
 
 ```bash
 # Add PostgreSQL connector (interactive)
-ddn connector add my_postgres -i
+ddn connector init my_postgres -i
 
 # Follow prompts:
 # - Connector: hasura/postgres

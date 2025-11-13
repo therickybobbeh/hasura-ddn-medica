@@ -1,0 +1,248 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Claims_1
+  description: Medical claims submitted for services
+  fields:
+    - name: allowedCents
+      type: Int32!
+      description: Amount allowed by plan in cents
+    - name: chargeCents
+      type: Int32!
+      description: Amount charged by provider in cents
+    - name: cpt
+      type: String_1!
+      description: Current Procedural Terminology code
+    - name: createdAt
+      type: Timestamptz!
+    - name: denialReason
+      type: String_1
+      description: Reason for claim denial (required when status is DENIED)
+    - name: dos
+      type: Date!
+      description: Date of Service
+    - name: id
+      type: Uuid!
+    - name: memberId
+      type: Uuid!
+    - name: providerId
+      type: Uuid!
+    - name: status
+      type: String_1!
+    - name: updatedAt
+      type: Timestamptz!
+  graphql:
+    typeName: Claims1
+    inputTypeName: Claims1Input
+  dataConnectorTypeMapping:
+    - dataConnectorName: neon_postgres_2
+      dataConnectorObjectType: claims
+      fieldMapping:
+        allowedCents:
+          column:
+            name: allowed_cents
+        chargeCents:
+          column:
+            name: charge_cents
+        cpt:
+          column:
+            name: cpt
+        createdAt:
+          column:
+            name: created_at
+        denialReason:
+          column:
+            name: denial_reason
+        dos:
+          column:
+            name: dos
+        id:
+          column:
+            name: id
+        memberId:
+          column:
+            name: member_id
+        providerId:
+          column:
+            name: provider_id
+        status:
+          column:
+            name: status
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Claims_1
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - allowedCents
+          - chargeCents
+          - cpt
+          - createdAt
+          - denialReason
+          - dos
+          - id
+          - memberId
+          - providerId
+          - status
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ClaimsBoolExp_1
+  operand:
+    object:
+      type: Claims_1
+      comparableFields:
+        - fieldName: allowedCents
+          booleanExpressionType: Int4BoolExp_1
+        - fieldName: chargeCents
+          booleanExpressionType: Int4BoolExp_1
+        - fieldName: cpt
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp_1
+        - fieldName: denialReason
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: dos
+          booleanExpressionType: DateBoolExp_1
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp_1
+        - fieldName: memberId
+          booleanExpressionType: UuidBoolExp_1
+        - fieldName: providerId
+          booleanExpressionType: UuidBoolExp_1
+        - fieldName: status
+          booleanExpressionType: TextBoolExp_1
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp_1
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ClaimsBoolExp1
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ClaimsAggExp_1
+  operand:
+    object:
+      aggregatedType: Claims_1
+      aggregatableFields:
+        - fieldName: allowedCents
+          aggregateExpression: Int4AggExp_1
+        - fieldName: chargeCents
+          aggregateExpression: Int4AggExp_1
+        - fieldName: cpt
+          aggregateExpression: TextAggExp_1
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp_1
+        - fieldName: denialReason
+          aggregateExpression: TextAggExp_1
+        - fieldName: dos
+          aggregateExpression: DateAggExp_1
+        - fieldName: id
+          aggregateExpression: UuidAggExp_1
+        - fieldName: memberId
+          aggregateExpression: UuidAggExp_1
+        - fieldName: providerId
+          aggregateExpression: UuidAggExp_1
+        - fieldName: status
+          aggregateExpression: TextAggExp_1
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp_1
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: ClaimsAggExp1
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: Claims1OrderByExp
+  operand:
+    object:
+      orderedType: Claims_1
+      orderableFields:
+        - fieldName: allowedCents
+          orderByExpression: Int32OrderByExp
+        - fieldName: chargeCents
+          orderByExpression: Int32OrderByExp
+        - fieldName: cpt
+          orderByExpression: String1OrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: denialReason
+          orderByExpression: String1OrderByExp
+        - fieldName: dos
+          orderByExpression: DateOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: memberId
+          orderByExpression: UuidOrderByExp
+        - fieldName: providerId
+          orderByExpression: UuidOrderByExp
+        - fieldName: status
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestamptzOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: Claims1OrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: Claims_1
+  objectType: Claims_1
+  source:
+    dataConnectorName: neon_postgres_2
+    collection: claims
+  filterExpressionType: ClaimsBoolExp_1
+  aggregateExpression: ClaimsAggExp_1
+  orderByExpression: Claims1OrderByExp
+  graphql:
+    selectMany:
+      queryRootField: claims1
+      subscription:
+        rootField: claims1
+    selectUniques:
+      - queryRootField: claims1ById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: claims1ById
+    filterInputTypeName: Claims1FilterInput
+    aggregate:
+      queryRootField: claims1Aggregate
+      subscription:
+        rootField: claims1Aggregate
+  description: Medical claims submitted for services
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Claims_1
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+
