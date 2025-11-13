@@ -1,2 +1,3 @@
+version: v3
 project: hopeful-monkey-8713
 supergraph: ./supergraph.yaml

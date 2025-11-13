@@ -29,6 +29,12 @@ jobs:
           curl -L https://graphql-engine-cdn.hasura.io/ddn/cli/v4/get.sh | bash
           echo "$HOME/.ddn/bin" >> $GITHUB_PATH
 
+      - name: Set DDN context
+        run: |
+          cd sample-project-1
+          ddn context set project hopeful-monkey-8713
+          ddn context set supergraph ./supergraph.yaml
+
       - name: Checkout base branch
         run: |
           git checkout ${{ inputs.base_branch }}
