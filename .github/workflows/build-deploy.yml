@@ -52,12 +52,6 @@ jobs:
         run: |
           ddn auth login --access-token ${{ secrets.HASURA_DDN_PAT }}
 
-      - name: Set DDN context
-        working-directory: sample-project-1
-        run: |
-          ddn context set project hopeful-monkey-8713
-          ddn context set supergraph ./supergraph.yaml
-
       - name: Set up environment variables
         working-directory: sample-project-1
         run: |
