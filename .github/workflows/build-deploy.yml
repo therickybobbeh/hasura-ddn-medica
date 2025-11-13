@@ -73,41 +73,14 @@ jobs:
         working-directory: sample-project-1
         run: |
           echo "Building supergraph..."
-
-          if [ "${{ inputs.build_mode }}" == "release" ]; then
-            echo "Creating release build..."
-            ddn supergraph build create --ci --project hopeful-monkey-8713 --supergraph supergraph.yaml --mode release --output-dir .
-            BUILD_EXIT_CODE=$?
-          else
-            echo "Creating standard build..."
-            ddn supergraph build create --ci --project hopeful-monkey-8713 --supergraph supergraph.yaml --output-dir .
-            BUILD_EXIT_CODE=$?
-          fi
-
-          echo "Build exit code: $BUILD_EXIT_CODE"
-
-          if [ $BUILD_EXIT_CODE -ne 0 ]; then
-            echo "Build failed!"
-            exit 1
-          fi
-
-          echo "Build succeeded!"
-          BUILD_OUTPUT="Build completed successfully"
-
-          # Extract build version if available
-          BUILD_VERSION=$(echo "$BUILD_OUTPUT" | grep -oP 'Build version: \K.*' || echo "unknown")
-          echo "build_version=$BUILD_VERSION" >> $GITHUB_OUTPUT
-          echo "BUILD_VERSION=$BUILD_VERSION" >> $GITHUB_ENV
+          ddn supergraph build create --supergraph supergraph.yaml --project hopeful-monkey-8713
 
       - name: Apply metadata
         if: ${{ inputs.apply_metadata == true }}
         working-directory: sample-project-1
         run: |
           echo "Applying metadata to Hasura DDN project..."
-          ddn metadata apply --ci --project hopeful-monkey-8713 --subgraph app || {
-            echo "❌ Metadata apply failed"
-            exit 1
-          }
+          ddn supergraph build apply --project hopeful-monkey-8713
 
       - name: Run connector health checks
         working-directory: sample-project-1
