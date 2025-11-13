@@ -53,14 +53,14 @@ jobs:
           ddn auth login --access-token ${{ secrets.HASURA_DDN_PAT }}
 
       - name: Set DDN context
+        working-directory: sample-project-1
         run: |
-          cd sample-project-1
           ddn context set project hopeful-monkey-8713
           ddn context set supergraph ./supergraph.yaml
 
       - name: Set up environment variables
+        working-directory: sample-project-1
         run: |
-          cd sample-project-1
           # Copy environment-specific .env file if it exists
           if [ -f ".env.${{ inputs.environment }}" ]; then
             cp .env.${{ inputs.environment }} .env
@@ -68,16 +68,16 @@ jobs:
           fi
 
       - name: Validate supergraph
+        working-directory: sample-project-1
         run: |
-          cd sample-project-1
           echo "Validating supergraph configuration..."
           ddn supergraph validate || echo "⚠️ Validation warnings detected"
 
       - name: Build supergraph
         if: ${{ inputs.create_build == true }}
         id: build
+        working-directory: sample-project-1
         run: |
-          cd sample-project-1
           echo "Building supergraph..."
 
           if [ "${{ inputs.build_mode }}" == "release" ]; then
@@ -97,8 +97,8 @@ jobs:
 
       - name: Apply metadata
         if: ${{ inputs.apply_metadata == true }}
+        working-directory: sample-project-1
         run: |
-          cd sample-project-1
           echo "Applying metadata to Hasura DDN project..."
           ddn metadata apply --project hopeful-monkey-8713 || {
             echo "❌ Metadata apply failed"
@@ -106,8 +106,8 @@ jobs:
           }
 
       - name: Run connector health checks
+        working-directory: sample-project-1
         run: |
-          cd sample-project-1
           echo "Checking connector health..."
           # Add your connector health check commands here
           echo "✅ All connectors healthy"

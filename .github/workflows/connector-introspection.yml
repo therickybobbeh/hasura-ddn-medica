@@ -40,23 +40,23 @@ jobs:
           ddn auth login --access-token ${{ secrets.HASURA_DDN_PAT }}
 
       - name: Set DDN context
+        working-directory: sample-project-1
         run: |
-          cd sample-project-1
           ddn context set project hopeful-monkey-8713
           ddn context set supergraph ./supergraph.yaml
 
       - name: Introspect specific connector
         if: ${{ inputs.connector_name != '' }}
+        working-directory: sample-project-1
         run: |
           echo "Introspecting connector: ${{ inputs.connector_name }}"
-          cd sample-project-1
           ddn connector introspect ${{ inputs.connector_name }} --project hopeful-monkey-8713
 
       - name: Introspect all connectors in subgraph
         if: ${{ inputs.connector_name == '' && inputs.subgraph != '' }}
+        working-directory: sample-project-1/${{ inputs.subgraph }}/connector
         run: |
           echo "Introspecting all connectors in subgraph: ${{ inputs.subgraph }}"
-          cd sample-project-1/${{ inputs.subgraph }}/connector
           for connector_dir in */; do
             connector_name="${connector_dir%/}"
             echo "Introspecting: $connector_name"
@@ -65,9 +65,9 @@ jobs:
 
       - name: Add models automatically
         if: ${{ inputs.auto_add_models == true }}
+        working-directory: sample-project-1
         run: |
           echo "Auto-adding models from introspected connectors"
-          cd sample-project-1
           if [ -n "${{ inputs.connector_name }}" ]; then
             ddn model add ${{ inputs.connector_name }} "*" --project hopeful-monkey-8713
           else
