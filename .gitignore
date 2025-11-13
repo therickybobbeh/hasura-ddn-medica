@@ -43,3 +43,7 @@ temp/
 
 # OS
 Thumbs.db
+
+# Hasura context (keep context.yaml tracked for CI/CD)
+.hasura/*
+!.hasura/context.yaml

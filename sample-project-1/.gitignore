@@ -1,3 +1,7 @@
 engine/build
 /.env
 /.env.*
+
+# Hasura context - track context.yaml for CI/CD
+.hasura/*
+!.hasura/context.yaml
