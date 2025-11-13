@@ -25,17 +25,6 @@ This document explains the architecture, design decisions, and patterns used in 
 - **Performance**: Rust-based engine for better performance and memory safety
 - **On-Premises First**: Designed for self-hosted deployments
 
-### Key Differences from v2
-
-| Aspect | Hasura v2 | Hasura DDN v3 |
-|--------|-----------|---------------|
-| **Language** | Haskell | Rust |
-| **Metadata** | YAML/JSON, mutable | HML files, compiled to immutable JSON |
-| **Deployment** | POST to `/v1/metadata` API | Docker image with baked-in metadata |
-| **Architecture** | Monolithic | Microservices (subgraphs) |
-| **Data Sources** | Built-in connectors | Native Data Connectors (NDC) protocol |
-| **Versioning** | Manual tracking | Git-based with compiled artifacts |
-
 ---
 
 ## Core Concepts

@@ -1,405 +1,324 @@
-# Hasura DDN v3 Quick Start Guide
+# Quick Start: Self-Hosted Hasura DDN in 10 Minutes
 
-Get your Hasura DDN project running in **15 minutes**.
+Get a Hasura DDN v3 GraphQL API running on your own infrastructure in 10 minutes.
 
-## Prerequisites Checklist
-
-Before you begin, ensure you have:
-
-- [ ] **Hasura DDN CLI** installed
-  ```bash
-  npm install -g @hasura/ddn-cli
-  ddn version  # Should show v3.x.x
-  ```
-
-- [ ] **Docker** installed and running
-  ```bash
-  docker --version
-  ```
-
-- [ ] **Kubernetes cluster** ready (microk8s, k3s, or full cluster)
-  ```bash
-  kubectl cluster-info
-  ```
-
-- [ ] **Database** accessible (PostgreSQL, MySQL, etc.)
-  ```bash
-  # Test connection
-  psql "postgresql://user:pass@host/db" -c "SELECT 1"
-  ```
-
-- [ ] **OAuth/OIDC provider** configured (Keycloak, Auth0, Azure AD, etc.)
-  - Issuer URL
-  - JWKS URL
-  - Client ID
-
-- [ ] **Docker Hub account** (or other registry)
-  ```bash
-  docker login
-  ```
-
----
-
-## Step 1: Clone and Configure (3 minutes)
-
-### 1.1 Clone the Template
+## Prerequisites
 
 ```bash
-git clone <your-repo-url> my-hasura-project
-cd my-hasura-project
+# Install DDN CLI
+npm install -g @hasura/ddn
+
+# Verify installations
+ddn version          # Should be v2.8.0+
+docker --version     # For building images
+kubectl version      # For Kubernetes deployment (optional for local testing)
 ```
 
-### 1.2 Copy Environment Template
+You'll also need:
+- A PostgreSQL database (Neon, RDS, local, etc.)
+- Access to a container registry (Docker Hub, ECR, GCR, etc.)
+
+## Step 1: Initialize Your Project (2 min)
 
 ```bash
-cp .env.local.template .env.local
+# Create new DDN project
+ddn project init my-api
+cd my-api
+
+# Directory structure created:
+# my-api/
+# ├── app/
+# │   ├── globals/
+# │   └── subgraphs/
+# └── .hasura/
 ```
 
-### 1.3 Edit Environment Variables
+## Step 2: Add Your Database (2 min)
 
 ```bash
-# Edit .env.local with your actual values
-nano .env.local  # or use your preferred editor
+# Add PostgreSQL connector (interactive mode)
+ddn connector add my_postgres -i
 ```
 
-**Required values**:
+**Follow the prompts:**
+- **Connector type:** `hasura/postgres`
+- **Connection string:** `postgresql://user:password@host:5432/database`
+- **Subgraph:** Press Enter for default
+
+**Example connection strings:**
 ```bash
-# TODO: Get from https://console.hasura.io/settings/tokens
-HASURA_DDN_PAT=ddn_pat_xxxxx
+# Neon
+postgresql://user:pass@ep-example-123.us-east-2.aws.neon.tech/neondb?sslmode=require
 
-# TODO: Your database connection string
-DATABASE_URL=postgresql://user:pass@host:5432/dbname
+# Local PostgreSQL
+postgresql://postgres:password@localhost:5432/mydb
 
-# TODO: Your OAuth provider
-OAUTH_ISSUER_URL=https://your-idp.com
-OAUTH_JWKS_URL=https://your-idp.com/.well-known/jwks.json
-OAUTH_AUDIENCE=your-audience
-OAUTH_CLIENT_ID=your-client-id
-
-# TODO: Your Docker Hub username
-DOCKER_REGISTRY=docker.io/your-username
+# AWS RDS
+postgresql://user:pass@mydb.xxx.us-east-1.rds.amazonaws.com:5432/mydb
 ```
 
-### 1.4 Customize Project Name
-
-```bash
-# Edit supergraph.yaml
-nano supergraph.yaml
-```
-
-Change `name: my-api` to your project name:
-```yaml
-definition:
-  name: your-project-name  # Change this
-```
-
----
-
-## Step 2: Initialize Database (2 minutes)
-
-### 2.1 Introspect Database Schema
+## Step 3: Generate GraphQL Models (1 min)
 
 ```bash
-# This reads your database schema and generates connector configuration
-ddn connector introspect postgres --verbose
+# Auto-generate models from all database tables
+ddn model add my_postgres "*"
+
+# Or add specific tables
+ddn model add my_postgres users
+ddn model add my_postgres posts
+ddn model add my_postgres comments
 ```
 
-**What it does**: Connects to your database and discovers all tables/views/functions.
+**What this does:**
+- Introspects your database schema
+- Creates `.hml` files in `app/subgraphs/default/metadata/`
+- Each table becomes a GraphQL type with queries and mutations
 
-### 2.2 Generate Models
-
-```bash
-# This creates .hml files for each table
-ddn model add postgres '*'
-```
-
-**Result**: Creates files in `subgraphs/database/metadata/` for each table.
-
-### 2.3 Verify Models
+## Step 4: Build Supergraph (1 min)
 
 ```bash
-ls subgraphs/database/metadata/
-# Should see: Table1.hml, Table2.hml, etc.
-```
-
----
-
-## Step 3: Build Supergraph (2 minutes)
-
-### 3.1 Compile Metadata
-
-```bash
-# This compiles all .hml files into JSON for the engine
+# Compile all metadata into deployable format
 ddn supergraph build local
+
+# Compiled metadata appears in:
+# app/supergraph/build/supergraph.json
 ```
 
-**Result**: Creates `engine/build/` directory with compiled metadata.
+**What gets compiled:**
+- All your `.hml` model files
+- Connector configurations
+- Auth config (noAuth by default)
+- GraphQL config
 
-### 3.2 Verify Build
+## Step 5: Test Locally (1 min)
 
 ```bash
-ls engine/build/
-# Should see: auth_config.json, metadata.json, open_dd.json
+# Start DDN engine locally in Docker
+ddn run docker-start
+
+# Engine runs on http://localhost:3000
 ```
 
-### 3.3 Review Output
-
+**Test your API:**
 ```bash
-# Check the compiled metadata
-cat engine/build/metadata.json | head -20
-```
-
----
-
-## Step 4: Build Engine Image (3 minutes)
-
-### 4.1 Build Docker Image
-
-```bash
-# This creates a Docker image with your metadata baked in
-./scripts/build-engine.sh v0.1.0
-```
-
-**What it does**:
-- Builds engine Docker image
-- Includes compiled metadata from `engine/build/`
-- Tags as `your-registry/hasura-ddn-engine:v0.1.0`
-
-### 4.2 Push to Registry
-
-```bash
-docker push your-registry/hasura-ddn-engine:v0.1.0
-```
-
-**Note**: Replace `your-registry` with your actual Docker Hub username.
-
----
-
-## Step 5: Deploy to Kubernetes (5 minutes)
-
-### 5.1 Create Namespace
-
-```bash
-kubectl create namespace hasura-local
-```
-
-### 5.2 Create Secrets
-
-```bash
-# Copy from template
-cp ../infra-k8s/self-hosted/k8s-manifests/secrets.yaml.template secrets.yaml
-
-# Edit with your actual secrets
-nano secrets.yaml
-
-# Apply to cluster
-kubectl apply -f secrets.yaml -n hasura-local
-```
-
-### 5.3 Deploy Engine
-
-```bash
-# This updates the Kubernetes deployment with your new image
-./scripts/deploy-metadata.sh local v0.1.0
-```
-
-**What it does**:
-- Updates hasura-ddn-engine deployment
-- Waits for rollout to complete
-- Runs health checks
-
-### 5.4 Verify Deployment
-
-```bash
-# Check pods
-kubectl get pods -n hasura-local
-
-# Should see:
-# hasura-ddn-engine-xxxxx   1/1  Running
-
-# Check logs
-kubectl logs -n hasura-local -l app=hasura-ddn,component=engine --tail=20
-```
-
----
-
-## Step 6: Test GraphQL API (2 minutes)
-
-### 6.1 Port Forward (for local testing)
-
-```bash
-kubectl port-forward -n hasura-local deployment/hasura-ddn-engine 3000:3000
-```
-
-### 6.2 Test Health Endpoint
-
-```bash
+# Health check
 curl http://localhost:3000/healthz
-# Should return: {"status": "ok"}
-```
 
-### 6.3 Test GraphQL Query
-
-```bash
-# Get schema
+# GraphQL query (no auth needed!)
 curl -X POST http://localhost:3000/graphql \
   -H "Content-Type: application/json" \
-  -d '{"query": "{ __schema { queryType { name } } }"}'
+  -d '{"query": "{ __typename }"}'
+
+# Or open GraphiQL in browser
+open http://localhost:3000/graphql
 ```
 
-### 6.4 Open GraphQL Console (if enabled)
-
-```bash
-# If console is enabled in development
-open http://localhost:3000/console
-```
-
-Try a query:
+**Example queries:**
 ```graphql
+# List all users
 query {
-  # Replace 'users' with your actual table name
   users {
     id
+    email
     name
+  }
+}
+
+# Create a user (if you have mutations)
+mutation {
+  insertUsers(objects: {
+    email: "test@example.com"
+    name: "Test User"
+  }) {
+    returning {
+      id
+      email
+    }
   }
 }
 ```
 
----
+## Step 6: Build Docker Image (2 min)
 
-## 🎉 Success!
+Now use this template's build script to package your metadata into a deployable Docker image.
 
-You now have a running Hasura DDN v3 instance!
+```bash
+# Clone this template repo (if you haven't already)
+cd ..
+git clone https://github.com/yourusername/onprem-hasura-k8s.git docker-helpers
+cd my-api
+
+# Copy the build artifacts to engine directory
+mkdir -p engine
+cp app/supergraph/build/supergraph.json engine/metadata.json
+
+# Build Docker image using the template's script
+../docker-helpers/scripts/build-engine.sh v1.0.0
+```
+
+**The script:**
+- Packages compiled metadata into Docker image
+- Tags with your version (v1.0.0)
+- Creates immutable deployment artifact
+
+## Step 7: Push to Registry (1 min)
+
+```bash
+# Login to your registry
+docker login
+
+# Push the image
+docker push your-registry/ddn-engine:v1.0.0
+```
+
+**Registry examples:**
+```bash
+# Docker Hub
+docker push username/ddn-engine:v1.0.0
+
+# AWS ECR
+docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/ddn-engine:v1.0.0
+
+# Google GCR
+docker push gcr.io/project-id/ddn-engine:v1.0.0
+```
+
+## Step 8: Deploy to Kubernetes (Optional)
+
+If you have Kubernetes set up:
+
+```bash
+# Use your existing K8s manifests or create simple deployment
+kubectl create deployment ddn-engine \
+  --image=your-registry/ddn-engine:v1.0.0
+
+# Expose as service
+kubectl expose deployment ddn-engine \
+  --port=3000 \
+  --target-port=3000
+
+# Port forward to test
+kubectl port-forward svc/ddn-engine 3000:3000
+
+# Test
+curl http://localhost:3000/graphql
+```
+
+For production Kubernetes setup, see your separate `infra-k8s` repository.
+
+## What You Just Built
+
+✅ **GraphQL API** - Auto-generated from your database schema
+✅ **No Authentication** - Test immediately (enable later)
+✅ **Immutable Deployment** - Metadata baked into Docker image
+✅ **Self-Hosted** - Running on your infrastructure
+✅ **Version Controlled** - All config in Git
 
 ## Next Steps
 
+### Add More Tables/Models
+
+```bash
+# Make database schema changes
+# Then regenerate models
+ddn model add my_postgres "*"
+ddn supergraph build local
+```
+
 ### Add Permissions
 
-Your models currently have no permissions. Add them:
+Edit the `.hml` files in `app/subgraphs/default/metadata/`:
 
-```bash
-# Edit a model file
-nano subgraphs/database/metadata/YourTable.hml
-
-# Add permissions section (see examples/sample-models/User.hml)
-```
-
-See `examples/sample-models/README.md` for permission examples.
-
-### Add Relationships
-
-Connect your tables with relationships:
-
-```bash
-ddn relationship add postgres users orders
-```
-
-Or manually edit `.hml` files (see examples).
-
-### Add Custom Business Logic
-
-Copy the TypeScript connector example:
-
-```bash
-cp -r examples/typescript-connector connectors/my-logic
-```
-
-See `examples/typescript-connector/HOW_TO_USE.md` for details.
-
-### Deploy to Other Environments
-
-```bash
-# Deploy to staging
-./scripts/deploy-metadata.sh staging v0.1.0
-
-# Deploy to production
-./scripts/deploy-metadata.sh production v0.1.0
-```
-
-### Set Up CI/CD
-
-The GitHub Actions workflows are ready to use:
-- `.github/workflows/introspect-and-build.yml` - Daily DB sync
-- `.github/workflows/deploy-metadata.yml` - Automated deployments
-
-Just add GitHub secrets (see `.github/README.md`).
-
+```yaml
+# app/subgraphs/default/metadata/Users.hml
 ---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Users
+  permissions:
+    - role: user
+      select:
+        filter:
+          fieldComparison:
+            field: id
+            operator: _eq
+            value:
+              sessionVariable: x-hasura-user-id
+```
+
+See [CLI_WORKFLOW.md](./CLI_WORKFLOW.md) for more on permissions.
+
+### Add a Second Database
+
+```bash
+# Add another connector
+ddn connector add my_second_db -i
+
+# Generate models
+ddn model add my_second_db "*"
+
+# Rebuild
+ddn supergraph build local
+```
+
+### Enable Authentication
+
+By default, authentication is **disabled** for quick testing.
+
+To enable OAuth/OIDC authentication, see [AUTHENTICATION.md](./AUTHENTICATION.md).
+
+**⚠️ Important:** Enable authentication before deploying to production!
+
+### Deploy Updates
+
+```bash
+# After any changes:
+ddn supergraph build local
+
+# Build new Docker image with new version
+../docker-helpers/scripts/build-engine.sh v1.1.0
+
+# Push and deploy
+docker push your-registry/ddn-engine:v1.1.0
+kubectl set image deployment/ddn-engine engine=your-registry/ddn-engine:v1.1.0
+```
 
 ## Common Issues
 
 ### "Cannot connect to database"
-
-**Fix**: Check `DATABASE_URL` in `.env.local`
 ```bash
-psql "$DATABASE_URL" -c "SELECT 1"
+# Test connection manually
+psql "your-connection-string" -c "SELECT 1"
+
+# Check SSL requirements (Neon requires sslmode=require)
 ```
 
-### "Permission denied" in GraphQL query
-
-**Fix**: Add permissions to your models (see `examples/sample-models/User.hml`)
-
-### "Engine image not found"
-
-**Fix**: Verify image was pushed to registry
+### "No tables showing up"
 ```bash
-docker pull your-registry/hasura-ddn-engine:v0.1.0
+# Verify models were generated
+ls app/subgraphs/default/metadata/
+
+# Check permissions - add ModelPermissions to .hml files
 ```
 
-### "Pod not starting"
-
-**Fix**: Check pod logs
+### "Docker build failed"
 ```bash
-kubectl logs -n hasura-local -l app=hasura-ddn,component=engine
+# Verify supergraph built successfully
+ls app/supergraph/build/supergraph.json
+
+# Check for compilation errors
+ddn supergraph build local --verbose
 ```
+
+## Resources
+
+- **Full CLI Reference**: [CLI_WORKFLOW.md](./CLI_WORKFLOW.md)
+- **Docker Build Details**: [DOCKER_BUILD.md](./DOCKER_BUILD.md)
+- **Enable Authentication**: [AUTHENTICATION.md](./AUTHENTICATION.md)
+- **Production Security**: [SECURITY.md](./SECURITY.md)
+- **Official DDN Docs**: https://hasura.io/docs/3.0/
 
 ---
 
-## Cheat Sheet
-
-```bash
-# Introspect database
-ddn connector introspect postgres
-
-# Generate models
-ddn model add postgres '*'
-
-# Build supergraph
-ddn supergraph build local
-
-# Build engine image
-./scripts/build-engine.sh v0.1.0
-
-# Deploy to Kubernetes
-./scripts/deploy-metadata.sh local v0.1.0
-
-# Check status
-kubectl get pods -n hasura-local
-kubectl logs -n hasura-local -l app=hasura-ddn --tail=50
-
-# Port forward for testing
-kubectl port-forward -n hasura-local deployment/hasura-ddn-engine 3000:3000
-```
-
----
-
-## Getting Help
-
-- **Full Documentation**: See `README.md` and `ARCHITECTURE.md`
-- **Examples**: Check `examples/` directory
-- **Component Docs**: Each directory has a README (globals/, subgraphs/, etc.)
-- **Official Docs**: https://hasura.io/docs/3.0/
-- **Discord**: https://discord.com/invite/hasura
-- **GitHub**: https://github.com/hasura/graphql-engine/discussions
-
----
-
-## What's Next?
-
-1. Read `ARCHITECTURE.md` to understand the system design
-2. Explore `examples/` for patterns and best practices
-3. Review component READMEs for detailed documentation
-4. Set up monitoring (see `../infra-k8s/self-hosted/monitoring/`)
-5. Configure production settings (see deployment YAML files)
-
-**Happy GraphQL hacking! 🚀**
+**Congratulations!** You now have a working Hasura DDN GraphQL API running on your own infrastructure. 🎉
