@@ -46,12 +46,15 @@ jobs:
         run: |
           cd sample-project-1
 
+          echo "Setting up DDN context..."
+          ddn context set-current-context default
+
           echo "Building supergraph metadata..."
           ddn supergraph build local \
             --supergraph supergraph.yaml \
             --env-file .env \
             --output-dir engine/build \
-            --ci || { echo "Build failed with exit code $?"; exit 1; }
+            --no-prompt || { echo "Build failed with exit code $?"; exit 1; }
 
           echo "Checking if build directory was created..."
           ls -la engine/
