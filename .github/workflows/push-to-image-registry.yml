@@ -46,17 +46,31 @@ jobs:
         run: |
           cd sample-project-1
 
-          echo "Setting up DDN context..."
+          echo "=== Checking required files ==="
+          ls -la supergraph.yaml .env || { echo "Missing supergraph.yaml or .env!"; exit 1; }
+
+          echo -e "\n=== supergraph.yaml content ==="
+          cat supergraph.yaml
+
+          echo -e "\n=== Setting up DDN context ==="
           ddn context set-current-context default
 
-          echo "Building supergraph metadata..."
+          echo -e "\n=== Verifying context ==="
+          ddn context get project || echo "No project in context"
+
+          echo -e "\n=== Building supergraph metadata (with DEBUG logging) ==="
           ddn supergraph build local \
             --supergraph supergraph.yaml \
             --env-file .env \
             --output-dir engine/build \
-            --no-prompt || { echo "Build failed with exit code $?"; exit 1; }
+            --no-prompt \
+            --log-level DEBUG 2>&1 | tee build-output.log || {
+              echo "❌ Build command failed!";
+              cat build-output.log;
+              exit 1;
+            }
 
-          echo "Checking if build directory was created..."
+          echo -e "\n=== Checking engine directory ==="
           ls -la engine/
 
           if [ -d "engine/build" ]; then
@@ -64,6 +78,8 @@ jobs:
             ls -la engine/build/
           else
             echo "❌ Build directory NOT created!"
+            echo "Build output was:"
+            cat build-output.log
             exit 1
           fi
 
