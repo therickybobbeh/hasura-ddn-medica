@@ -11,4 +11,4 @@ services:
     extra_hosts:
       - local.hasura.dev:host-gateway
     ports:
-      - 5637:8080
+      - "${APP_NEON_POSTGRES_1_HASURA_CONNECTOR_PORT:-5637}:8080"

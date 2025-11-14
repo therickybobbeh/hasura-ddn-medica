@@ -14,13 +14,13 @@ services:
       ENABLE_SQL_INTERFACE: "true"
       INTROSPECTION_METADATA_FILE: /md/metadata.json
       METADATA_PATH: /md/open_dd.json
-      OTLP_ENDPOINT: http://local.hasura.dev:4317
+      OTLP_ENDPOINT: http://local.hasura.dev:${OTEL_GRPC_PORT:-4317}
     extra_hosts:
       - local.hasura.dev:host-gateway
     labels:
       io.hasura.ddn.service-name: engine
     ports:
-      - 3280:3000
+      - "${ENGINE_PORT:-3280}:3000"
   otel-collector:
     command:
       - --config=/etc/otel-collector-config.yaml
@@ -28,7 +28,7 @@ services:
       HASURA_DDN_PAT: ${HASURA_DDN_PAT}
     image: otel/opentelemetry-collector:0.104.0
     ports:
-      - 4317:4317
-      - 4318:4318
+      - "${OTEL_GRPC_PORT:-4317}:4317"
+      - "${OTEL_HTTP_PORT:-4318}:4318"
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
