@@ -38,7 +38,9 @@ jobs:
 
       - name: Create .env file from secret
         run: |
-          echo "${{ secrets.DDN_ENV_LOCAL }}" > sample-project-1/.env
+          cat <<'EOF' > sample-project-1/.env
+          ${{ secrets.DDN_ENV_LOCAL }}
+          EOF
 
       - name: Build supergraph metadata
         run: |
