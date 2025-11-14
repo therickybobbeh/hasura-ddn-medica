@@ -45,8 +45,6 @@ jobs:
           echo "Building: DDN Engine"
           echo "========================================="
 
-          cd sample-project-1/engine
-
           IMAGE_NAME="rickybobbeh/ddn-engine"
           IMAGE_TAG="${{ inputs.tag }}"
           FULL_IMAGE="$IMAGE_NAME:$IMAGE_TAG"
@@ -55,10 +53,10 @@ jobs:
 
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
-            -f Dockerfile.engine \
+            -f sample-project-1/engine/Dockerfile.engine \
             -t "$FULL_IMAGE" \
             ${{ inputs.push_to_registry == true && '--push' || '--load' }} \
-            .
+            sample-project-1/engine
 
           if [ $? -eq 0 ]; then
             echo "✅ Successfully built: $FULL_IMAGE"
@@ -66,8 +64,6 @@ jobs:
             echo "❌ Failed to build: $FULL_IMAGE"
             exit 1
           fi
-
-          cd ../..
 
       - name: Build and push connector images
         run: |
