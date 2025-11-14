@@ -46,8 +46,15 @@ jobs:
         run: |
           cd sample-project-1
 
-          echo "=== Checking required files ==="
+          echo "=== DDN CLI Version ==="
+          ddn --version
+
+          echo -e "\n=== Checking required files ==="
           ls -la supergraph.yaml .env || { echo "Missing supergraph.yaml or .env!"; exit 1; }
+
+          echo -e "\n=== Checking .hasura directory ==="
+          ls -la .hasura/ || { echo "No .hasura directory!"; exit 1; }
+          cat .hasura/context.yaml
 
           echo -e "\n=== supergraph.yaml content ==="
           cat supergraph.yaml
