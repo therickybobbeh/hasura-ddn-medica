@@ -1,0 +1,110 @@
+# Docker Compose file for testing published images from Docker Hub
+# This uses the pre-built images instead of building from source
+#
+# Usage:
+#   docker compose -f compose.test.yaml --env-file .env up
+#   docker compose -f compose.test.yaml down
+
+services:
+  # Hasura DDN Engine - pre-built image from Docker Hub
+  engine:
+    image: rickybobbeh/ddn-engine:latest
+    pull_policy: always
+    environment:
+      AUTHN_CONFIG_PATH: /md/auth_config.json
+      ENABLE_CORS: "true"
+      ENABLE_SQL_INTERFACE: "true"
+      INTROSPECTION_METADATA_FILE: /md/metadata.json
+      METADATA_PATH: /md/open_dd.json
+      OTLP_ENDPOINT: http://local.hasura.dev:${OTEL_GRPC_PORT:-4317}
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    labels:
+      io.hasura.ddn.service-name: engine
+    ports:
+      - "${ENGINE_PORT:-3280}:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Connector 1 - neon_postgres_1
+  app_neon_postgres_1:
+    image: rickybobbeh/ddn-connector-1:latest
+    pull_policy: always
+    environment:
+      CONNECTION_URI: $APP_NEON_POSTGRES_1_CONNECTION_URI
+      HASURA_SERVICE_TOKEN_SECRET: $APP_NEON_POSTGRES_1_HASURA_SERVICE_TOKEN_SECRET
+      OTEL_EXPORTER_OTLP_ENDPOINT: $APP_NEON_POSTGRES_1_OTEL_EXPORTER_OTLP_ENDPOINT
+      OTEL_SERVICE_NAME: $APP_NEON_POSTGRES_1_OTEL_SERVICE_NAME
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    ports:
+      - "${APP_NEON_POSTGRES_1_HASURA_CONNECTOR_PORT:-5637}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Connector 2 - neon_postgres_2
+  app_neon_postgres_2:
+    image: rickybobbeh/ddn-connector-2:latest
+    pull_policy: always
+    environment:
+      CONNECTION_URI: $APP_NEON_POSTGRES_2_CONNECTION_URI
+      HASURA_SERVICE_TOKEN_SECRET: $APP_NEON_POSTGRES_2_HASURA_SERVICE_TOKEN_SECRET
+      OTEL_EXPORTER_OTLP_ENDPOINT: $APP_NEON_POSTGRES_2_OTEL_EXPORTER_OTLP_ENDPOINT
+      OTEL_SERVICE_NAME: $APP_NEON_POSTGRES_2_OTEL_SERVICE_NAME
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    ports:
+      - "${APP_NEON_POSTGRES_2_HASURA_CONNECTOR_PORT:-5638}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Connector 3 - neon_postgres_lean
+  app_neon_postgres_lean:
+    image: rickybobbeh/ddn-connector-3:latest
+    pull_policy: always
+    environment:
+      CONNECTION_URI: $APP_NEON_POSTGRES_LEAN_CONNECTION_URI
+      HASURA_SERVICE_TOKEN_SECRET: $APP_NEON_POSTGRES_LEAN_HASURA_SERVICE_TOKEN_SECRET
+      OTEL_EXPORTER_OTLP_ENDPOINT: $APP_NEON_POSTGRES_LEAN_OTEL_EXPORTER_OTLP_ENDPOINT
+      OTEL_SERVICE_NAME: $APP_NEON_POSTGRES_LEAN_OTEL_SERVICE_NAME
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    ports:
+      - "${APP_NEON_POSTGRES_LEAN_HASURA_CONNECTOR_PORT:-5639}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # OpenTelemetry Collector
+  otel-collector:
+    image: otel/opentelemetry-collector:0.104.0
+    command:
+      - --config=/etc/otel-collector-config.yaml
+    environment:
+      HASURA_DDN_PAT: ${HASURA_DDN_PAT}
+    ports:
+      - "${OTEL_GRPC_PORT:-4317}:4317"
+      - "${OTEL_HTTP_PORT:-4318}:4318"
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:13133/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
