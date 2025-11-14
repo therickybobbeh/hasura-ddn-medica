@@ -1,3 +1,24 @@
+kind: Context
 version: v3
-project: hopeful-monkey-8713
-supergraph: ./supergraph.yaml
+definition:
+  current: default
+  contexts:
+    default:
+      project: hopeful-monkey-8713
+      supergraph: ../supergraph.yaml
+      subgraph: ../app/subgraph.yaml
+      localEnvFile: ../.env
+      cloudEnvFile: ../.env.cloud
+  scripts:
+    build-local:
+      bash: ddn supergraph build local --supergraph supergraph.yaml --env-file .env
+      powershell: ddn supergraph build local --supergraph supergraph.yaml --env-file .env
+    build-supergraph:
+      bash: ddn supergraph build create --supergraph supergraph.yaml --env-file .env.cloud --project hopeful-monkey-8713
+      powershell: ddn supergraph build create --supergraph supergraph.yaml --env-file .env.cloud --project hopeful-monkey-8713
+    docker-start:
+      bash: HASURA_DDN_PAT=$(ddn auth print-pat) docker compose -f compose.yaml --env-file .env up --build --pull always -d
+      powershell: $Env:HASURA_DDN_PAT = ddn auth print-pat; docker compose -f compose.yaml --env-file .env up --build --pull always -d
+    docker-stop:
+      bash: docker compose -f compose.yaml down
+      powershell: docker compose -f compose.yaml down
