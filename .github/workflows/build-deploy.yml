@@ -73,14 +73,14 @@ jobs:
         working-directory: sample-project-1
         run: |
           echo "Building supergraph..."
-          ddn supergraph build create --supergraph supergraph.yaml --project hopeful-monkey-8713
+          ddn supergraph build create --ci --supergraph supergraph.yaml --project hopeful-monkey-8713
 
-      - name: Apply metadata
+      - name: Apply build
         if: ${{ inputs.apply_metadata == true }}
         working-directory: sample-project-1
         run: |
-          echo "Applying metadata to Hasura DDN project..."
-          ddn supergraph build apply --project hopeful-monkey-8713
+          echo "Applying latest build to Hasura DDN project..."
+          ddn supergraph build apply --ci --project hopeful-monkey-8713
 
       - name: Run connector health checks
         working-directory: sample-project-1
