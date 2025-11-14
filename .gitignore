@@ -20,6 +20,7 @@ go.sum
 # Build outputs
 dist/
 build/
+!sample-project-1/engine/build/
 *.o
 *.so
 *.dylib
