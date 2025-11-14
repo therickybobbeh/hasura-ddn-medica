@@ -45,11 +45,24 @@ jobs:
       - name: Build supergraph metadata
         run: |
           cd sample-project-1
+
+          echo "Building supergraph metadata..."
           ddn supergraph build local \
             --supergraph supergraph.yaml \
             --env-file .env \
             --output-dir engine/build \
-            --ci
+            --ci || { echo "Build failed with exit code $?"; exit 1; }
+
+          echo "Checking if build directory was created..."
+          ls -la engine/
+
+          if [ -d "engine/build" ]; then
+            echo "✅ Build directory exists"
+            ls -la engine/build/
+          else
+            echo "❌ Build directory NOT created!"
+            exit 1
+          fi
 
       - name: Log in to Docker Hub
         if: ${{ inputs.push_to_registry == true }}
