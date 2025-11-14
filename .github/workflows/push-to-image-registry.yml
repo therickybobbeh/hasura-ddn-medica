@@ -34,7 +34,7 @@ jobs:
 
       - name: Install DDN CLI
         run: |
-          npm install -g @hasura/ddn-cli
+          npm install -g @ddn/ddn-cli
 
       - name: Build supergraph metadata
         run: |
