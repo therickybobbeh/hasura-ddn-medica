@@ -78,13 +78,6 @@ jobs:
 
           echo "Building connectors: $CONNECTORS"
 
-          # Map connector directory names to numbered names
-          declare -A CONNECTOR_MAP=(
-            ["neon_postgres_1"]="1"
-            ["neon_postgres_2"]="2"
-            ["neon_postgres_lean"]="3"
-          )
-
           for connector in $CONNECTORS; do
             if [ -d "$connector" ]; then
               echo ""
@@ -105,8 +98,21 @@ jobs:
                 continue
               fi
 
-              # Map to numbered name or use directory name as fallback
-              CONNECTOR_NUMBER="${CONNECTOR_MAP[$connector]:-$connector}"
+              # Map connector directory names to numbered names
+              case "$connector" in
+                neon_postgres_1)
+                  CONNECTOR_NUMBER="1"
+                  ;;
+                neon_postgres_2)
+                  CONNECTOR_NUMBER="2"
+                  ;;
+                neon_postgres_lean)
+                  CONNECTOR_NUMBER="3"
+                  ;;
+                *)
+                  CONNECTOR_NUMBER="$connector"
+                  ;;
+              esac
 
               # Build image
               IMAGE_NAME="rickybobbeh/ddn-connector-$CONNECTOR_NUMBER"

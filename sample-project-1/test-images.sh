@@ -4,6 +4,9 @@
 
 set -e  # Exit on error
 
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -15,9 +18,11 @@ echo -e "${YELLOW}=== Docker Image Test Suite ===${NC}\n"
 # Configuration
 DOCKER_USERNAME="rickybobbeh"
 TAG="${1:-latest}"  # Use first argument or default to 'latest'
-COMPOSE_FILE="compose.test.yaml"
+ENV_FILE="${2:-${SCRIPT_DIR}/.env}"  # Use second argument or default to script dir .env
+COMPOSE_FILE="${SCRIPT_DIR}/compose.test.yaml"
 
-echo -e "${YELLOW}Testing images with tag: ${TAG}${NC}\n"
+echo -e "${YELLOW}Testing images with tag: ${TAG}${NC}"
+echo -e "${YELLOW}Using env file: ${ENV_FILE}${NC}\n"
 
 # Function to print section headers
 print_header() {
@@ -39,9 +44,9 @@ print_header "Step 1: Pulling Images from Docker Hub"
 
 images=(
     "${DOCKER_USERNAME}/ddn-engine:${TAG}"
-    "${DOCKER_USERNAME}/ddn-connector-1:${TAG}"
-    "${DOCKER_USERNAME}/ddn-connector-2:${TAG}"
-    "${DOCKER_USERNAME}/ddn-connector-3:${TAG}"
+    "${DOCKER_USERNAME}/ddn-connector-neon_postgres_1:${TAG}"
+    "${DOCKER_USERNAME}/ddn-connector-neon_postgres_2:${TAG}"
+    "${DOCKER_USERNAME}/ddn-connector-neon_postgres_lean:${TAG}"
 )
 
 for image in "${images[@]}"; do
@@ -54,16 +59,22 @@ for image in "${images[@]}"; do
     fi
 done
 
-# Step 2: Verify .env file exists
+# Step 2: Verify env file exists
 print_header "Step 2: Checking Environment File"
 
-if [ ! -f .env ]; then
-    print_error ".env file not found!"
-    echo "Please create a .env file with your configuration."
-    echo "See .env.example for reference."
+if [ ! -f "${ENV_FILE}" ]; then
+    print_error "${ENV_FILE} file not found!"
+    echo "Please create a ${ENV_FILE} file with your configuration."
+    echo "Usage: $0 [tag] [env-file]"
+    echo "  tag:      Docker image tag (default: latest)"
+    echo "  env-file: Environment file to use (default: .env)"
+    echo ""
+    echo "Examples:"
+    echo "  $0 latest .env"
+    echo "  $0 latest .env.cloud"
     exit 1
 fi
-print_success ".env file found"
+print_success "${ENV_FILE} file found"
 
 # Step 3: Stop any existing containers
 print_header "Step 3: Cleaning Up Existing Containers"
@@ -80,7 +91,7 @@ fi
 print_header "Step 4: Starting Services"
 
 echo "Starting all services..."
-if docker compose -f "${COMPOSE_FILE}" --env-file .env up -d; then
+if docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" up -d; then
     print_success "Services started successfully"
 else
     print_error "Failed to start services"
@@ -113,8 +124,8 @@ check_service_health() {
     return 1
 }
 
-# Check each service
-services=("engine" "app_neon_postgres_1" "app_neon_postgres_2" "app_neon_postgres_lean" "otel-collector")
+# Check each service (skipping otel-collector for now)
+services=("engine" "app_neon_postgres_1" "app_neon_postgres_2" "app_neon_postgres_lean")
 all_healthy=true
 
 for service in "${services[@]}"; do

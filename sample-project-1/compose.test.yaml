@@ -32,7 +32,7 @@ services:
 
   # Connector 1 - neon_postgres_1
   app_neon_postgres_1:
-    image: rickybobbeh/ddn-connector-1:latest
+    image: rickybobbeh/ddn-connector-neon_postgres_1:latest
     pull_policy: always
     environment:
       CONNECTION_URI: $APP_NEON_POSTGRES_1_CONNECTION_URI
@@ -52,7 +52,7 @@ services:
 
   # Connector 2 - neon_postgres_2
   app_neon_postgres_2:
-    image: rickybobbeh/ddn-connector-2:latest
+    image: rickybobbeh/ddn-connector-neon_postgres_2:latest
     pull_policy: always
     environment:
       CONNECTION_URI: $APP_NEON_POSTGRES_2_CONNECTION_URI
@@ -72,7 +72,7 @@ services:
 
   # Connector 3 - neon_postgres_lean
   app_neon_postgres_lean:
-    image: rickybobbeh/ddn-connector-3:latest
+    image: rickybobbeh/ddn-connector-neon_postgres_lean:latest
     pull_policy: always
     environment:
       CONNECTION_URI: $APP_NEON_POSTGRES_LEAN_CONNECTION_URI
@@ -90,21 +90,22 @@ services:
       retries: 5
       start_period: 10s
 
-  # OpenTelemetry Collector
-  otel-collector:
-    image: otel/opentelemetry-collector:0.104.0
-    command:
-      - --config=/etc/otel-collector-config.yaml
-    environment:
-      HASURA_DDN_PAT: ${HASURA_DDN_PAT}
-    ports:
-      - "${OTEL_GRPC_PORT:-4317}:4317"
-      - "${OTEL_HTTP_PORT:-4318}:4318"
-    volumes:
-      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:13133/"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
+  # OpenTelemetry Collector - DISABLED FOR NOW
+  # Uncomment when ready to set up telemetry
+  # otel-collector:
+  #   image: otel/opentelemetry-collector:0.104.0
+  #   command:
+  #     - --config=/etc/otel-collector-config.yaml
+  #   environment:
+  #     HASURA_DDN_PAT: ${HASURA_DDN_PAT}
+  #   ports:
+  #     - "${OTEL_GRPC_PORT:-4317}:4317"
+  #     - "${OTEL_HTTP_PORT:-4318}:4318"
+  #   volumes:
+  #     - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--spider", "-q", "http://localhost:13133/"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 5s
