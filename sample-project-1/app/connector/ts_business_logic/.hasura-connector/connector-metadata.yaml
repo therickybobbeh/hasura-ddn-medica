@@ -1,0 +1,17 @@
+packagingDefinition:
+  type: ManagedDockerBuild
+  build:
+    dockerFile: ./.hasura-connector/Dockerfile.ts_business_logic
+supportedEnvironmentVariables:
+  - name: HASURA_CONNECTOR_PORT
+    description: Port for the connector to listen on
+    defaultValue: "8080"
+  - name: HASURA_SERVICE_TOKEN_SECRET
+    description: Shared secret for authentication
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    description: OpenTelemetry endpoint for metrics
+  - name: OTEL_SERVICE_NAME
+    description: Service name for OpenTelemetry
+commands:
+  update: npm install && npm run build
+  watch: npm run watch

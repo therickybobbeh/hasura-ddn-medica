@@ -98,16 +98,25 @@ jobs:
                 continue
               fi
 
-              # Map connector directory names to numbered names
+              # Map connector directory names to numbered or descriptive names
               case "$connector" in
                 neon_postgres_1)
-                  CONNECTOR_NUMBER="1"
+                  CONNECTOR_NUMBER="neon_postgres_1"
                   ;;
                 neon_postgres_2)
-                  CONNECTOR_NUMBER="2"
+                  CONNECTOR_NUMBER="neon_postgres_2"
                   ;;
                 neon_postgres_lean)
-                  CONNECTOR_NUMBER="3"
+                  CONNECTOR_NUMBER="neon_postgres_lean"
+                  ;;
+                ts_business_logic)
+                  CONNECTOR_NUMBER="ts_business_logic"
+                  ;;
+                py_business_logic)
+                  CONNECTOR_NUMBER="py_business_logic"
+                  ;;
+                go_business_logic)
+                  CONNECTOR_NUMBER="go_business_logic"
                   ;;
                 *)
                   CONNECTOR_NUMBER="$connector"

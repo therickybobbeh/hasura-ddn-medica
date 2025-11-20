@@ -33,3 +33,9 @@ definition:
       connectorLinkName: neon_postgres_2
     - path: connector/neon_postgres_lean/connector.yaml
       connectorLinkName: neon_postgres_lean
+    - path: connector/ts_business_logic/connector.yaml
+      connectorLinkName: ts_business_logic
+    - path: connector/py_business_logic/connector.yaml
+      connectorLinkName: py_business_logic
+    - path: connector/go_business_logic/connector.yaml
+      connectorLinkName: go_business_logic

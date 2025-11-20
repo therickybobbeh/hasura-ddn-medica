@@ -90,6 +90,63 @@ services:
       retries: 5
       start_period: 10s
 
+  # Connector 4 - TypeScript Business Logic
+  app_ts_business_logic:
+    image: rickybobbeh/ddn-connector-ts_business_logic:latest
+    pull_policy: always
+    environment:
+      HASURA_SERVICE_TOKEN_SECRET: $APP_TS_BUSINESS_LOGIC_HASURA_SERVICE_TOKEN_SECRET
+      OTEL_EXPORTER_OTLP_ENDPOINT: $APP_TS_BUSINESS_LOGIC_OTEL_EXPORTER_OTLP_ENDPOINT
+      OTEL_SERVICE_NAME: $APP_TS_BUSINESS_LOGIC_OTEL_SERVICE_NAME
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    ports:
+      - "${APP_TS_BUSINESS_LOGIC_HASURA_CONNECTOR_PORT:-5640}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Connector 5 - Python Business Logic
+  app_py_business_logic:
+    image: rickybobbeh/ddn-connector-py_business_logic:latest
+    pull_policy: always
+    environment:
+      HASURA_SERVICE_TOKEN_SECRET: $APP_PY_BUSINESS_LOGIC_HASURA_SERVICE_TOKEN_SECRET
+      OTEL_EXPORTER_OTLP_ENDPOINT: $APP_PY_BUSINESS_LOGIC_OTEL_EXPORTER_OTLP_ENDPOINT
+      OTEL_SERVICE_NAME: $APP_PY_BUSINESS_LOGIC_OTEL_SERVICE_NAME
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    ports:
+      - "${APP_PY_BUSINESS_LOGIC_HASURA_CONNECTOR_PORT:-5641}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Connector 6 - Go Business Logic
+  app_go_business_logic:
+    image: rickybobbeh/ddn-connector-go_business_logic:latest
+    pull_policy: always
+    environment:
+      HASURA_SERVICE_TOKEN_SECRET: $APP_GO_BUSINESS_LOGIC_HASURA_SERVICE_TOKEN_SECRET
+      OTEL_EXPORTER_OTLP_ENDPOINT: $APP_GO_BUSINESS_LOGIC_OTEL_EXPORTER_OTLP_ENDPOINT
+      OTEL_SERVICE_NAME: $APP_GO_BUSINESS_LOGIC_OTEL_SERVICE_NAME
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    ports:
+      - "${APP_GO_BUSINESS_LOGIC_HASURA_CONNECTOR_PORT:-5642}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   # OpenTelemetry Collector - DISABLED FOR NOW
   # Uncomment when ready to set up telemetry
   # otel-collector:

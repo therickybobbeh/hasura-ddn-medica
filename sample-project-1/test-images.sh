@@ -47,6 +47,9 @@ images=(
     "${DOCKER_USERNAME}/ddn-connector-neon_postgres_1:${TAG}"
     "${DOCKER_USERNAME}/ddn-connector-neon_postgres_2:${TAG}"
     "${DOCKER_USERNAME}/ddn-connector-neon_postgres_lean:${TAG}"
+    "${DOCKER_USERNAME}/ddn-connector-ts_business_logic:${TAG}"
+    "${DOCKER_USERNAME}/ddn-connector-py_business_logic:${TAG}"
+    "${DOCKER_USERNAME}/ddn-connector-go_business_logic:${TAG}"
 )
 
 for image in "${images[@]}"; do
@@ -125,7 +128,7 @@ check_service_health() {
 }
 
 # Check each service (skipping otel-collector for now)
-services=("engine" "app_neon_postgres_1" "app_neon_postgres_2" "app_neon_postgres_lean")
+services=("engine" "app_neon_postgres_1" "app_neon_postgres_2" "app_neon_postgres_lean" "app_ts_business_logic" "app_py_business_logic" "app_go_business_logic")
 all_healthy=true
 
 for service in "${services[@]}"; do
