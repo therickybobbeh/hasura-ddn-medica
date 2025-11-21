@@ -4,11 +4,30 @@ This document describes the TypeScript, Python, and Go business logic connectors
 
 ## Overview
 
-Three custom connectors have been implemented in different languages, each providing identical insurance claim processing functionality:
+Three custom connectors have been implemented in different languages, each providing **identical insurance claim processing functionality**:
 
 1. **TypeScript Connector** (`ts_business_logic`) - Node.js/TypeScript implementation
 2. **Python Connector** (`py_business_logic`) - Python implementation
 3. **Go Connector** (`go_business_logic`) - Go implementation
+
+### ⚠️ Algorithmic Equivalence Guarantee
+
+**All three connectors implement the exact same business logic with identical time complexity:**
+
+- **Time Complexity:** O(1) for single claim operations (`calculateClaimRisk`, `generateClaimSummary`, `processClaim`)
+- **Time Complexity:** O(n) for batch operations where n = number of claims
+- **Algorithm:** Same conditional checks, arithmetic operations, and scoring logic across all implementations
+- **Big O Notation:** No algorithmic differences - all connectors perform the same number of operations
+
+**This means performance differences are purely due to:**
+
+- Language runtime characteristics (compiled vs JIT vs interpreted)
+- Memory management and garbage collection strategies
+- JSON parsing/serialization performance
+- HTTP/network layer implementation
+- Concurrency model efficiency (goroutines vs event loop vs threads)
+
+**Fair Comparison:** The connectors are algorithmically identical, so benchmarks reflect true language/runtime performance differences, not implementation variations.
 
 ## Business Logic
 
