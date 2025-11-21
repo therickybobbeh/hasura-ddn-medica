@@ -1,0 +1,147 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ProcessClaimClaim
+  fields:
+    - name: claimAmount
+      type: Float!
+    - name: claimId
+      type: String!
+    - name: claimType
+      type: String!
+    - name: memberId
+      type: String!
+    - name: providerId
+      type: String
+    - name: serviceDate
+      type: String!
+  graphql:
+    typeName: ProcessClaimClaim
+    inputTypeName: ProcessClaimClaimInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: process_claim_claim
+      fieldMapping:
+        claimAmount:
+          column:
+            name: claim_amount
+        claimId:
+          column:
+            name: claim_id
+        claimType:
+          column:
+            name: claim_type
+        memberId:
+          column:
+            name: member_id
+        providerId:
+          column:
+            name: provider_id
+        serviceDate:
+          column:
+            name: service_date
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ProcessClaimClaim
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimAmount
+          - claimId
+          - claimType
+          - memberId
+          - providerId
+          - serviceDate
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ProcessClaim
+  fields:
+    - name: approved
+      type: Boolean!
+    - name: approvedAmount
+      type: Float
+    - name: claimId
+      type: String!
+    - name: processingTime
+      type: Float!
+    - name: rejectionReason
+      type: String
+    - name: status
+      type: String!
+  graphql:
+    typeName: ProcessClaim
+    inputTypeName: ProcessClaimInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: process_claim
+      fieldMapping:
+        approved:
+          column:
+            name: approved
+        approvedAmount:
+          column:
+            name: approved_amount
+        claimId:
+          column:
+            name: claim_id
+        processingTime:
+          column:
+            name: processing_time
+        rejectionReason:
+          column:
+            name: rejection_reason
+        status:
+          column:
+            name: status
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ProcessClaim
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - approved
+          - approvedAmount
+          - claimId
+          - processingTime
+          - rejectionReason
+          - status
+
+---
+kind: Command
+version: v1
+definition:
+  name: ProcessClaim_2
+  outputType: ProcessClaim!
+  arguments:
+    - name: claim
+      type: ProcessClaimClaim!
+  source:
+    dataConnectorName: py_buisness_logic_1
+    dataConnectorCommand:
+      procedure: process_claim
+  graphql:
+    rootFieldName: processClaim2
+    rootFieldKind: Mutation
+  description: Processes and validates an insurance claim
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: ProcessClaim_2
+  permissions:
+    - role: admin
+      allowExecution: true
+

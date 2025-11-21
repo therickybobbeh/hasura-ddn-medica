@@ -1,0 +1,229 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: go_buisness_logic_1
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: APP_GO_BUISNESS_LOGIC_1_READ_URL
+      write:
+        valueFromEnv: APP_GO_BUISNESS_LOGIC_1_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: APP_GO_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER
+  schema:
+    version: v0.2
+    schema:
+      collections: []
+      functions:
+        - arguments:
+            claims:
+              type:
+                element_type:
+                  name: ClaimData
+                  type: named
+                type: array
+          description: batch calculates risk scores for multiple claims
+          name: batchCalculateRisk
+          result_type:
+            element_type:
+              name: RiskScore
+              type: named
+            type: array
+        - arguments:
+            claim:
+              type:
+                name: ClaimData
+                type: named
+          description: calculates risk score for an insurance claim Query functions in Go start with "Function" prefix
+          name: calculateClaimRisk
+          result_type:
+            type: nullable
+            underlying_type:
+              name: RiskScore
+              type: named
+        - arguments:
+            claim:
+              type:
+                name: ClaimData
+                type: named
+          description: generates formatted summary of a claim
+          name: generateClaimSummary
+          result_type:
+            type: nullable
+            underlying_type:
+              name: ClaimSummary
+              type: named
+      object_types:
+        ClaimData:
+          description: represents input data for an insurance claim
+          fields:
+            claim_amount:
+              type:
+                name: Float64
+                type: named
+            claim_id:
+              type:
+                name: String
+                type: named
+            claim_type:
+              type:
+                name: String
+                type: named
+            member_id:
+              type:
+                name: String
+                type: named
+            provider_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            service_date:
+              type:
+                name: String
+                type: named
+          foreign_keys: {}
+        ClaimProcessResult:
+          description: represents the result of processing a claim
+          fields:
+            approved:
+              type:
+                name: Boolean
+                type: named
+            approved_amount:
+              type:
+                type: nullable
+                underlying_type:
+                  name: Float64
+                  type: named
+            claim_id:
+              type:
+                name: String
+                type: named
+            processing_time:
+              type:
+                name: Float64
+                type: named
+            rejection_reason:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            status:
+              type:
+                name: String
+                type: named
+          foreign_keys: {}
+        ClaimSummary:
+          description: represents a formatted summary of a claim
+          fields:
+            claim_id:
+              type:
+                name: String
+                type: named
+            member_id:
+              type:
+                name: String
+                type: named
+            net_amount:
+              type:
+                name: Float64
+                type: named
+            status:
+              type:
+                name: String
+                type: named
+            summary:
+              type:
+                name: String
+                type: named
+            tax_amount:
+              type:
+                name: Float64
+                type: named
+            total_amount:
+              type:
+                name: Float64
+                type: named
+          foreign_keys: {}
+        RiskScore:
+          description: represents risk assessment result for a claim
+          fields:
+            claim_id:
+              type:
+                name: String
+                type: named
+            factors:
+              type:
+                element_type:
+                  name: String
+                  type: named
+                type: array
+            risk_level:
+              type:
+                name: String
+                type: named
+            risk_score:
+              type:
+                name: Float64
+                type: named
+            timestamp:
+              type:
+                name: String
+                type: named
+          foreign_keys: {}
+      procedures:
+        - arguments:
+            claims:
+              type:
+                element_type:
+                  name: ClaimData
+                  type: named
+                type: array
+          description: batch processes multiple claims
+          name: batchProcessClaims
+          result_type:
+            element_type:
+              name: ClaimProcessResult
+              type: named
+            type: array
+        - arguments:
+            claim:
+              type:
+                name: ClaimData
+                type: named
+          description: processes and validates an insurance claim Mutation functions in Go start with "Procedure" prefix
+          name: processClaim
+          result_type:
+            type: nullable
+            underlying_type:
+              name: ClaimProcessResult
+              type: named
+      scalar_types:
+        Boolean:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: boolean
+        Float64:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: float64
+        String:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: string
+    capabilities:
+      capabilities:
+        mutation: {}
+        query:
+          exists: {}
+          nested_fields:
+            order_by: null
+          variables: {}
+      version: 0.2.10

@@ -1,0 +1,70 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ClaimSummary_1
+  fields:
+    - name: claimId
+      type: String!
+    - name: memberId
+      type: String!
+    - name: netAmount
+      type: Float!
+    - name: status
+      type: String!
+    - name: summary
+      type: String!
+    - name: taxAmount
+      type: Float!
+    - name: totalAmount
+      type: Float!
+  graphql:
+    typeName: ClaimSummary1
+    inputTypeName: ClaimSummary1Input
+  dataConnectorTypeMapping:
+    - dataConnectorName: ts_buisness_logic_1
+      dataConnectorObjectType: ClaimSummary
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ClaimSummary_1
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimId
+          - memberId
+          - netAmount
+          - status
+          - summary
+          - taxAmount
+          - totalAmount
+
+---
+kind: Command
+version: v1
+definition:
+  name: GenerateClaimSummary_1
+  outputType: ClaimSummary_1!
+  arguments:
+    - name: claim
+      type: ClaimData_1!
+  source:
+    dataConnectorName: ts_buisness_logic_1
+    dataConnectorCommand:
+      function: generateClaimSummary
+  graphql:
+    rootFieldName: generateClaimSummary1
+    rootFieldKind: Query
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: GenerateClaimSummary_1
+  permissions:
+    - role: admin
+      allowExecution: true
+

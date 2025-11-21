@@ -2,6 +2,9 @@ include:
   - path: app/connector/neon_postgres_1/compose.yaml
   - path: app/connector/neon_postgres_2/compose.yaml
   - path: app/connector/neon_postgres_lean/compose.yaml
+  - path: app/connector/go_buisness_logic_1/compose.yaml
+  - path: app/connector/py_buisness_logic_1/compose.yaml
+  - path: app/connector/ts_buisness_logic_1/compose.yaml
 services:
   engine:
     build:
@@ -20,7 +23,7 @@ services:
     labels:
       io.hasura.ddn.service-name: engine
     ports:
-      - "${ENGINE_PORT:-3280}:3000"
+      - ${ENGINE_PORT:-3280}:3000
   otel-collector:
     command:
       - --config=/etc/otel-collector-config.yaml
@@ -28,7 +31,7 @@ services:
       HASURA_DDN_PAT: ${HASURA_DDN_PAT}
     image: otel/opentelemetry-collector:0.104.0
     ports:
-      - "${OTEL_GRPC_PORT:-4317}:4317"
-      - "${OTEL_HTTP_PORT:-4318}:4318"
+      - ${OTEL_GRPC_PORT:-4317}:4317
+      - ${OTEL_HTTP_PORT:-4318}:4318
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml

@@ -1,0 +1,153 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: GenerateClaimSummaryClaim
+  fields:
+    - name: claimAmount
+      type: Float!
+    - name: claimId
+      type: String!
+    - name: claimType
+      type: String!
+    - name: memberId
+      type: String!
+    - name: providerId
+      type: String
+    - name: serviceDate
+      type: String!
+  graphql:
+    typeName: GenerateClaimSummaryClaim
+    inputTypeName: GenerateClaimSummaryClaimInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: generate_claim_summary_claim
+      fieldMapping:
+        claimAmount:
+          column:
+            name: claim_amount
+        claimId:
+          column:
+            name: claim_id
+        claimType:
+          column:
+            name: claim_type
+        memberId:
+          column:
+            name: member_id
+        providerId:
+          column:
+            name: provider_id
+        serviceDate:
+          column:
+            name: service_date
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: GenerateClaimSummaryClaim
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimAmount
+          - claimId
+          - claimType
+          - memberId
+          - providerId
+          - serviceDate
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: GenerateClaimSummary
+  fields:
+    - name: claimId
+      type: String!
+    - name: memberId
+      type: String!
+    - name: netAmount
+      type: Float!
+    - name: status
+      type: String!
+    - name: summary
+      type: String!
+    - name: taxAmount
+      type: Float!
+    - name: totalAmount
+      type: Float!
+  graphql:
+    typeName: GenerateClaimSummary
+    inputTypeName: GenerateClaimSummaryInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: generate_claim_summary
+      fieldMapping:
+        claimId:
+          column:
+            name: claim_id
+        memberId:
+          column:
+            name: member_id
+        netAmount:
+          column:
+            name: net_amount
+        status:
+          column:
+            name: status
+        summary:
+          column:
+            name: summary
+        taxAmount:
+          column:
+            name: tax_amount
+        totalAmount:
+          column:
+            name: total_amount
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: GenerateClaimSummary
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimId
+          - memberId
+          - netAmount
+          - status
+          - summary
+          - taxAmount
+          - totalAmount
+
+---
+kind: Command
+version: v1
+definition:
+  name: GenerateClaimSummary_2
+  outputType: GenerateClaimSummary!
+  arguments:
+    - name: claim
+      type: GenerateClaimSummaryClaim!
+  source:
+    dataConnectorName: py_buisness_logic_1
+    dataConnectorCommand:
+      function: generate_claim_summary
+  graphql:
+    rootFieldName: generateClaimSummary2
+    rootFieldKind: Query
+  description: Generates formatted summary of a claim
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: GenerateClaimSummary_2
+  permissions:
+    - role: admin
+      allowExecution: true
+

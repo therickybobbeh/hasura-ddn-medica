@@ -1,0 +1,537 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: py_buisness_logic_1
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: APP_PY_BUISNESS_LOGIC_1_READ_URL
+      write:
+        valueFromEnv: APP_PY_BUISNESS_LOGIC_1_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: APP_PY_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER
+  schema:
+    version: v0.1
+    schema:
+      collections: []
+      functions:
+        - arguments:
+            claim:
+              description: null
+              type:
+                name: calculate_claim_risk_claim
+                type: named
+          description: Calculates risk score for an insurance claim
+          name: calculate_claim_risk
+          result_type:
+            name: calculate_claim_risk
+            type: named
+        - arguments:
+            claim:
+              description: null
+              type:
+                name: generate_claim_summary_claim
+                type: named
+          description: Generates formatted summary of a claim
+          name: generate_claim_summary
+          result_type:
+            name: generate_claim_summary
+            type: named
+        - arguments:
+            claims:
+              description: null
+              type:
+                element_type:
+                  name: batch_calculate_risk_claims
+                  type: named
+                type: array
+          description: Batch calculates risk scores for multiple claims (O(n) complexity)
+          name: batch_calculate_risk
+          result_type:
+            element_type:
+              name: batch_calculate_risk
+              type: named
+            type: array
+      object_types:
+        batch_calculate_risk:
+          description: null
+          fields:
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            factors:
+              arguments: {}
+              description: null
+              type:
+                element_type:
+                  name: String
+                  type: named
+                type: array
+            risk_level:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            risk_score:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            timestamp:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+        batch_calculate_risk_claims:
+          description: null
+          fields:
+            claim_amount:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            claim_type:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            member_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            provider_id:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            service_date:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+        batch_process_claims:
+          description: null
+          fields:
+            approved:
+              arguments: {}
+              description: null
+              type:
+                name: Boolean
+                type: named
+            approved_amount:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: Float
+                  type: named
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            processing_time:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            rejection_reason:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            status:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+        batch_process_claims_claims:
+          description: null
+          fields:
+            claim_amount:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            claim_type:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            member_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            provider_id:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            service_date:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+        calculate_claim_risk:
+          description: null
+          fields:
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            factors:
+              arguments: {}
+              description: null
+              type:
+                element_type:
+                  name: String
+                  type: named
+                type: array
+            risk_level:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            risk_score:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            timestamp:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+        calculate_claim_risk_claim:
+          description: null
+          fields:
+            claim_amount:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            claim_type:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            member_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            provider_id:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            service_date:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+        generate_claim_summary:
+          description: null
+          fields:
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            member_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            net_amount:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            status:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            summary:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            tax_amount:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            total_amount:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+        generate_claim_summary_claim:
+          description: null
+          fields:
+            claim_amount:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            claim_type:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            member_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            provider_id:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            service_date:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+        process_claim:
+          description: null
+          fields:
+            approved:
+              arguments: {}
+              description: null
+              type:
+                name: Boolean
+                type: named
+            approved_amount:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: Float
+                  type: named
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            processing_time:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            rejection_reason:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            status:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+        process_claim_claim:
+          description: null
+          fields:
+            claim_amount:
+              arguments: {}
+              description: null
+              type:
+                name: Float
+                type: named
+            claim_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            claim_type:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            member_id:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+            provider_id:
+              arguments: {}
+              description: null
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            service_date:
+              arguments: {}
+              description: null
+              type:
+                name: String
+                type: named
+      procedures:
+        - arguments:
+            claim:
+              description: null
+              type:
+                name: process_claim_claim
+                type: named
+          description: Processes and validates an insurance claim
+          name: process_claim
+          result_type:
+            name: process_claim
+            type: named
+        - arguments:
+            claims:
+              description: null
+              type:
+                element_type:
+                  name: batch_process_claims_claims
+                  type: named
+                type: array
+          description: Batch processes multiple claims (O(n) complexity)
+          name: batch_process_claims
+          result_type:
+            element_type:
+              name: batch_process_claims
+              type: named
+            type: array
+      scalar_types:
+        Boolean:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: boolean
+        Float:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: float64
+        HeaderMap:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: json
+        Int:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: integer
+        Json:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: json
+        String:
+          aggregate_functions: {}
+          comparison_operators: {}
+          representation:
+            type: string
+    capabilities:
+      capabilities:
+        mutation:
+          explain: null
+          transactional: {}
+        query:
+          aggregates: {}
+          exists:
+            nested_collections: null
+          explain: {}
+          nested_fields:
+            aggregates: null
+            filter_by: null
+            order_by: null
+          variables: {}
+        relationships: null
+      version: 0.1.6

@@ -1,0 +1,141 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: BatchCalculateRiskClaims
+  fields:
+    - name: claimAmount
+      type: Float!
+    - name: claimId
+      type: String!
+    - name: claimType
+      type: String!
+    - name: memberId
+      type: String!
+    - name: providerId
+      type: String
+    - name: serviceDate
+      type: String!
+  graphql:
+    typeName: BatchCalculateRiskClaims
+    inputTypeName: BatchCalculateRiskClaimsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: batch_calculate_risk_claims
+      fieldMapping:
+        claimAmount:
+          column:
+            name: claim_amount
+        claimId:
+          column:
+            name: claim_id
+        claimType:
+          column:
+            name: claim_type
+        memberId:
+          column:
+            name: member_id
+        providerId:
+          column:
+            name: provider_id
+        serviceDate:
+          column:
+            name: service_date
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: BatchCalculateRiskClaims
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimAmount
+          - claimId
+          - claimType
+          - memberId
+          - providerId
+          - serviceDate
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: BatchCalculateRisk
+  fields:
+    - name: claimId
+      type: String!
+    - name: factors
+      type: "[String!]!"
+    - name: riskLevel
+      type: String!
+    - name: riskScore
+      type: Float!
+    - name: timestamp
+      type: String!
+  graphql:
+    typeName: BatchCalculateRisk
+    inputTypeName: BatchCalculateRiskInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: batch_calculate_risk
+      fieldMapping:
+        claimId:
+          column:
+            name: claim_id
+        factors:
+          column:
+            name: factors
+        riskLevel:
+          column:
+            name: risk_level
+        riskScore:
+          column:
+            name: risk_score
+        timestamp:
+          column:
+            name: timestamp
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: BatchCalculateRisk
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimId
+          - factors
+          - riskLevel
+          - riskScore
+          - timestamp
+
+---
+kind: Command
+version: v1
+definition:
+  name: BatchCalculateRisk_2
+  outputType: "[BatchCalculateRisk!]!"
+  arguments:
+    - name: claims
+      type: "[BatchCalculateRiskClaims!]!"
+  source:
+    dataConnectorName: py_buisness_logic_1
+    dataConnectorCommand:
+      function: batch_calculate_risk
+  graphql:
+    rootFieldName: batchCalculateRisk2
+    rootFieldKind: Query
+  description: Batch calculates risk scores for multiple claims (O(n) complexity)
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: BatchCalculateRisk_2
+  permissions:
+    - role: admin
+      allowExecution: true
+

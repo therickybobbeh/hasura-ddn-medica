@@ -1,0 +1,26 @@
+---
+kind: Command
+version: v1
+definition:
+  name: BatchCalculateRisk_1
+  outputType: "[RiskScore_1!]!"
+  arguments:
+    - name: claims
+      type: "[ClaimData_1!]!"
+  source:
+    dataConnectorName: ts_buisness_logic_1
+    dataConnectorCommand:
+      function: batchCalculateRisk
+  graphql:
+    rootFieldName: batchCalculateRisk1
+    rootFieldKind: Query
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: BatchCalculateRisk_1
+  permissions:
+    - role: admin
+      allowExecution: true
+

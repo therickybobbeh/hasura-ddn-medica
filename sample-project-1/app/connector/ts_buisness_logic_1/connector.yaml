@@ -1,0 +1,16 @@
+kind: Connector
+version: v2
+definition:
+  name: ts_buisness_logic_1
+  subgraph: app
+  source: hasura/nodejs:v1.16.0
+  context: .
+  envMapping:
+    HASURA_CONNECTOR_PORT:
+      fromEnv: APP_TS_BUISNESS_LOGIC_1_HASURA_CONNECTOR_PORT
+    HASURA_SERVICE_TOKEN_SECRET:
+      fromEnv: APP_TS_BUISNESS_LOGIC_1_HASURA_SERVICE_TOKEN_SECRET
+    OTEL_EXPORTER_OTLP_ENDPOINT:
+      fromEnv: APP_TS_BUISNESS_LOGIC_1_OTEL_EXPORTER_OTLP_ENDPOINT
+    OTEL_SERVICE_NAME:
+      fromEnv: APP_TS_BUISNESS_LOGIC_1_OTEL_SERVICE_NAME

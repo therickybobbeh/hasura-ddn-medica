@@ -1,0 +1,48 @@
+packagingDefinition:
+  type: ManagedDockerBuild
+supportedEnvironmentVariables: []
+commands:
+  update: hasura-ndc-go update
+  upgradeConfiguration: hasura-ndc-go upgrade
+cliPlugin:
+  type: null
+  name: ndc-go
+  version: v2.1.0
+dockerComposeWatch:
+  - path: go.mod
+    action: rebuild
+  - path: go.sum
+    action: rebuild
+  - path: main.go
+    action: rebuild
+  - path: connector.go
+    action: rebuild
+  - path: connector.generated.go
+    action: rebuild
+nativeToolchainDefinition:
+  commands:
+    start:
+      type: ShellScript
+      bash: "#!/usr/bin/env bash\nset -eu -o pipefail        \nHASURA_CONFIGURATION_DIRECTORY=\"$HASURA_PLUGIN_CONNECTOR_CONTEXT_PATH\" \"$HASURA_DDN_NATIVE_CONNECTOR_DIR/hasura-ndc-go\" serve\n"
+      powershell: |
+        $ErrorActionPreference = "Stop"
+        $env:HASURA_CONFIGURATION_DIRECTORY="$env:HASURA_PLUGIN_CONNECTOR_CONTEXT_PATH"; & "$env:HASURA_DDN_NATIVE_CONNECTOR_DIR\hasura-ndc-go.exe" serve
+    watch:
+      type: ShellScript
+      bash: |
+        #!/usr/bin/env bash
+        echo "Watch is not supported for this connector"
+        exit 1
+      powershell: |
+        Write-Output "Watch is not supported for this connector"
+        exit 1
+    update:
+      type: ShellScript
+      bash: |
+        #!/usr/bin/env bash
+        set -eu -o pipefail
+        "$HASURA_DDN_NATIVE_CONNECTOR_PLUGIN_DIR/hasura-ndc-go" update
+      powershell: |
+        $ErrorActionPreference = "Stop"
+        & "$env:HASURA_DDN_NATIVE_CONNECTOR_PLUGIN_DIR\hasura-ndc-go.exe" update
+documentationPage: https://hasura.io/docs/3.0/business-logic/tutorials/add-custom-logic

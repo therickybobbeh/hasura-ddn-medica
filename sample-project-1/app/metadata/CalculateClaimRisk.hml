@@ -1,0 +1,30 @@
+---
+kind: Command
+version: v1
+definition:
+  name: CalculateClaimRisk
+  outputType: RiskScore
+  arguments:
+    - name: claim
+      type: ClaimData!
+  source:
+    dataConnectorName: go_buisness_logic_1
+    dataConnectorCommand:
+      function: calculateClaimRisk
+    argumentMapping:
+      claim: claim
+  graphql:
+    rootFieldName: calculateClaimRisk
+    rootFieldKind: Query
+  description: calculates risk score for an insurance claim Query functions in Go
+    start with "Function" prefix
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: CalculateClaimRisk
+  permissions:
+    - role: admin
+      allowExecution: true
+

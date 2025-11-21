@@ -1,0 +1,96 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ClaimSummary
+  description: represents a formatted summary of a claim
+  fields:
+    - name: claimId
+      type: String!
+    - name: memberId
+      type: String!
+    - name: netAmount
+      type: Float64!
+    - name: status
+      type: String!
+    - name: summary
+      type: String!
+    - name: taxAmount
+      type: Float64!
+    - name: totalAmount
+      type: Float64!
+  graphql:
+    typeName: ClaimSummary
+    inputTypeName: ClaimSummaryInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: go_buisness_logic_1
+      dataConnectorObjectType: ClaimSummary
+      fieldMapping:
+        claimId:
+          column:
+            name: claim_id
+        memberId:
+          column:
+            name: member_id
+        netAmount:
+          column:
+            name: net_amount
+        status:
+          column:
+            name: status
+        summary:
+          column:
+            name: summary
+        taxAmount:
+          column:
+            name: tax_amount
+        totalAmount:
+          column:
+            name: total_amount
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ClaimSummary
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimId
+          - memberId
+          - netAmount
+          - status
+          - summary
+          - taxAmount
+          - totalAmount
+
+---
+kind: Command
+version: v1
+definition:
+  name: GenerateClaimSummary
+  outputType: ClaimSummary
+  arguments:
+    - name: claim
+      type: ClaimData!
+  source:
+    dataConnectorName: go_buisness_logic_1
+    dataConnectorCommand:
+      function: generateClaimSummary
+    argumentMapping:
+      claim: claim
+  graphql:
+    rootFieldName: generateClaimSummary
+    rootFieldKind: Query
+  description: generates formatted summary of a claim
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: GenerateClaimSummary
+  permissions:
+    - role: admin
+      allowExecution: true
+

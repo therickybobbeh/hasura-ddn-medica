@@ -1,0 +1,141 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: CalculateClaimRiskClaim
+  fields:
+    - name: claimAmount
+      type: Float!
+    - name: claimId
+      type: String!
+    - name: claimType
+      type: String!
+    - name: memberId
+      type: String!
+    - name: providerId
+      type: String
+    - name: serviceDate
+      type: String!
+  graphql:
+    typeName: CalculateClaimRiskClaim
+    inputTypeName: CalculateClaimRiskClaimInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: calculate_claim_risk_claim
+      fieldMapping:
+        claimAmount:
+          column:
+            name: claim_amount
+        claimId:
+          column:
+            name: claim_id
+        claimType:
+          column:
+            name: claim_type
+        memberId:
+          column:
+            name: member_id
+        providerId:
+          column:
+            name: provider_id
+        serviceDate:
+          column:
+            name: service_date
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: CalculateClaimRiskClaim
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimAmount
+          - claimId
+          - claimType
+          - memberId
+          - providerId
+          - serviceDate
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: CalculateClaimRisk
+  fields:
+    - name: claimId
+      type: String!
+    - name: factors
+      type: "[String!]!"
+    - name: riskLevel
+      type: String!
+    - name: riskScore
+      type: Float!
+    - name: timestamp
+      type: String!
+  graphql:
+    typeName: CalculateClaimRisk
+    inputTypeName: CalculateClaimRiskInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: calculate_claim_risk
+      fieldMapping:
+        claimId:
+          column:
+            name: claim_id
+        factors:
+          column:
+            name: factors
+        riskLevel:
+          column:
+            name: risk_level
+        riskScore:
+          column:
+            name: risk_score
+        timestamp:
+          column:
+            name: timestamp
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: CalculateClaimRisk
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimId
+          - factors
+          - riskLevel
+          - riskScore
+          - timestamp
+
+---
+kind: Command
+version: v1
+definition:
+  name: CalculateClaimRisk_2
+  outputType: CalculateClaimRisk!
+  arguments:
+    - name: claim
+      type: CalculateClaimRiskClaim!
+  source:
+    dataConnectorName: py_buisness_logic_1
+    dataConnectorCommand:
+      function: calculate_claim_risk
+  graphql:
+    rootFieldName: calculateClaimRisk2
+    rootFieldKind: Query
+  description: Calculates risk score for an insurance claim
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: CalculateClaimRisk_2
+  permissions:
+    - role: admin
+      allowExecution: true
+

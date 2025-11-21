@@ -1,0 +1,226 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: ts_buisness_logic_1
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: APP_TS_BUISNESS_LOGIC_1_READ_URL
+      write:
+        valueFromEnv: APP_TS_BUISNESS_LOGIC_1_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: APP_TS_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER
+  schema:
+    version: v0.2
+    schema:
+      collections: []
+      functions:
+        - arguments:
+            claim:
+              type:
+                name: ClaimData
+                type: named
+          name: calculateClaimRisk
+          result_type:
+            name: RiskScore
+            type: named
+        - arguments:
+            claim:
+              type:
+                name: ClaimData
+                type: named
+          name: generateClaimSummary
+          result_type:
+            name: ClaimSummary
+            type: named
+        - arguments:
+            claims:
+              type:
+                element_type:
+                  name: ClaimData
+                  type: named
+                type: array
+          name: batchCalculateRisk
+          result_type:
+            element_type:
+              name: RiskScore
+              type: named
+            type: array
+      object_types:
+        ClaimData:
+          description: |-
+            Insurance Claim Processing Business Logic - TypeScript Implementation
+
+            This connector implements identical business logic to the Go and Python connectors
+            for fair performance comparison. All algorithms have O(1) complexity for single
+            operations and O(n) for batch operations.
+          fields:
+            claimAmount:
+              type:
+                name: Float
+                type: named
+            claimId:
+              type:
+                name: String
+                type: named
+            claimType:
+              type:
+                name: String
+                type: named
+            memberId:
+              type:
+                name: String
+                type: named
+            providerId:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            serviceDate:
+              type:
+                name: String
+                type: named
+          foreign_keys: {}
+        ClaimProcessResult:
+          fields:
+            approved:
+              type:
+                name: Boolean
+                type: named
+            approvedAmount:
+              type:
+                type: nullable
+                underlying_type:
+                  name: Float
+                  type: named
+            claimId:
+              type:
+                name: String
+                type: named
+            processingTime:
+              type:
+                name: Float
+                type: named
+            rejectionReason:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            status:
+              type:
+                name: String
+                type: named
+          foreign_keys: {}
+        ClaimSummary:
+          fields:
+            claimId:
+              type:
+                name: String
+                type: named
+            memberId:
+              type:
+                name: String
+                type: named
+            netAmount:
+              type:
+                name: Float
+                type: named
+            status:
+              type:
+                name: String
+                type: named
+            summary:
+              type:
+                name: String
+                type: named
+            taxAmount:
+              type:
+                name: Float
+                type: named
+            totalAmount:
+              type:
+                name: Float
+                type: named
+          foreign_keys: {}
+        RiskScore:
+          fields:
+            claimId:
+              type:
+                name: String
+                type: named
+            factors:
+              type:
+                element_type:
+                  name: String
+                  type: named
+                type: array
+            riskLevel:
+              type:
+                name: String
+                type: named
+            riskScore:
+              type:
+                name: Float
+                type: named
+            timestamp:
+              type:
+                name: String
+                type: named
+          foreign_keys: {}
+      procedures:
+        - arguments:
+            claim:
+              type:
+                name: ClaimData
+                type: named
+          description: Processes and validates an insurance claim
+          name: processClaim
+          result_type:
+            name: ClaimProcessResult
+            type: named
+        - arguments:
+            claims:
+              type:
+                element_type:
+                  name: ClaimData
+                  type: named
+                type: array
+          description: Batch processes multiple claims (O(n) complexity)
+          name: batchProcessClaims
+          result_type:
+            element_type:
+              name: ClaimProcessResult
+              type: named
+            type: array
+      scalar_types:
+        Boolean:
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+          representation:
+            type: boolean
+        Float:
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+          representation:
+            type: float64
+        String:
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+          representation:
+            type: string
+    capabilities:
+      capabilities:
+        mutation: {}
+        query:
+          nested_fields: {}
+          variables: {}
+      version: 0.2.0

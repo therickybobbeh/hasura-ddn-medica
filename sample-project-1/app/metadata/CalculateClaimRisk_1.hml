@@ -1,0 +1,114 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ClaimData_1
+  description: >-
+    Insurance Claim Processing Business Logic - TypeScript Implementation
+
+
+    This connector implements identical business logic to the Go and Python connectors
+
+    for fair performance comparison. All algorithms have O(1) complexity for single
+
+    operations and O(n) for batch operations.
+  fields:
+    - name: claimAmount
+      type: Float!
+    - name: claimId
+      type: String!
+    - name: claimType
+      type: String!
+    - name: memberId
+      type: String!
+    - name: providerId
+      type: String
+    - name: serviceDate
+      type: String!
+  graphql:
+    typeName: ClaimData1
+    inputTypeName: ClaimData1Input
+  dataConnectorTypeMapping:
+    - dataConnectorName: ts_buisness_logic_1
+      dataConnectorObjectType: ClaimData
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ClaimData_1
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimAmount
+          - claimId
+          - claimType
+          - memberId
+          - providerId
+          - serviceDate
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: RiskScore_1
+  fields:
+    - name: claimId
+      type: String!
+    - name: factors
+      type: "[String!]!"
+    - name: riskLevel
+      type: String!
+    - name: riskScore
+      type: Float!
+    - name: timestamp
+      type: String!
+  graphql:
+    typeName: RiskScore1
+    inputTypeName: RiskScore1Input
+  dataConnectorTypeMapping:
+    - dataConnectorName: ts_buisness_logic_1
+      dataConnectorObjectType: RiskScore
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: RiskScore_1
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimId
+          - factors
+          - riskLevel
+          - riskScore
+          - timestamp
+
+---
+kind: Command
+version: v1
+definition:
+  name: CalculateClaimRisk_1
+  outputType: RiskScore_1!
+  arguments:
+    - name: claim
+      type: ClaimData_1!
+  source:
+    dataConnectorName: ts_buisness_logic_1
+    dataConnectorCommand:
+      function: calculateClaimRisk
+  graphql:
+    rootFieldName: calculateClaimRisk1
+    rootFieldKind: Query
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: CalculateClaimRisk_1
+  permissions:
+    - role: admin
+      allowExecution: true
+

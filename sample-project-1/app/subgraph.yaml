@@ -8,6 +8,12 @@ definition:
   includePaths:
     - metadata
   envMapping:
+    APP_GO_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER:
+      fromEnv: APP_GO_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER
+    APP_GO_BUISNESS_LOGIC_1_READ_URL:
+      fromEnv: APP_GO_BUISNESS_LOGIC_1_READ_URL
+    APP_GO_BUISNESS_LOGIC_1_WRITE_URL:
+      fromEnv: APP_GO_BUISNESS_LOGIC_1_WRITE_URL
     APP_NEON_POSTGRES_1_AUTHORIZATION_HEADER:
       fromEnv: APP_NEON_POSTGRES_1_AUTHORIZATION_HEADER
     APP_NEON_POSTGRES_1_READ_URL:
@@ -26,6 +32,18 @@ definition:
       fromEnv: APP_NEON_POSTGRES_LEAN_READ_URL
     APP_NEON_POSTGRES_LEAN_WRITE_URL:
       fromEnv: APP_NEON_POSTGRES_LEAN_WRITE_URL
+    APP_PY_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER:
+      fromEnv: APP_PY_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER
+    APP_PY_BUISNESS_LOGIC_1_READ_URL:
+      fromEnv: APP_PY_BUISNESS_LOGIC_1_READ_URL
+    APP_PY_BUISNESS_LOGIC_1_WRITE_URL:
+      fromEnv: APP_PY_BUISNESS_LOGIC_1_WRITE_URL
+    APP_TS_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER:
+      fromEnv: APP_TS_BUISNESS_LOGIC_1_AUTHORIZATION_HEADER
+    APP_TS_BUISNESS_LOGIC_1_READ_URL:
+      fromEnv: APP_TS_BUISNESS_LOGIC_1_READ_URL
+    APP_TS_BUISNESS_LOGIC_1_WRITE_URL:
+      fromEnv: APP_TS_BUISNESS_LOGIC_1_WRITE_URL
   connectors:
     - path: connector/neon_postgres_1/connector.yaml
       connectorLinkName: neon_postgres_1
@@ -33,9 +51,9 @@ definition:
       connectorLinkName: neon_postgres_2
     - path: connector/neon_postgres_lean/connector.yaml
       connectorLinkName: neon_postgres_lean
-    - path: connector/ts_business_logic/connector.yaml
-      connectorLinkName: ts_business_logic
-    - path: connector/py_business_logic/connector.yaml
-      connectorLinkName: py_business_logic
-    - path: connector/go_business_logic/connector.yaml
-      connectorLinkName: go_business_logic
+    - path: connector/go_buisness_logic_1/connector.yaml
+      connectorLinkName: go_buisness_logic_1
+    - path: connector/py_buisness_logic_1/connector.yaml
+      connectorLinkName: py_buisness_logic_1
+    - path: connector/ts_buisness_logic_1/connector.yaml
+      connectorLinkName: ts_buisness_logic_1

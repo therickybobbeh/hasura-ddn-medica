@@ -1,0 +1,27 @@
+---
+kind: Command
+version: v1
+definition:
+  name: BatchProcessClaims_1
+  outputType: "[ClaimProcessResult_1!]!"
+  arguments:
+    - name: claims
+      type: "[ClaimData_1!]!"
+  source:
+    dataConnectorName: ts_buisness_logic_1
+    dataConnectorCommand:
+      procedure: batchProcessClaims
+  graphql:
+    rootFieldName: batchProcessClaims1
+    rootFieldKind: Mutation
+  description: Batch processes multiple claims (O(n) complexity)
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: BatchProcessClaims_1
+  permissions:
+    - role: admin
+      allowExecution: true
+

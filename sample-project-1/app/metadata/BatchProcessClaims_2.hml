@@ -1,0 +1,147 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: BatchProcessClaimsClaims
+  fields:
+    - name: claimAmount
+      type: Float!
+    - name: claimId
+      type: String!
+    - name: claimType
+      type: String!
+    - name: memberId
+      type: String!
+    - name: providerId
+      type: String
+    - name: serviceDate
+      type: String!
+  graphql:
+    typeName: BatchProcessClaimsClaims
+    inputTypeName: BatchProcessClaimsClaimsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: batch_process_claims_claims
+      fieldMapping:
+        claimAmount:
+          column:
+            name: claim_amount
+        claimId:
+          column:
+            name: claim_id
+        claimType:
+          column:
+            name: claim_type
+        memberId:
+          column:
+            name: member_id
+        providerId:
+          column:
+            name: provider_id
+        serviceDate:
+          column:
+            name: service_date
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: BatchProcessClaimsClaims
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimAmount
+          - claimId
+          - claimType
+          - memberId
+          - providerId
+          - serviceDate
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: BatchProcessClaims
+  fields:
+    - name: approved
+      type: Boolean!
+    - name: approvedAmount
+      type: Float
+    - name: claimId
+      type: String!
+    - name: processingTime
+      type: Float!
+    - name: rejectionReason
+      type: String
+    - name: status
+      type: String!
+  graphql:
+    typeName: BatchProcessClaims
+    inputTypeName: BatchProcessClaimsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: py_buisness_logic_1
+      dataConnectorObjectType: batch_process_claims
+      fieldMapping:
+        approved:
+          column:
+            name: approved
+        approvedAmount:
+          column:
+            name: approved_amount
+        claimId:
+          column:
+            name: claim_id
+        processingTime:
+          column:
+            name: processing_time
+        rejectionReason:
+          column:
+            name: rejection_reason
+        status:
+          column:
+            name: status
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: BatchProcessClaims
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - approved
+          - approvedAmount
+          - claimId
+          - processingTime
+          - rejectionReason
+          - status
+
+---
+kind: Command
+version: v1
+definition:
+  name: BatchProcessClaims_2
+  outputType: "[BatchProcessClaims!]!"
+  arguments:
+    - name: claims
+      type: "[BatchProcessClaimsClaims!]!"
+  source:
+    dataConnectorName: py_buisness_logic_1
+    dataConnectorCommand:
+      procedure: batch_process_claims
+  graphql:
+    rootFieldName: batchProcessClaims2
+    rootFieldKind: Mutation
+  description: Batch processes multiple claims (O(n) complexity)
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: BatchProcessClaims_2
+  permissions:
+    - role: admin
+      allowExecution: true
+

@@ -1,0 +1,30 @@
+---
+kind: Command
+version: v1
+definition:
+  name: ProcessClaim
+  outputType: ClaimProcessResult
+  arguments:
+    - name: claim
+      type: ClaimData!
+  source:
+    dataConnectorName: go_buisness_logic_1
+    dataConnectorCommand:
+      procedure: processClaim
+    argumentMapping:
+      claim: claim
+  graphql:
+    rootFieldName: processClaim
+    rootFieldKind: Mutation
+  description: processes and validates an insurance claim Mutation functions in Go
+    start with "Procedure" prefix
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: ProcessClaim
+  permissions:
+    - role: admin
+      allowExecution: true
+

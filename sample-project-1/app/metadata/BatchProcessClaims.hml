@@ -1,0 +1,88 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ClaimProcessResult
+  description: represents the result of processing a claim
+  fields:
+    - name: approved
+      type: Boolean!
+    - name: approvedAmount
+      type: Float64
+    - name: claimId
+      type: String!
+    - name: processingTime
+      type: Float64!
+    - name: rejectionReason
+      type: String
+    - name: status
+      type: String!
+  graphql:
+    typeName: ClaimProcessResult
+    inputTypeName: ClaimProcessResultInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: go_buisness_logic_1
+      dataConnectorObjectType: ClaimProcessResult
+      fieldMapping:
+        approved:
+          column:
+            name: approved
+        approvedAmount:
+          column:
+            name: approved_amount
+        claimId:
+          column:
+            name: claim_id
+        processingTime:
+          column:
+            name: processing_time
+        rejectionReason:
+          column:
+            name: rejection_reason
+        status:
+          column:
+            name: status
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ClaimProcessResult
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - approved
+          - approvedAmount
+          - claimId
+          - processingTime
+          - rejectionReason
+          - status
+
+---
+kind: Command
+version: v1
+definition:
+  name: BatchProcessClaims
+  outputType: "[ClaimProcessResult!]!"
+  arguments:
+    - name: claims
+      type: "[ClaimData!]!"
+  source:
+    dataConnectorName: go_buisness_logic_1
+    dataConnectorCommand:
+      procedure: batchProcessClaims
+  graphql:
+    rootFieldName: batchProcessClaims
+    rootFieldKind: Mutation
+  description: batch processes multiple claims
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: BatchProcessClaims
+  permissions:
+    - role: admin
+      allowExecution: true
+

@@ -1,0 +1,143 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ClaimData
+  description: represents input data for an insurance claim
+  fields:
+    - name: claimAmount
+      type: Float64!
+    - name: claimId
+      type: String!
+    - name: claimType
+      type: String!
+    - name: memberId
+      type: String!
+    - name: providerId
+      type: String
+    - name: serviceDate
+      type: String!
+  graphql:
+    typeName: ClaimData
+    inputTypeName: ClaimDataInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: go_buisness_logic_1
+      dataConnectorObjectType: ClaimData
+      fieldMapping:
+        claimAmount:
+          column:
+            name: claim_amount
+        claimId:
+          column:
+            name: claim_id
+        claimType:
+          column:
+            name: claim_type
+        memberId:
+          column:
+            name: member_id
+        providerId:
+          column:
+            name: provider_id
+        serviceDate:
+          column:
+            name: service_date
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ClaimData
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimAmount
+          - claimId
+          - claimType
+          - memberId
+          - providerId
+          - serviceDate
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: RiskScore
+  description: represents risk assessment result for a claim
+  fields:
+    - name: claimId
+      type: String!
+    - name: factors
+      type: "[String!]!"
+    - name: riskLevel
+      type: String!
+    - name: riskScore
+      type: Float64!
+    - name: timestamp
+      type: String!
+  graphql:
+    typeName: RiskScore
+    inputTypeName: RiskScoreInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: go_buisness_logic_1
+      dataConnectorObjectType: RiskScore
+      fieldMapping:
+        claimId:
+          column:
+            name: claim_id
+        factors:
+          column:
+            name: factors
+        riskLevel:
+          column:
+            name: risk_level
+        riskScore:
+          column:
+            name: risk_score
+        timestamp:
+          column:
+            name: timestamp
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: RiskScore
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - claimId
+          - factors
+          - riskLevel
+          - riskScore
+          - timestamp
+
+---
+kind: Command
+version: v1
+definition:
+  name: BatchCalculateRisk
+  outputType: "[RiskScore!]!"
+  arguments:
+    - name: claims
+      type: "[ClaimData!]!"
+  source:
+    dataConnectorName: go_buisness_logic_1
+    dataConnectorCommand:
+      function: batchCalculateRisk
+  graphql:
+    rootFieldName: batchCalculateRisk
+    rootFieldKind: Query
+  description: batch calculates risk scores for multiple claims
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: BatchCalculateRisk
+  permissions:
+    - role: admin
+      allowExecution: true
+
