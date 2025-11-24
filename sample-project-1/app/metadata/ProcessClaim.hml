@@ -14,10 +14,9 @@ definition:
     argumentMapping:
       claim: claim
   graphql:
-    rootFieldName: processClaim
+    rootFieldName: processClaimGo
     rootFieldKind: Mutation
-  description: processes and validates an insurance claim Mutation functions in Go
-    start with "Procedure" prefix
+  description: "Processes and adjudicates insurance claim using Go implementation. Validates eligibility, checks benefit coverage, applies plan rules (copay/coinsurance/deductible), and determines approval status. Returns approved amount, processing time, and rejection reason if denied. Executes real-time claim adjudication workflow. Algorithmically equivalent to TypeScript and Python implementations."
 
 ---
 kind: CommandPermissions

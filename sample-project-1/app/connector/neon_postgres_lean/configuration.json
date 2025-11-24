@@ -37,6 +37,14 @@
             "hasDefault": "hasDefault",
             "description": null
           },
+          "external_reference_id": {
+            "name": "external_reference_id",
+            "type": {
+              "scalarType": "text"
+            },
+            "nullable": "nullable",
+            "description": null
+          },
           "id": {
             "name": "id",
             "type": {
@@ -201,6 +209,14 @@
             "name": "end_date",
             "type": {
               "scalarType": "date"
+            },
+            "nullable": "nullable",
+            "description": null
+          },
+          "external_reference_id": {
+            "name": "external_reference_id",
+            "type": {
+              "scalarType": "text"
             },
             "nullable": "nullable",
             "description": null

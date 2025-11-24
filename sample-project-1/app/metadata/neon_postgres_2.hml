@@ -20,7 +20,6 @@ definition:
             count_scalar_type: int8
       collections:
         - arguments: {}
-          description: Medical claims submitted for services
           name: claims
           type: claims
           uniqueness_constraints:
@@ -28,7 +27,6 @@ definition:
               unique_columns:
                 - id
         - arguments: {}
-          description: Member eligibility verification results
           name: eligibility_checks
           type: eligibility_checks
           uniqueness_constraints:
@@ -36,7 +34,6 @@ definition:
               unique_columns:
                 - id
         - arguments: {}
-          description: Health plan members/patients
           name: members
           type: members
           uniqueness_constraints:
@@ -51,7 +48,6 @@ definition:
               unique_columns:
                 - id
         - arguments: {}
-          description: Case management notes for members
           name: notes
           type: notes
           uniqueness_constraints:
@@ -59,33 +55,28 @@ definition:
               unique_columns:
                 - id
         - arguments: {}
-          description: Healthcare providers (doctors, hospitals, etc.)
           name: provider_records
           type: provider_records
           uniqueness_constraints:
-            providers_npi_key:
+            provider_records_npi_key:
               unique_columns:
                 - npi
-            providers_pkey:
+            provider_records_pkey:
               unique_columns:
                 - id
       functions: []
       object_types:
         claims:
-          description: Medical claims submitted for services
           fields:
             allowed_cents:
-              description: Amount allowed by plan in cents
               type:
                 name: int4
                 type: named
             charge_cents:
-              description: Amount charged by provider in cents
               type:
                 name: int4
                 type: named
             cpt:
-              description: Current Procedural Terminology code
               type:
                 name: text
                 type: named
@@ -94,17 +85,21 @@ definition:
                 name: timestamptz
                 type: named
             denial_reason:
-              description: Reason for claim denial (required when status is DENIED)
               type:
                 type: nullable
                 underlying_type:
                   name: text
                   type: named
             dos:
-              description: Date of Service
               type:
                 name: date
                 type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             id:
               type:
                 name: uuid
@@ -125,17 +120,7 @@ definition:
               type:
                 name: timestamptz
                 type: named
-          foreign_keys:
-            claims_member_id_fkey:
-              column_mapping:
-                member_id:
-                  - id
-              foreign_collection: members
-            claims_provider_id_fkey:
-              column_mapping:
-                provider_id:
-                  - id
-              foreign_collection: provider_records
+          foreign_keys: {}
         delete_claims_by_id_response:
           description: Responses from the 'delete_claims_by_id' procedure
           fields:
@@ -249,7 +234,6 @@ definition:
                 type: array
           foreign_keys: {}
         eligibility_checks:
-          description: Member eligibility verification results
           fields:
             checked_at:
               type:
@@ -271,26 +255,18 @@ definition:
               type:
                 name: jsonb
                 type: named
-          foreign_keys:
-            eligibility_checks_member_id_fkey:
-              column_mapping:
-                member_id:
-                  - id
-              foreign_collection: members
+          foreign_keys: {}
         insert_claims_object:
           fields:
             allowed_cents:
-              description: Amount allowed by plan in cents
               type:
                 name: int4
                 type: named
             charge_cents:
-              description: Amount charged by provider in cents
               type:
                 name: int4
                 type: named
             cpt:
-              description: Current Procedural Terminology code
               type:
                 name: text
                 type: named
@@ -301,17 +277,21 @@ definition:
                   name: timestamptz
                   type: named
             denial_reason:
-              description: Reason for claim denial (required when status is DENIED)
               type:
                 type: nullable
                 underlying_type:
                   name: text
                   type: named
             dos:
-              description: Date of Service
               type:
                 name: date
                 type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             id:
               type:
                 type: nullable
@@ -357,10 +337,8 @@ definition:
           fields:
             checked_at:
               type:
-                type: nullable
-                underlying_type:
-                  name: timestamptz
-                  type: named
+                name: timestamptz
+                type: named
             created_at:
               type:
                 type: nullable
@@ -410,6 +388,12 @@ definition:
               type:
                 name: date
                 type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             first_name:
               type:
                 name: text
@@ -533,6 +517,12 @@ definition:
                 underlying_type:
                   name: timestamptz
                   type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             id:
               type:
                 type: nullable
@@ -575,7 +565,6 @@ definition:
                 type: array
           foreign_keys: {}
         members:
-          description: Health plan members/patients
           fields:
             created_at:
               type:
@@ -585,6 +574,12 @@ definition:
               type:
                 name: date
                 type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             first_name:
               type:
                 name: text
@@ -648,7 +643,6 @@ definition:
                   type: named
           foreign_keys: {}
         notes:
-          description: Case management notes for members
           fields:
             body:
               type:
@@ -666,19 +660,19 @@ definition:
               type:
                 name: uuid
                 type: named
-          foreign_keys:
-            notes_member_id_fkey:
-              column_mapping:
-                member_id:
-                  - id
-              foreign_collection: members
+          foreign_keys: {}
         provider_records:
-          description: Healthcare providers (doctors, hospitals, etc.)
           fields:
             created_at:
               type:
                 name: timestamptz
                 type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             id:
               type:
                 name: uuid
@@ -760,6 +754,13 @@ definition:
                 type: nullable
                 underlying_type:
                   name: update_column_claims_dos
+                  type: named
+            external_reference_id:
+              description: Update the 'external_reference_id' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_external_reference_id
                   type: named
             id:
               description: Update the 'id' column in the 'claims' collection.
@@ -852,6 +853,17 @@ definition:
               type:
                 name: date
                 type: named
+          foreign_keys: {}
+        update_column_claims_external_reference_id:
+          description: Update the 'external_reference_id' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
           foreign_keys: {}
         update_column_claims_id:
           description: Update the 'id' column in the 'claims' collection
@@ -960,6 +972,17 @@ definition:
               type:
                 name: date
                 type: named
+          foreign_keys: {}
+        update_column_members_external_reference_id:
+          description: Update the 'external_reference_id' column in the 'members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
           foreign_keys: {}
         update_column_members_first_name:
           description: Update the 'first_name' column in the 'members' collection
@@ -1081,6 +1104,17 @@ definition:
               type:
                 name: timestamptz
                 type: named
+          foreign_keys: {}
+        update_column_provider_records_external_reference_id:
+          description: Update the 'external_reference_id' column in the 'provider_records' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
           foreign_keys: {}
         update_column_provider_records_id:
           description: Update the 'id' column in the 'provider_records' collection
@@ -1214,6 +1248,13 @@ definition:
                 type: nullable
                 underlying_type:
                   name: update_column_members_dob
+                  type: named
+            external_reference_id:
+              description: Update the 'external_reference_id' column in the 'members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_members_external_reference_id
                   type: named
             first_name:
               description: Update the 'first_name' column in the 'members' collection.
@@ -1366,6 +1407,13 @@ definition:
                 underlying_type:
                   name: update_column_provider_records_created_at
                   type: named
+            external_reference_id:
+              description: Update the 'external_reference_id' column in the 'provider_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_provider_records_external_reference_id
+                  type: named
             id:
               description: Update the 'id' column in the 'provider_records' collection.
               type:
@@ -1427,6 +1475,13 @@ definition:
                 type: nullable
                 underlying_type:
                   name: update_column_provider_records_created_at
+                  type: named
+            external_reference_id:
+              description: Update the 'external_reference_id' column in the 'provider_records' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_provider_records_external_reference_id
                   type: named
             id:
               description: Update the 'id' column in the 'provider_records' collection.

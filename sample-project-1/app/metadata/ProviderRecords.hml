@@ -3,20 +3,26 @@ kind: ObjectType
 version: v1
 definition:
   name: ProviderRecords
-  description: Healthcare providers (doctors, hospitals, etc.)
+  description: Healthcare providers (physicians, hospitals, clinics) who render services to members. Maintains network and credential information for billing and care coordination.
   fields:
     - name: createdAt
       type: Timestamptz!
+      description: Timestamp when provider was added to network or credentialing system.
     - name: id
       type: Uuid!
+      description: Unique provider identifier within system. Primary key for provider relationships and claims linkage.
     - name: name
       type: String_1!
+      description: Provider's full name or facility name as registered with insurance network.
     - name: npi
       type: String_1!
+      description: National Provider Identifier - unique 10-digit number required by HIPAA (e.g., 1234567890). Type 1 for individuals, Type 2 for organizations.
     - name: specialty
       type: String_1!
+      description: Provider's medical specialty or practice type (e.g., "Cardiology", "Family Medicine", "Radiology"). Used for network adequacy and referrals.
     - name: updatedAt
       type: Timestamptz!
+      description: Timestamp of last credential, network status, or information update.
   graphql:
     typeName: ProviderRecords
     inputTypeName: ProviderRecordsInput
@@ -173,7 +179,7 @@ definition:
       queryRootField: providerRecordsAggregate
       subscription:
         rootField: providerRecordsAggregate
-  description: Healthcare providers (doctors, hospitals, etc.)
+  description: Healthcare providers (physicians, hospitals, clinics) who render services to members. Maintains network and credential information for billing and care coordination.
 
 ---
 kind: ModelPermissions

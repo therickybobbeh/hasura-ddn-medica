@@ -23,7 +23,9 @@ services:
     labels:
       io.hasura.ddn.service-name: engine
     ports:
-      - ${ENGINE_PORT:-3280}:3000
+      - target: 3000
+        published: ${ENGINE_PORT:-3280}
+        protocol: tcp
   otel-collector:
     command:
       - --config=/etc/otel-collector-config.yaml
@@ -31,7 +33,11 @@ services:
       HASURA_DDN_PAT: ${HASURA_DDN_PAT}
     image: otel/opentelemetry-collector:0.104.0
     ports:
-      - ${OTEL_GRPC_PORT:-4317}:4317
-      - ${OTEL_HTTP_PORT:-4318}:4318
+      - target: 4317
+        published: ${OTEL_GRPC_PORT:-4317}
+        protocol: tcp
+      - target: 4318
+        published: ${OTEL_HTTP_PORT:-4318}
+        protocol: tcp
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml

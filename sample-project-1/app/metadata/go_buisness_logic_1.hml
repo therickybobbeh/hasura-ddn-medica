@@ -18,12 +18,13 @@ definition:
       functions:
         - arguments:
             claims:
+              description: Array of claims to analyze for fraud risk in batch
               type:
                 element_type:
                   name: ClaimData
                   type: named
                 type: array
-          description: batch calculates risk scores for multiple claims
+          description: Batch processes multiple claims for fraud risk analysis. Returns array of risk scores with O(n) complexity for nightly detection runs.
           name: batchCalculateRisk
           result_type:
             element_type:
@@ -32,10 +33,11 @@ definition:
             type: array
         - arguments:
             claim:
+              description: Claim data to analyze for fraud risk patterns
               type:
                 name: ClaimData
                 type: named
-          description: calculates risk score for an insurance claim Query functions in Go start with "Function" prefix
+          description: Analyzes claim for fraud risk using amount patterns, provider history, and member utilization. Returns risk score (0-100) with contributing factors for SIU referrals.
           name: calculateClaimRisk
           result_type:
             type: nullable
@@ -44,10 +46,11 @@ definition:
               type: named
         - arguments:
             claim:
+              description: Claim to generate formatted summary for
               type:
                 name: ClaimData
                 type: named
-          description: generates formatted summary of a claim
+          description: Generates formatted claim summary with financial breakdown for EOB generation or member portal display. Includes totals, taxes, and human-readable text.
           name: generateClaimSummary
           result_type:
             type: nullable
@@ -59,28 +62,34 @@ definition:
           description: represents input data for an insurance claim
           fields:
             claim_amount:
+              description: Total amount claimed in dollars
               type:
                 name: Float64
                 type: named
             claim_id:
+              description: Unique claim identifier for tracking and processing
               type:
                 name: String
                 type: named
             claim_type:
+              description: Type of claim (e.g., 'medical', 'pharmacy', 'dental')
               type:
                 name: String
                 type: named
             member_id:
+              description: Member ID who received services
               type:
                 name: String
                 type: named
             provider_id:
+              description: Provider ID who rendered services (optional for some claim types)
               type:
                 type: nullable
                 underlying_type:
                   name: String
                   type: named
             service_date:
+              description: Date services were provided (ISO 8601 format)
               type:
                 name: String
                 type: named
@@ -89,30 +98,36 @@ definition:
           description: represents the result of processing a claim
           fields:
             approved:
+              description: Whether the claim was approved for payment
               type:
                 name: Boolean
                 type: named
             approved_amount:
+              description: Amount approved for payment in dollars (null if denied)
               type:
                 type: nullable
                 underlying_type:
                   name: Float64
                   type: named
             claim_id:
+              description: Claim identifier that was processed
               type:
                 name: String
                 type: named
             processing_time:
+              description: Time taken to process in seconds
               type:
                 name: Float64
                 type: named
             rejection_reason:
+              description: Reason for denial (null if approved)
               type:
                 type: nullable
                 underlying_type:
                   name: String
                   type: named
             status:
+              description: Processing status ('APPROVED', 'DENIED', 'PENDING_REVIEW')
               type:
                 name: String
                 type: named
@@ -121,30 +136,37 @@ definition:
           description: represents a formatted summary of a claim
           fields:
             claim_id:
+              description: Claim identifier for this summary
               type:
                 name: String
                 type: named
             member_id:
+              description: Member ID associated with this claim
               type:
                 name: String
                 type: named
             net_amount:
+              description: Net amount after all adjustments
               type:
                 name: Float64
                 type: named
             status:
+              description: Current claim status
               type:
                 name: String
                 type: named
             summary:
+              description: Human-readable summary text for EOB or member portal
               type:
                 name: String
                 type: named
             tax_amount:
+              description: Calculated tax amount
               type:
                 name: Float64
                 type: named
             total_amount:
+              description: Total claim amount before adjustments
               type:
                 name: Float64
                 type: named
@@ -153,24 +175,29 @@ definition:
           description: represents risk assessment result for a claim
           fields:
             claim_id:
+              description: Claim identifier this risk score applies to
               type:
                 name: String
                 type: named
             factors:
+              description: Array of risk factors that contributed to the score (e.g., 'high_amount', 'unusual_provider', 'duplicate_service')
               type:
                 element_type:
                   name: String
                   type: named
                 type: array
             risk_level:
+              description: Categorical risk level ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')
               type:
                 name: String
                 type: named
             risk_score:
+              description: Numerical risk score from 0-100, where higher values indicate greater fraud risk
               type:
                 name: Float64
                 type: named
             timestamp:
+              description: When this risk assessment was performed (ISO 8601 format)
               type:
                 name: String
                 type: named
@@ -178,12 +205,13 @@ definition:
       procedures:
         - arguments:
             claims:
+              description: Array of claims to process through adjudication workflow
               type:
                 element_type:
                   name: ClaimData
                   type: named
                 type: array
-          description: batch processes multiple claims
+          description: Batch adjudicates multiple claims through full processing workflow. Returns array of processing results with O(n) complexity for automated claim processing.
           name: batchProcessClaims
           result_type:
             element_type:
@@ -192,10 +220,11 @@ definition:
             type: array
         - arguments:
             claim:
+              description: Claim to adjudicate through validation and approval workflow
               type:
                 name: ClaimData
                 type: named
-          description: processes and validates an insurance claim Mutation functions in Go start with "Procedure" prefix
+          description: Adjudicates claim through validation, eligibility check, benefit verification, and approval workflow. Returns approval status with amount or rejection reason.
           name: processClaim
           result_type:
             type: nullable

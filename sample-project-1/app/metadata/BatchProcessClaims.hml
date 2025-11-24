@@ -7,16 +7,22 @@ definition:
   fields:
     - name: approved
       type: Boolean!
+      description: "Boolean indicating whether claim was approved for payment. True means all validation, eligibility, and benefit checks passed successfully."
     - name: approvedAmount
       type: Float64
+      description: "Dollar amount approved for payment after applying copay, coinsurance, deductible, and benefit limits. Null if claim was rejected."
     - name: claimId
       type: String!
+      description: "Unique claim identifier linking result back to submitted claim. Used for tracking, reporting, and member communication (EOB generation)."
     - name: processingTime
       type: Float64!
+      description: "Time in milliseconds to adjudicate the claim. Used for performance monitoring and SLA compliance tracking across different processing engines."
     - name: rejectionReason
       type: String
+      description: "Human-readable explanation if claim was denied (e.g., 'not eligible', 'benefit exhausted', 'out of network'). Null if approved."
     - name: status
       type: String!
+      description: "Processing outcome status (APPROVED, DENIED, PENDING). Determines next workflow steps - payment processing, appeal handling, or additional review."
   graphql:
     typeName: ClaimProcessResult
     inputTypeName: ClaimProcessResultInput
@@ -73,9 +79,9 @@ definition:
     dataConnectorCommand:
       procedure: batchProcessClaims
   graphql:
-    rootFieldName: batchProcessClaims
+    rootFieldName: batchProcessClaimsGo
     rootFieldKind: Mutation
-  description: batch processes multiple claims
+  description: "Batch adjudicates multiple insurance claims using Go implementation. Processes claims array through validation, eligibility, benefit checking, and approval workflow. Returns array of process results with O(n) complexity. Used for automated nightly claim processing and bulk adjudication workflows. Algorithmically equivalent to TypeScript and Python implementations."
 
 ---
 kind: CommandPermissions

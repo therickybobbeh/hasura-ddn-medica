@@ -3,23 +3,32 @@ kind: ObjectType
 version: v1
 definition:
   name: AppointmentsAppointments
+  description: Scheduled healthcare appointments between members and providers. Tracks care coordination, utilization patterns, and provider network engagement. Supports HEDIS quality measures and member engagement analytics.
   fields:
     - name: appointmentDate
       type: Timestamptz!
+      description: Scheduled date and time for the appointment. Used for care coordination, no-show tracking, and provider schedule optimization.
     - name: createdAt
       type: Timestamptz!
+      description: Timestamp when the appointment was initially scheduled in the system.
     - name: id
       type: Uuid!
+      description: Unique appointment identifier. Primary key for appointment tracking and rescheduling history.
     - name: memberId
       type: Uuid!
+      description: Foreign key to the member scheduled for the appointment. Links appointment to patient record and care plan.
     - name: notes
       type: String_1
+      description: Administrative notes about the appointment. May include scheduling preferences, special accommodations, transportation needs, or interpreter requirements.
     - name: providerId
       type: Uuid!
+      description: Foreign key to the provider conducting the appointment. Links to provider network and specialty information.
     - name: status
       type: String_1!
+      description: Appointment status. Valid values - SCHEDULED (confirmed appointment), COMPLETED (member attended), CANCELLED (appointment cancelled), NO_SHOW (member did not attend). Used for no-show tracking and rescheduling workflows.
     - name: updatedAt
       type: Timestamptz!
+      description: Timestamp of last status change or appointment modification. Tracks rescheduling activity and status updates.
   graphql:
     typeName: AppointmentsAppointments
     inputTypeName: AppointmentsAppointmentsInput

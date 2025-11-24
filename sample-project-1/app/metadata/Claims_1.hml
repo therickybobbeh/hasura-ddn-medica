@@ -3,35 +3,41 @@ kind: ObjectType
 version: v1
 definition:
   name: Claims_1
-  description: Medical claims submitted for services
+  description: Medical claims submitted by healthcare providers for reimbursement. Represents requests for payment based on services provided, tracked through adjudication from submission to payment or denial.
   fields:
     - name: allowedCents
       type: Int32!
-      description: Amount allowed by plan in cents
+      description: Amount plan allows in cents. Maximum reimbursement based on contracted rates. Difference from chargeCents may be written off (in-network) or balance-billed (out-of-network).
     - name: chargeCents
       type: Int32!
-      description: Amount charged by provider in cents
+      description: Amount provider billed in cents (e.g., 50000 = $500.00). Provider's standard charge before contractual adjustments.
     - name: cpt
       type: String_1!
-      description: Current Procedural Terminology code
+      description: Current Procedural Terminology code (5-digit). Standardized medical procedure code (e.g., 99213 for office visit, 70450 for CT scan).
     - name: createdAt
       type: Timestamptz!
+      description: Timestamp when claim was submitted to system for processing.
     - name: denialReason
       type: String_1
-      description: Reason for claim denial (required when status is DENIED)
+      description: Explanation for denied claims. Common values - "Not eligible on DOS", "Service not covered", "Duplicate claim", "Coding error". Required when status is DENIED.
     - name: dos
       type: Date!
-      description: Date of Service
+      description: Date of Service - actual date services were provided. Critical for eligibility verification, timely filing, and benefit period tracking.
     - name: id
       type: Uuid!
+      description: Unique claim identifier. Primary key for billing, audit tracking, and claim relationships.
     - name: memberId
       type: Uuid!
+      description: Foreign key to member who received services. Links claim to patient record and eligibility.
     - name: providerId
       type: Uuid!
+      description: Foreign key to provider who rendered services. Links claim to billing provider and network status.
     - name: status
       type: String_1!
+      description: Claim adjudication status. Valid values - PENDING (awaiting review), PAID (approved and paid), DENIED (rejected, see denialReason).
     - name: updatedAt
       type: Timestamptz!
+      description: Timestamp of last status change or claim modification.
   graphql:
     typeName: Claims1
     inputTypeName: Claims1Input
@@ -233,7 +239,7 @@ definition:
       queryRootField: claims1Aggregate
       subscription:
         rootField: claims1Aggregate
-  description: Medical claims submitted for services
+  description: Medical claims submitted by healthcare providers for reimbursement. Represents requests for payment based on services provided, tracked through adjudication from submission to payment or denial.
 
 ---
 kind: ModelPermissions

@@ -52,6 +52,12 @@ definition:
               type:
                 name: timestamptz
                 type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             id:
               type:
                 name: uuid
@@ -177,6 +183,12 @@ definition:
                 type: nullable
                 underlying_type:
                   name: timestamptz
+                  type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
                   type: named
             id:
               type:
@@ -304,6 +316,12 @@ definition:
                 underlying_type:
                   name: date
                   type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             frequency:
               type:
                 name: varchar
@@ -389,6 +407,12 @@ definition:
                 underlying_type:
                   name: date
                   type: named
+            external_reference_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
             frequency:
               type:
                 name: varchar
@@ -468,6 +492,13 @@ definition:
                 type: nullable
                 underlying_type:
                   name: update_column_appointments_appointments_created_at
+                  type: named
+            external_reference_id:
+              description: Update the 'external_reference_id' column in the 'appointments_appointments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_appointments_appointments_external_reference_id
                   type: named
             id:
               description: Update the 'id' column in the 'appointments_appointments' collection.
@@ -605,6 +636,17 @@ definition:
               type:
                 name: timestamptz
                 type: named
+          foreign_keys: {}
+        update_column_appointments_appointments_external_reference_id:
+          description: Update the 'external_reference_id' column in the 'appointments_appointments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
           foreign_keys: {}
         update_column_appointments_appointments_id:
           description: Update the 'id' column in the 'appointments_appointments' collection
@@ -767,6 +809,17 @@ definition:
                   name: date
                   type: named
           foreign_keys: {}
+        update_column_medications_prescriptions_external_reference_id:
+          description: Update the 'external_reference_id' column in the 'medications_prescriptions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
         update_column_medications_prescriptions_frequency:
           description: Update the 'frequency' column in the 'medications_prescriptions' collection
           fields:
@@ -907,6 +960,13 @@ definition:
                 type: nullable
                 underlying_type:
                   name: update_column_medications_prescriptions_end_date
+                  type: named
+            external_reference_id:
+              description: Update the 'external_reference_id' column in the 'medications_prescriptions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_medications_prescriptions_external_reference_id
                   type: named
             frequency:
               description: Update the 'frequency' column in the 'medications_prescriptions' collection.

@@ -18,35 +18,35 @@ definition:
       functions:
         - arguments:
             claim:
-              description: null
+              description: Claim data to analyze for fraud risk patterns
               type:
                 name: calculate_claim_risk_claim
                 type: named
-          description: Calculates risk score for an insurance claim
+          description: Analyzes claim for fraud risk using amount patterns, provider history, and member utilization. Returns risk score (0-100) with contributing factors for SIU referrals.
           name: calculate_claim_risk
           result_type:
             name: calculate_claim_risk
             type: named
         - arguments:
             claim:
-              description: null
+              description: Claim to generate formatted summary for
               type:
                 name: generate_claim_summary_claim
                 type: named
-          description: Generates formatted summary of a claim
+          description: Generates formatted claim summary with financial breakdown for EOB generation or member portal display. Includes totals, taxes, and human-readable text.
           name: generate_claim_summary
           result_type:
             name: generate_claim_summary
             type: named
         - arguments:
             claims:
-              description: null
+              description: Array of claims to analyze for fraud risk in batch
               type:
                 element_type:
                   name: batch_calculate_risk_claims
                   type: named
                 type: array
-          description: Batch calculates risk scores for multiple claims (O(n) complexity)
+          description: Batch processes multiple claims for fraud risk analysis. Returns array of risk scores with O(n) complexity for nightly detection runs.
           name: batch_calculate_risk
           result_type:
             element_type:
@@ -55,17 +55,17 @@ definition:
             type: array
       object_types:
         batch_calculate_risk:
-          description: null
+          description: represents risk assessment result for a claim
           fields:
             claim_id:
               arguments: {}
-              description: null
+              description: Claim identifier this risk score applies to
               type:
                 name: String
                 type: named
             factors:
               arguments: {}
-              description: null
+              description: Array of risk factors that contributed to the score (e.g., 'high_amount', 'unusual_provider', 'duplicate_service')
               type:
                 element_type:
                   name: String
@@ -73,52 +73,52 @@ definition:
                 type: array
             risk_level:
               arguments: {}
-              description: null
+              description: Categorical risk level ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')
               type:
                 name: String
                 type: named
             risk_score:
               arguments: {}
-              description: null
+              description: Numerical risk score from 0-100, where higher values indicate greater fraud risk
               type:
                 name: Float
                 type: named
             timestamp:
               arguments: {}
-              description: null
+              description: When this risk assessment was performed (ISO 8601 format)
               type:
                 name: String
                 type: named
         batch_calculate_risk_claims:
-          description: null
+          description: represents input data for an insurance claim
           fields:
             claim_amount:
               arguments: {}
-              description: null
+              description: Total amount claimed in dollars
               type:
                 name: Float
                 type: named
             claim_id:
               arguments: {}
-              description: null
+              description: Unique claim identifier for tracking and processing
               type:
                 name: String
                 type: named
             claim_type:
               arguments: {}
-              description: null
+              description: Type of claim (e.g., 'medical', 'pharmacy', 'dental')
               type:
                 name: String
                 type: named
             member_id:
               arguments: {}
-              description: null
+              description: Member ID who received services
               type:
                 name: String
                 type: named
             provider_id:
               arguments: {}
-              description: null
+              description: Provider ID who rendered services (optional for some claim types)
               type:
                 type: nullable
                 underlying_type:
@@ -126,22 +126,22 @@ definition:
                   type: named
             service_date:
               arguments: {}
-              description: null
+              description: Date services were provided (ISO 8601 format)
               type:
                 name: String
                 type: named
         batch_process_claims:
-          description: null
+          description: represents the result of processing a claim
           fields:
             approved:
               arguments: {}
-              description: null
+              description: Whether the claim was approved for payment
               type:
                 name: Boolean
                 type: named
             approved_amount:
               arguments: {}
-              description: null
+              description: Amount approved for payment in dollars (null if denied)
               type:
                 type: nullable
                 underlying_type:
@@ -149,19 +149,19 @@ definition:
                   type: named
             claim_id:
               arguments: {}
-              description: null
+              description: Claim identifier that was processed
               type:
                 name: String
                 type: named
             processing_time:
               arguments: {}
-              description: null
+              description: Time taken to process in seconds
               type:
                 name: Float
                 type: named
             rejection_reason:
               arguments: {}
-              description: null
+              description: Reason for denial (null if approved)
               type:
                 type: nullable
                 underlying_type:
@@ -169,40 +169,40 @@ definition:
                   type: named
             status:
               arguments: {}
-              description: null
+              description: Processing status ('APPROVED', 'DENIED', 'PENDING_REVIEW')
               type:
                 name: String
                 type: named
         batch_process_claims_claims:
-          description: null
+          description: represents input data for an insurance claim
           fields:
             claim_amount:
               arguments: {}
-              description: null
+              description: Total amount claimed in dollars
               type:
                 name: Float
                 type: named
             claim_id:
               arguments: {}
-              description: null
+              description: Unique claim identifier for tracking and processing
               type:
                 name: String
                 type: named
             claim_type:
               arguments: {}
-              description: null
+              description: Type of claim (e.g., 'medical', 'pharmacy', 'dental')
               type:
                 name: String
                 type: named
             member_id:
               arguments: {}
-              description: null
+              description: Member ID who received services
               type:
                 name: String
                 type: named
             provider_id:
               arguments: {}
-              description: null
+              description: Provider ID who rendered services (optional for some claim types)
               type:
                 type: nullable
                 underlying_type:
@@ -210,22 +210,22 @@ definition:
                   type: named
             service_date:
               arguments: {}
-              description: null
+              description: Date services were provided (ISO 8601 format)
               type:
                 name: String
                 type: named
         calculate_claim_risk:
-          description: null
+          description: represents risk assessment result for a claim
           fields:
             claim_id:
               arguments: {}
-              description: null
+              description: Claim identifier this risk score applies to
               type:
                 name: String
                 type: named
             factors:
               arguments: {}
-              description: null
+              description: Array of risk factors that contributed to the score (e.g., 'high_amount', 'unusual_provider', 'duplicate_service')
               type:
                 element_type:
                   name: String
@@ -233,52 +233,52 @@ definition:
                 type: array
             risk_level:
               arguments: {}
-              description: null
+              description: Categorical risk level ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')
               type:
                 name: String
                 type: named
             risk_score:
               arguments: {}
-              description: null
+              description: Numerical risk score from 0-100, where higher values indicate greater fraud risk
               type:
                 name: Float
                 type: named
             timestamp:
               arguments: {}
-              description: null
+              description: When this risk assessment was performed (ISO 8601 format)
               type:
                 name: String
                 type: named
         calculate_claim_risk_claim:
-          description: null
+          description: represents input data for an insurance claim
           fields:
             claim_amount:
               arguments: {}
-              description: null
+              description: Total amount claimed in dollars
               type:
                 name: Float
                 type: named
             claim_id:
               arguments: {}
-              description: null
+              description: Unique claim identifier for tracking and processing
               type:
                 name: String
                 type: named
             claim_type:
               arguments: {}
-              description: null
+              description: Type of claim (e.g., 'medical', 'pharmacy', 'dental')
               type:
                 name: String
                 type: named
             member_id:
               arguments: {}
-              description: null
+              description: Member ID who received services
               type:
                 name: String
                 type: named
             provider_id:
               arguments: {}
-              description: null
+              description: Provider ID who rendered services (optional for some claim types)
               type:
                 type: nullable
                 underlying_type:
@@ -286,85 +286,85 @@ definition:
                   type: named
             service_date:
               arguments: {}
-              description: null
+              description: Date services were provided (ISO 8601 format)
               type:
                 name: String
                 type: named
         generate_claim_summary:
-          description: null
+          description: represents a formatted summary of a claim
           fields:
             claim_id:
               arguments: {}
-              description: null
+              description: Claim identifier for this summary
               type:
                 name: String
                 type: named
             member_id:
               arguments: {}
-              description: null
+              description: Member ID associated with this claim
               type:
                 name: String
                 type: named
             net_amount:
               arguments: {}
-              description: null
+              description: Net amount after all adjustments
               type:
                 name: Float
                 type: named
             status:
               arguments: {}
-              description: null
+              description: Current claim status
               type:
                 name: String
                 type: named
             summary:
               arguments: {}
-              description: null
+              description: Human-readable summary text for EOB or member portal
               type:
                 name: String
                 type: named
             tax_amount:
               arguments: {}
-              description: null
+              description: Calculated tax amount
               type:
                 name: Float
                 type: named
             total_amount:
               arguments: {}
-              description: null
+              description: Total claim amount before adjustments
               type:
                 name: Float
                 type: named
         generate_claim_summary_claim:
-          description: null
+          description: represents input data for an insurance claim
           fields:
             claim_amount:
               arguments: {}
-              description: null
+              description: Total amount claimed in dollars
               type:
                 name: Float
                 type: named
             claim_id:
               arguments: {}
-              description: null
+              description: Unique claim identifier for tracking and processing
               type:
                 name: String
                 type: named
             claim_type:
               arguments: {}
-              description: null
+              description: Type of claim (e.g., 'medical', 'pharmacy', 'dental')
               type:
                 name: String
                 type: named
             member_id:
               arguments: {}
-              description: null
+              description: Member ID who received services
               type:
                 name: String
                 type: named
             provider_id:
               arguments: {}
-              description: null
+              description: Provider ID who rendered services (optional for some claim types)
               type:
                 type: nullable
                 underlying_type:
@@ -372,22 +372,22 @@ definition:
                   type: named
             service_date:
               arguments: {}
-              description: null
+              description: Date services were provided (ISO 8601 format)
               type:
                 name: String
                 type: named
         process_claim:
-          description: null
+          description: represents the result of processing a claim
           fields:
             approved:
               arguments: {}
-              description: null
+              description: Whether the claim was approved for payment
               type:
                 name: Boolean
                 type: named
             approved_amount:
               arguments: {}
-              description: null
+              description: Amount approved for payment in dollars (null if denied)
               type:
                 type: nullable
                 underlying_type:
@@ -395,19 +395,19 @@ definition:
                   type: named
             claim_id:
               arguments: {}
-              description: null
+              description: Claim identifier that was processed
               type:
                 name: String
                 type: named
             processing_time:
               arguments: {}
-              description: null
+              description: Time taken to process in seconds
               type:
                 name: Float
                 type: named
             rejection_reason:
               arguments: {}
-              description: null
+              description: Reason for denial (null if approved)
               type:
                 type: nullable
                 underlying_type:
@@ -415,40 +415,40 @@ definition:
                   type: named
             status:
               arguments: {}
-              description: null
+              description: Processing status ('APPROVED', 'DENIED', 'PENDING_REVIEW')
               type:
                 name: String
                 type: named
         process_claim_claim:
-          description: null
+          description: represents input data for an insurance claim
           fields:
             claim_amount:
               arguments: {}
-              description: null
+              description: Total amount claimed in dollars
               type:
                 name: Float
                 type: named
             claim_id:
               arguments: {}
-              description: null
+              description: Unique claim identifier for tracking and processing
               type:
                 name: String
                 type: named
             claim_type:
               arguments: {}
-              description: null
+              description: Type of claim (e.g., 'medical', 'pharmacy', 'dental')
               type:
                 name: String
                 type: named
             member_id:
               arguments: {}
-              description: null
+              description: Member ID who received services
               type:
                 name: String
                 type: named
             provider_id:
               arguments: {}
-              description: null
+              description: Provider ID who rendered services (optional for some claim types)
               type:
                 type: nullable
                 underlying_type:
@@ -456,31 +456,31 @@ definition:
                   type: named
             service_date:
               arguments: {}
-              description: null
+              description: Date services were provided (ISO 8601 format)
               type:
                 name: String
                 type: named
       procedures:
         - arguments:
             claim:
-              description: null
+              description: Claim to adjudicate through validation and approval workflow
               type:
                 name: process_claim_claim
                 type: named
-          description: Processes and validates an insurance claim
+          description: Adjudicates claim through validation, eligibility check, benefit verification, and approval workflow. Returns approval status with amount or rejection reason.
           name: process_claim
           result_type:
             name: process_claim
             type: named
         - arguments:
             claims:
-              description: null
+              description: Array of claims to process through adjudication workflow
               type:
                 element_type:
                   name: batch_process_claims_claims
                   type: named
                 type: array
-          description: Batch processes multiple claims (O(n) complexity)
+          description: Batch adjudicates multiple claims through full processing workflow. Returns array of processing results with O(n) complexity for automated claim processing.
           name: batch_process_claims
           result_type:
             element_type:

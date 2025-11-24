@@ -6,16 +6,22 @@ definition:
   fields:
     - name: claimAmount
       type: Float!
+      description: "Total dollar amount billed for claim. Used in risk scoring, benefit calculations, and outlier detection algorithms."
     - name: claimId
       type: String!
+      description: "Unique claim identifier. Primary tracking ID for adjudication workflow, audit trails, and cross-system references."
     - name: claimType
       type: String!
+      description: "Category of service (medical, dental, pharmacy, etc). Determines which benefit plan rules and coverage limits apply during adjudication."
     - name: memberId
       type: String!
+      description: "Unique member/patient identifier. Links claim to insurance policy for eligibility verification and benefit determination."
     - name: providerId
       type: String
+      description: "National Provider Identifier (NPI) of rendering provider. Used for provider network validation, contract pricing, and fraud pattern analysis."
     - name: serviceDate
       type: String!
+      description: "Date service was rendered (Date of Service - DOS). Critical for eligibility determination, timely filing limits, and coordination of benefits."
   graphql:
     typeName: GenerateClaimSummaryClaim
     inputTypeName: GenerateClaimSummaryClaimInput
@@ -66,18 +72,25 @@ definition:
   fields:
     - name: claimId
       type: String!
+      description: "Unique claim identifier for tracking and reporting. Links summary to source claim across systems."
     - name: memberId
       type: String!
+      description: "Member identifier for patient. Used to associate summary with insurance policy and member portal account."
     - name: netAmount
       type: Float!
+      description: "Net payment amount after all adjustments (taxes, fees, copay/coinsurance/deductible). Actual dollar amount member or provider will receive."
     - name: status
       type: String!
+      description: "Current claim status (APPROVED, DENIED, PENDING, PAID). Reflects position in claim lifecycle and payment processing workflow."
     - name: summary
       type: String!
+      description: "Human-readable text summary of claim with financial breakdown. Formatted for Explanation of Benefits (EOB) documents and member communication."
     - name: taxAmount
       type: Float!
+      description: "Total tax amount calculated on claim. Varies by jurisdiction and service type (e.g., medical devices may have sales tax)."
     - name: totalAmount
       type: Float!
+      description: "Gross total claim amount before any adjustments. Sum of all billed charges from provider for services rendered."
   graphql:
     typeName: GenerateClaimSummary
     inputTypeName: GenerateClaimSummaryInput
@@ -138,9 +151,9 @@ definition:
     dataConnectorCommand:
       function: generate_claim_summary
   graphql:
-    rootFieldName: generateClaimSummary2
+    rootFieldName: generateClaimSummaryPy
     rootFieldKind: Query
-  description: Generates formatted summary of a claim
+  description: "Generates human-readable claim summary with financial breakdown using Python implementation. Calculates totals, net amounts, tax, and formats results for reporting or member communication. Produces structured summary text with all claim details. Used for Explanation of Benefits (EOB) generation and member portal display. Algorithmically equivalent to Go and TypeScript implementations."
 
 ---
 kind: CommandPermissions

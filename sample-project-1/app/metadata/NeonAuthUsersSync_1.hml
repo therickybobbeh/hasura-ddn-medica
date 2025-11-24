@@ -3,21 +3,29 @@ kind: ObjectType
 version: v1
 definition:
   name: NeonAuthUsersSync_1
+  description: Synchronized user authentication records from Neon Auth identity provider. Maintains user profiles, authentication metadata, and session management for application access control. Supports SSO, MFA, and audit logging requirements.
   fields:
     - name: createdAt
       type: Timestamptz
+      description: Timestamp when the user account was initially created in the authentication system. Used for account age analysis and onboarding tracking.
     - name: deletedAt
       type: Timestamptz
+      description: Soft-delete timestamp indicating when the user account was deactivated. NULL for active accounts. Used for access revocation and audit trails while preserving historical data.
     - name: email
       type: String_1
+      description: User's email address for authentication and communication. Primary identifier for login, password reset, and notifications. Must be unique across the system.
     - name: id
       type: String_1!
+      description: Unique user identifier from Neon Auth. Primary key for cross-referencing user identity across application services and maintaining authentication state.
     - name: name
       type: String_1
+      description: User's display name or full name. Used for personalization, audit logs, and user interface display. May differ from legal name in member records.
     - name: rawJson
       type: Json!
+      description: Complete raw authentication profile from Neon Auth. Contains additional identity provider metadata, authentication methods, MFA status, last login, session tokens, and custom claims. Preserves full auth context for compliance and debugging.
     - name: updatedAt
       type: Timestamptz
+      description: Timestamp of last profile update or authentication event. Tracks account modifications, password changes, and security setting updates.
   graphql:
     typeName: NeonAuthUsersSync1
     inputTypeName: NeonAuthUsersSync1Input

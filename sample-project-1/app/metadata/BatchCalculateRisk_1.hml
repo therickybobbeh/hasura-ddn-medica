@@ -12,8 +12,9 @@ definition:
     dataConnectorCommand:
       function: batchCalculateRisk
   graphql:
-    rootFieldName: batchCalculateRisk1
+    rootFieldName: batchCalculateRiskTs
     rootFieldKind: Query
+  description: "Batch processes multiple claims for fraud risk scoring using TypeScript implementation. Analyzes claim patterns across multiple submissions for efficiency. Returns array of risk scores with O(n) complexity. Used for nightly fraud detection runs and bulk claim review workflows. Algorithmically equivalent to Go and Python implementations."
 
 ---
 kind: CommandPermissions

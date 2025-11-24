@@ -7,16 +7,22 @@ definition:
   fields:
     - name: claimAmount
       type: Float64!
+      description: "Total dollar amount billed for claim. Used in risk scoring, benefit calculations, and outlier detection algorithms."
     - name: claimId
       type: String!
+      description: "Unique claim identifier. Primary tracking ID for adjudication workflow, audit trails, and cross-system references."
     - name: claimType
       type: String!
+      description: "Category of service (medical, dental, pharmacy, etc). Determines which benefit plan rules and coverage limits apply during adjudication."
     - name: memberId
       type: String!
+      description: "Unique member/patient identifier. Links claim to insurance policy for eligibility verification and benefit determination."
     - name: providerId
       type: String
+      description: "National Provider Identifier (NPI) of rendering provider. Used for provider network validation, contract pricing, and fraud pattern analysis."
     - name: serviceDate
       type: String!
+      description: "Date service was rendered (Date of Service - DOS). Critical for eligibility determination, timely filing limits, and coordination of benefits."
   graphql:
     typeName: ClaimData
     inputTypeName: ClaimDataInput
@@ -68,14 +74,19 @@ definition:
   fields:
     - name: claimId
       type: String!
+      description: "Unique claim identifier this risk score applies to. Links assessment back to original claim for SIU review and audit trails."
     - name: factors
       type: "[String!]!"
+      description: "Array of contributing risk factors detected (e.g., 'high_amount', 'unusual_provider', 'duplicate_service'). Provides explainability for fraud investigators."
     - name: riskLevel
       type: String!
+      description: "Categorical risk classification (LOW, MEDIUM, HIGH, CRITICAL). Determines routing to automated approval, prepayment review, or SIU investigation."
     - name: riskScore
       type: Float64!
+      description: "Numeric fraud risk score from 0-100. Calculated from claim amount anomalies, provider patterns, and member utilization history."
     - name: timestamp
       type: String!
+      description: "ISO 8601 timestamp when risk assessment was performed. Used for audit compliance and tracking risk score changes over claim lifecycle."
   graphql:
     typeName: RiskScore
     inputTypeName: RiskScoreInput
@@ -128,9 +139,9 @@ definition:
     dataConnectorCommand:
       function: batchCalculateRisk
   graphql:
-    rootFieldName: batchCalculateRisk
+    rootFieldName: batchCalculateRiskGo
     rootFieldKind: Query
-  description: batch calculates risk scores for multiple claims
+  description: "Batch processes multiple claims for fraud risk scoring using Go implementation. Analyzes claim patterns across multiple submissions for efficiency. Returns array of risk scores with O(n) complexity. Used for nightly fraud detection runs and bulk claim review workflows. Algorithmically equivalent to TypeScript and Python implementations."
 
 ---
 kind: CommandPermissions

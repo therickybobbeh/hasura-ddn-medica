@@ -6,16 +6,22 @@ definition:
   fields:
     - name: approved
       type: Boolean!
+      description: "Boolean indicating whether claim was approved for payment. True means all validation, eligibility, and benefit checks passed successfully."
     - name: approvedAmount
       type: Float
+      description: "Dollar amount approved for payment after applying copay, coinsurance, deductible, and benefit limits. Null if claim was rejected."
     - name: claimId
       type: String!
+      description: "Unique claim identifier linking result back to submitted claim. Used for tracking, reporting, and member communication (EOB generation)."
     - name: processingTime
       type: Float!
+      description: "Time in milliseconds to adjudicate the claim. Used for performance monitoring and SLA compliance tracking across different processing engines."
     - name: rejectionReason
       type: String
+      description: "Human-readable explanation if claim was denied (e.g., 'not eligible', 'benefit exhausted', 'out of network'). Null if approved."
     - name: status
       type: String!
+      description: "Processing outcome status (APPROVED, DENIED, PENDING). Determines next workflow steps - payment processing, appeal handling, or additional review."
   graphql:
     typeName: ClaimProcessResult1
     inputTypeName: ClaimProcessResult1Input
@@ -53,9 +59,9 @@ definition:
     dataConnectorCommand:
       procedure: processClaim
   graphql:
-    rootFieldName: processClaim1
+    rootFieldName: processClaimTs
     rootFieldKind: Mutation
-  description: Processes and validates an insurance claim
+  description: "Processes and adjudicates insurance claim using TypeScript implementation. Validates eligibility, checks benefit coverage, applies plan rules (copay/coinsurance/deductible), and determines approval status. Returns approved amount, processing time, and rejection reason if denied. Executes real-time claim adjudication workflow. Algorithmically equivalent to Go and Python implementations."
 
 ---
 kind: CommandPermissions

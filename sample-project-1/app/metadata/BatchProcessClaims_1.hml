@@ -12,9 +12,9 @@ definition:
     dataConnectorCommand:
       procedure: batchProcessClaims
   graphql:
-    rootFieldName: batchProcessClaims1
+    rootFieldName: batchProcessClaimsTs
     rootFieldKind: Mutation
-  description: Batch processes multiple claims (O(n) complexity)
+  description: "Batch adjudicates multiple insurance claims using TypeScript implementation. Processes claims array through validation, eligibility, benefit checking, and approval workflow. Returns array of process results with O(n) complexity. Used for automated nightly claim processing and bulk adjudication workflows. Algorithmically equivalent to Go and Python implementations."
 
 ---
 kind: CommandPermissions

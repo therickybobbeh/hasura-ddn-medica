@@ -3,35 +3,50 @@ kind: ObjectType
 version: v1
 definition:
   name: MedicationsPrescriptions
+  description: Prescribed medications for member treatment plans. Tracks pharmacy benefits, drug utilization, medication adherence, and formulary compliance. Supports pharmacy claims adjudication, prior authorization workflows, and medication therapy management (MTM) programs.
   fields:
     - name: createdAt
       type: Timestamp!
+      description: Timestamp when the prescription was originally written by the provider.
     - name: dosage
       type: String_1!
+      description: Prescribed dosage strength and form (e.g., "500mg tablet", "10mg/ml solution", "5% cream"). Critical for pharmacy dispensing and medication safety.
     - name: endDate
       type: Date
+      description: Date when the prescription expires or treatment ends. Used for medication adherence tracking, refill authorization, and therapeutic course completion.
     - name: frequency
       type: String_1!
+      description: How often medication should be taken (e.g., "twice daily", "every 8 hours", "as needed", "at bedtime"). Used for adherence monitoring and drug interaction checking.
     - name: id
       type: Uuid!
+      description: Unique prescription identifier. Primary key for prescription tracking, refill processing, and pharmacy benefit claims.
     - name: medicationName
       type: String_1!
+      description: Generic or brand name of the prescribed medication. Used for formulary checking, drug interaction screening, and therapeutic class analysis.
     - name: memberId
       type: Uuid!
+      description: Foreign key to the member receiving the medication. Links prescription to patient record and medication history.
     - name: notes
       type: String_1
+      description: Clinical notes or special instructions. May include indication for use, dietary restrictions, administration instructions, or drug interaction warnings.
     - name: pharmacy
       type: String_1!
+      description: Preferred or designated pharmacy for dispensing. Can be retail chain, independent pharmacy, mail-order, or specialty pharmacy. Used for pharmacy network management and benefit coordination.
     - name: providerId
       type: Uuid!
+      description: Foreign key to the prescribing provider. Links prescription to ordering physician for prior authorization and prescriber profiling.
     - name: refillsRemaining
       type: Int32!
+      description: Number of authorized refills left. Tracks refill exhaustion for prior authorization triggers and medication adherence programs. Value of 0 requires new prescription.
     - name: startDate
       type: Date!
+      description: Date when member should begin taking medication. Used for adherence calculation, treatment timeline tracking, and coordination with other therapies.
     - name: status
       type: String_1!
+      description: Current prescription status. Valid values - ACTIVE (currently prescribed), COMPLETED (treatment finished), DISCONTINUED (stopped by provider), EXPIRED (beyond end date). Used for active medication lists and polypharmacy reviews.
     - name: updatedAt
       type: Timestamp!
+      description: Timestamp of last modification to the prescription. Tracks refill updates, dosage changes, or status changes.
   graphql:
     typeName: MedicationsPrescriptions
     inputTypeName: MedicationsPrescriptionsInput

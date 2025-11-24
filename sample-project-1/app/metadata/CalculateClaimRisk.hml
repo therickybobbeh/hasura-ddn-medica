@@ -14,10 +14,9 @@ definition:
     argumentMapping:
       claim: claim
   graphql:
-    rootFieldName: calculateClaimRisk
+    rootFieldName: calculateClaimRiskGo
     rootFieldKind: Query
-  description: calculates risk score for an insurance claim Query functions in Go
-    start with "Function" prefix
+  description: "Calculates fraud risk score for insurance claim using Go implementation. Analyzes claim amount, procedure code patterns, provider history, and member utilization to detect anomalies. Returns risk score (0-100) with contributing factors. Used for Special Investigations Unit (SIU) referrals and prepayment review workflows. Algorithmically equivalent to TypeScript and Python implementations."
 
 ---
 kind: CommandPermissions

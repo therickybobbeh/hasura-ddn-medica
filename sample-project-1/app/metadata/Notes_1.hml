@@ -3,16 +3,20 @@ kind: ObjectType
 version: v1
 definition:
   name: Notes_1
-  description: Case management notes for members
+  description: Clinical and administrative case management notes for member care coordination. Documents care plans, provider communications, utilization review decisions, and appeals/grievances. Supports continuity of care and regulatory compliance (HIPAA, NCQA).
   fields:
     - name: body
       type: String_1!
+      description: Free-text content of the case note. May include care plan updates, provider call summaries, authorization decisions, discharge planning, disease management interventions, or quality improvement activities.
     - name: createdAt
       type: Timestamptz!
+      description: Timestamp when the note was created. Critical for audit trails, appeals timelines, and care coordination chronology.
     - name: id
       type: Uuid!
+      description: Unique identifier for this case note. Primary key for note retrieval and audit logging.
     - name: memberId
       type: Uuid!
+      description: Foreign key to the member this note pertains to. Links note to patient record for care coordination and utilization management.
   graphql:
     typeName: Notes1
     inputTypeName: Notes1Input
@@ -144,7 +148,7 @@ definition:
       queryRootField: notes1Aggregate
       subscription:
         rootField: notes1Aggregate
-  description: Case management notes for members
+  description: Clinical and administrative case management notes for member care coordination. Documents care plans, provider communications, utilization review decisions, and appeals/grievances. Supports continuity of care and regulatory compliance (HIPAA, NCQA).
 
 ---
 kind: ModelPermissions

@@ -73,15 +73,9 @@ else
     exit 1
 fi
 
-# Sample test data
-TEST_CLAIM='{
-  "claim_id": "CLM-001",
-  "member_id": "MBR-123",
-  "claim_amount": 5500.00,
-  "claim_type": "SURGERY",
-  "service_date": "2025-11-15T00:00:00Z",
-  "provider_id": "PROV-456"
-}'
+# Sample test data (using camelCase for GraphQL)
+# Note: Uses escaped quotes for embedding in GraphQL query string
+TEST_CLAIM_DATA='{claimId: \"CLM-001\", memberId: \"MBR-123\", claimAmount: 5500.0, claimType: \"surgery\", serviceDate: \"2024-10-15\", providerId: \"PROV-456\"}'
 
 # Create results directory
 RESULTS_DIR="${SCRIPT_DIR}/benchmark-results"
@@ -100,7 +94,7 @@ benchmark_connector() {
     # GraphQL query
     local query=$(cat <<EOF
 {
-  "query": "query BenchmarkTest { ${query_name}(claim: ${TEST_CLAIM}) { claim_id risk_score risk_level factors timestamp } }"
+  "query": "query BenchmarkTest { ${query_name}(claim: ${TEST_CLAIM_DATA}) { claimId riskScore riskLevel factors timestamp } }"
 }
 EOF
 )
@@ -236,20 +230,17 @@ Concurrent:        ${CONCURRENT_REQUESTS}
 EOF
 
 # Run benchmarks for each connector
-# Note: You'll need to update the query names based on your actual GraphQL schema
-# after introspection is complete
-
 print_header "Starting Benchmarks"
 echo ""
 
+# Benchmark Go connector
+benchmark_connector "Go" "calculateClaimRiskGo" "calculateClaimRiskGo"
+
 # Benchmark TypeScript connector
-benchmark_connector "TypeScript" "calculateClaimRisk" "calculateClaimRiskTs"
+benchmark_connector "TypeScript" "calculateClaimRiskTs" "calculateClaimRiskTs"
 
 # Benchmark Python connector
-benchmark_connector "Python" "calculateClaimRisk" "calculateClaimRiskPy"
-
-# Benchmark Go connector
-benchmark_connector "Go" "calculateClaimRisk" "calculateClaimRiskGo"
+benchmark_connector "Python" "calculateClaimRiskPy" "calculateClaimRiskPy"
 
 # Generate comparison summary
 print_header "Performance Comparison Summary"

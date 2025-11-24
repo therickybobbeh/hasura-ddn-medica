@@ -6,16 +6,22 @@ definition:
   fields:
     - name: claimAmount
       type: Float!
+      description: "Total dollar amount billed for claim. Used in risk scoring, benefit calculations, and outlier detection algorithms."
     - name: claimId
       type: String!
+      description: "Unique claim identifier. Primary tracking ID for adjudication workflow, audit trails, and cross-system references."
     - name: claimType
       type: String!
+      description: "Category of service (medical, dental, pharmacy, etc). Determines which benefit plan rules and coverage limits apply during adjudication."
     - name: memberId
       type: String!
+      description: "Unique member/patient identifier. Links claim to insurance policy for eligibility verification and benefit determination."
     - name: providerId
       type: String
+      description: "National Provider Identifier (NPI) of rendering provider. Used for provider network validation, contract pricing, and fraud pattern analysis."
     - name: serviceDate
       type: String!
+      description: "Date service was rendered (Date of Service - DOS). Critical for eligibility determination, timely filing limits, and coordination of benefits."
   graphql:
     typeName: BatchProcessClaimsClaims
     inputTypeName: BatchProcessClaimsClaimsInput
@@ -66,16 +72,22 @@ definition:
   fields:
     - name: approved
       type: Boolean!
+      description: "Boolean indicating whether claim was approved for payment. True means all validation, eligibility, and benefit checks passed successfully."
     - name: approvedAmount
       type: Float
+      description: "Dollar amount approved for payment after applying copay, coinsurance, deductible, and benefit limits. Null if claim was rejected."
     - name: claimId
       type: String!
+      description: "Unique claim identifier linking result back to submitted claim. Used for tracking, reporting, and member communication (EOB generation)."
     - name: processingTime
       type: Float!
+      description: "Time in milliseconds to adjudicate the claim. Used for performance monitoring and SLA compliance tracking across different processing engines."
     - name: rejectionReason
       type: String
+      description: "Human-readable explanation if claim was denied (e.g., 'not eligible', 'benefit exhausted', 'out of network'). Null if approved."
     - name: status
       type: String!
+      description: "Processing outcome status (APPROVED, DENIED, PENDING). Determines next workflow steps - payment processing, appeal handling, or additional review."
   graphql:
     typeName: BatchProcessClaims
     inputTypeName: BatchProcessClaimsInput
@@ -132,9 +144,9 @@ definition:
     dataConnectorCommand:
       procedure: batch_process_claims
   graphql:
-    rootFieldName: batchProcessClaims2
+    rootFieldName: batchProcessClaimsPy
     rootFieldKind: Mutation
-  description: Batch processes multiple claims (O(n) complexity)
+  description: "Batch adjudicates multiple insurance claims using Python implementation. Processes claims array through validation, eligibility, benefit checking, and approval workflow. Returns array of process results with O(n) complexity. Used for automated nightly claim processing and bulk adjudication workflows. Algorithmically equivalent to Go and TypeScript implementations."
 
 ---
 kind: CommandPermissions

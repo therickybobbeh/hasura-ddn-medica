@@ -26,7 +26,7 @@
               "scalarType": "int4"
             },
             "nullable": "nonNullable",
-            "description": "Amount allowed by plan in cents"
+            "description": null
           },
           "charge_cents": {
             "name": "charge_cents",
@@ -34,7 +34,7 @@
               "scalarType": "int4"
             },
             "nullable": "nonNullable",
-            "description": "Amount charged by provider in cents"
+            "description": null
           },
           "cpt": {
             "name": "cpt",
@@ -42,7 +42,7 @@
               "scalarType": "text"
             },
             "nullable": "nonNullable",
-            "description": "Current Procedural Terminology code"
+            "description": null
           },
           "created_at": {
             "name": "created_at",
@@ -59,7 +59,7 @@
               "scalarType": "text"
             },
             "nullable": "nullable",
-            "description": "Reason for claim denial (required when status is DENIED)"
+            "description": null
           },
           "dos": {
             "name": "dos",
@@ -67,7 +67,15 @@
               "scalarType": "date"
             },
             "nullable": "nonNullable",
-            "description": "Date of Service"
+            "description": null
+          },
+          "external_reference_id": {
+            "name": "external_reference_id",
+            "type": {
+              "scalarType": "text"
+            },
+            "nullable": "nullable",
+            "description": null
           },
           "id": {
             "name": "id",
@@ -117,23 +125,8 @@
             "id"
           ]
         },
-        "foreignRelations": {
-          "claims_member_id_fkey": {
-            "foreignSchema": "public",
-            "foreignTable": "members",
-            "columnMapping": {
-              "member_id": "id"
-            }
-          },
-          "claims_provider_id_fkey": {
-            "foreignSchema": "public",
-            "foreignTable": "provider_records",
-            "columnMapping": {
-              "provider_id": "id"
-            }
-          }
-        },
-        "description": "Medical claims submitted for services"
+        "foreignRelations": {},
+        "description": null
       },
       "eligibility_checks": {
         "schemaName": "public",
@@ -145,7 +138,6 @@
               "scalarType": "timestamptz"
             },
             "nullable": "nonNullable",
-            "hasDefault": "hasDefault",
             "description": null
           },
           "created_at": {
@@ -188,16 +180,8 @@
             "id"
           ]
         },
-        "foreignRelations": {
-          "eligibility_checks_member_id_fkey": {
-            "foreignSchema": "public",
-            "foreignTable": "members",
-            "columnMapping": {
-              "member_id": "id"
-            }
-          }
-        },
-        "description": "Member eligibility verification results"
+        "foreignRelations": {},
+        "description": null
       },
       "members": {
         "schemaName": "public",
@@ -218,6 +202,14 @@
               "scalarType": "date"
             },
             "nullable": "nonNullable",
+            "description": null
+          },
+          "external_reference_id": {
+            "name": "external_reference_id",
+            "type": {
+              "scalarType": "text"
+            },
+            "nullable": "nullable",
             "description": null
           },
           "first_name": {
@@ -269,7 +261,7 @@
           ]
         },
         "foreignRelations": {},
-        "description": "Health plan members/patients"
+        "description": null
       },
       "neon_auth_users_sync": {
         "schemaName": "neon_auth",
@@ -392,16 +384,8 @@
             "id"
           ]
         },
-        "foreignRelations": {
-          "notes_member_id_fkey": {
-            "foreignSchema": "public",
-            "foreignTable": "members",
-            "columnMapping": {
-              "member_id": "id"
-            }
-          }
-        },
-        "description": "Case management notes for members"
+        "foreignRelations": {},
+        "description": null
       },
       "provider_records": {
         "schemaName": "public",
@@ -414,6 +398,14 @@
             },
             "nullable": "nonNullable",
             "hasDefault": "hasDefault",
+            "description": null
+          },
+          "external_reference_id": {
+            "name": "external_reference_id",
+            "type": {
+              "scalarType": "text"
+            },
+            "nullable": "nullable",
             "description": null
           },
           "id": {
@@ -460,15 +452,15 @@
           }
         },
         "uniquenessConstraints": {
-          "providers_npi_key": [
+          "provider_records_npi_key": [
             "npi"
           ],
-          "providers_pkey": [
+          "provider_records_pkey": [
             "id"
           ]
         },
         "foreignRelations": {},
-        "description": "Healthcare providers (doctors, hospitals, etc.)"
+        "description": null
       }
     },
     "types": {

@@ -6,18 +6,25 @@ definition:
   fields:
     - name: claimId
       type: String!
+      description: "Unique claim identifier for tracking and reporting. Links summary to source claim across systems."
     - name: memberId
       type: String!
+      description: "Member identifier for patient. Used to associate summary with insurance policy and member portal account."
     - name: netAmount
       type: Float!
+      description: "Net payment amount after all adjustments (taxes, fees, copay/coinsurance/deductible). Actual dollar amount member or provider will receive."
     - name: status
       type: String!
+      description: "Current claim status (APPROVED, DENIED, PENDING, PAID). Reflects position in claim lifecycle and payment processing workflow."
     - name: summary
       type: String!
+      description: "Human-readable text summary of claim with financial breakdown. Formatted for Explanation of Benefits (EOB) documents and member communication."
     - name: taxAmount
       type: Float!
+      description: "Total tax amount calculated on claim. Varies by jurisdiction and service type (e.g., medical devices may have sales tax)."
     - name: totalAmount
       type: Float!
+      description: "Gross total claim amount before any adjustments. Sum of all billed charges from provider for services rendered."
   graphql:
     typeName: ClaimSummary1
     inputTypeName: ClaimSummary1Input
@@ -56,8 +63,9 @@ definition:
     dataConnectorCommand:
       function: generateClaimSummary
   graphql:
-    rootFieldName: generateClaimSummary1
+    rootFieldName: generateClaimSummaryTs
     rootFieldKind: Query
+  description: "Generates human-readable claim summary with financial breakdown using TypeScript implementation. Calculates totals, net amounts, tax, and formats results for reporting or member communication. Produces structured summary text with all claim details. Used for Explanation of Benefits (EOB) generation and member portal display. Algorithmically equivalent to Go and Python implementations."
 
 ---
 kind: CommandPermissions

@@ -3,22 +3,29 @@ kind: ObjectType
 version: v1
 definition:
   name: Members
-  description: Health plan members/patients
+  description: Health plan members (patients/subscribers) enrolled in insurance plans. Stores demographic and enrollment information for individuals covered under HMO, PPO, EPO, or POS plans.
   fields:
     - name: createdAt
       type: Timestamptz!
+      description: Timestamp when the member record was created in the system.
     - name: dob
       type: Date!
+      description: Date of birth. Used for age calculations, eligibility verification, and benefits determination.
     - name: firstName
       type: String_1!
+      description: Member's first name as it appears on insurance card.
     - name: id
       type: Uuid!
+      description: Unique identifier for the member. Primary key used for all member relationships (claims, appointments, prescriptions).
     - name: lastName
       type: String_1!
+      description: Member's last name as it appears on insurance card.
     - name: plan
       type: String_1!
+      description: Insurance plan type. Valid values - HMO (requires PCP, referrals needed), PPO (flexible network, no referrals), EPO (network only), POS (hybrid HMO/PPO).
     - name: updatedAt
       type: Timestamptz!
+      description: Timestamp of the last update to this member record.
   graphql:
     typeName: Members
     inputTypeName: MembersInput
@@ -180,7 +187,7 @@ definition:
       queryRootField: membersAggregate
       subscription:
         rootField: membersAggregate
-  description: Health plan members/patients
+  description: Health plan members (patients/subscribers) enrolled in insurance plans. Stores demographic and enrollment information for individuals covered under HMO, PPO, EPO, or POS plans.
 
 ---
 kind: ModelPermissions

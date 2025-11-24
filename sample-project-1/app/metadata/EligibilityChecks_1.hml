@@ -3,18 +3,23 @@ kind: ObjectType
 version: v1
 definition:
   name: EligibilityChecks_1
-  description: Member eligibility verification results
+  description: Real-time eligibility verification checks performed before services or claims. Stores HIPAA 270/271 transaction results for coverage verification, benefit limits, and prior authorization requirements.
   fields:
     - name: checkedAt
       type: Timestamptz!
+      description: Timestamp when the eligibility verification was performed against the payer system. Critical for timely filing and coverage validation at time of service.
     - name: createdAt
       type: Timestamptz!
+      description: Timestamp when this eligibility check record was created in the system.
     - name: id
       type: Uuid!
+      description: Unique identifier for this eligibility check. Primary key for audit trails and verification history.
     - name: memberId
       type: Uuid!
+      description: Foreign key to the member whose coverage was verified. Links eligibility results to patient record.
     - name: result
       type: Json!
+      description: Structured JSON response from eligibility verification. Contains active coverage status, benefit details, copay/coinsurance amounts, deductible balances, and prior authorization requirements.
   graphql:
     typeName: EligibilityChecks1
     inputTypeName: EligibilityChecks1Input
@@ -156,7 +161,7 @@ definition:
       queryRootField: eligibilityChecks1Aggregate
       subscription:
         rootField: eligibilityChecks1Aggregate
-  description: Member eligibility verification results
+  description: Real-time eligibility verification checks performed before services or claims. Stores HIPAA 270/271 transaction results for coverage verification, benefit limits, and prior authorization requirements.
 
 ---
 kind: ModelPermissions

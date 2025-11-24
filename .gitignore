@@ -42,6 +42,9 @@ tmp/
 temp/
 *.tmp
 
+# Benchmark results
+benchmark-results/
+
 # OS
 Thumbs.db
 

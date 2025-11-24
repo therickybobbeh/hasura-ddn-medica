@@ -3,23 +3,32 @@ kind: ObjectType
 version: v1
 definition:
   name: AppointmentsBillingRecords
+  description: Payment and billing transactions for processed claims. Tracks financial reconciliation between billed amounts, paid amounts, and outstanding balances. Supports accounts receivable, payment posting, and revenue cycle management.
   fields:
     - name: amountBilled
       type: Int32!
+      description: Total amount billed in cents. Original claim submission amount before adjustments, denials, or contractual write-offs.
     - name: amountPaid
       type: Int32!
+      description: Amount actually paid in cents. Net payment after plan adjustments, member cost-sharing (copay/coinsurance/deductible), and contractual allowances. Difference from amountBilled represents write-offs or outstanding balances.
     - name: claimId
       type: Uuid!
+      description: Foreign key to the claim this billing record pertains to. Links payment to original service claim for reconciliation and audit trails.
     - name: createdAt
       type: Timestamptz!
+      description: Timestamp when this billing record was created. Represents when the payment was posted to the system.
     - name: id
       type: Uuid!
+      description: Unique billing record identifier. Primary key for payment tracking and financial reconciliation.
     - name: paymentDate
       type: Date
+      description: Date when payment was issued or received. Used for cash flow analysis, aging reports, and timely payment compliance (typically 30-45 days from claim submission).
     - name: paymentMethod
       type: String_1
+      description: How payment was remitted. Common values - EFT (Electronic Funds Transfer), CHECK (paper check), ACH (Automated Clearing House), CREDIT_CARD, WIRE_TRANSFER. Used for payment reconciliation and deposit tracking.
     - name: updatedAt
       type: Timestamptz!
+      description: Timestamp of last update to this billing record. Tracks payment adjustments, corrections, or status changes.
   graphql:
     typeName: AppointmentsBillingRecords
     inputTypeName: AppointmentsBillingRecordsInput
