@@ -2,7 +2,7 @@ kind: Connector
 version: v2
 definition:
   name: neon_postgres_2
-  subgraph: app
+  subgraph: medical
   source: hasura/postgres:v3.1.0
   context: .
   envMapping:

@@ -1,5 +1,5 @@
 services:
-  app_neon_postgres_2:
+  medical_neon_postgres_2:
     build:
       context: .
       dockerfile: .hasura-connector/Dockerfile.neon_postgres_2

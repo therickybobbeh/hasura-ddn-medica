@@ -1,5 +1,5 @@
 services:
-  app_neon_postgres_lean:
+  medical_neon_postgres_lean:
     build:
       context: .
       dockerfile: .hasura-connector/Dockerfile.neon_postgres_lean

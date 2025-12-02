@@ -26,6 +26,8 @@ services:
       - target: 3000
         published: ${ENGINE_PORT:-3280}
         protocol: tcp
+    volumes:
+      - ./engine/build:/md
   otel-collector:
     command:
       - --config=/etc/otel-collector-config.yaml

@@ -1,5 +1,5 @@
 services:
-  app_ts_buisness_logic_1:
+  medical_ts_buisness_logic_1:
     build:
       context: .
       dockerfile: .hasura-connector/Dockerfile

@@ -3,6 +3,9 @@ version: v3
 definition:
   current: default
   contexts:
+    debug:
+      project: hopeful-monkey-8713
+      localEnvFile: ../.env.debug
     default:
       project: hopeful-monkey-8713
       supergraph: ../supergraph.yaml
