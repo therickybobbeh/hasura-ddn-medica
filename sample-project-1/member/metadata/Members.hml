@@ -1,0 +1,181 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Members
+  fields:
+    - name: createdAt
+      type: Timestamptz!
+    - name: dob
+      type: Date!
+    - name: firstName
+      type: String_1!
+    - name: id
+      type: Uuid!
+    - name: lastName
+      type: String_1!
+    - name: updatedAt
+      type: Timestamptz!
+  graphql:
+    typeName: Members_1
+    inputTypeName: MembersInput_1
+  dataConnectorTypeMapping:
+    - dataConnectorName: member_sample_data
+      dataConnectorObjectType: members
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        dob:
+          column:
+            name: dob
+        firstName:
+          column:
+            name: first_name
+        id:
+          column:
+            name: id
+        lastName:
+          column:
+            name: last_name
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Members
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - dob
+          - firstName
+          - id
+          - lastName
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: MembersBoolExp
+  operand:
+    object:
+      type: Members
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: dob
+          booleanExpressionType: DateBoolExp
+        - fieldName: firstName
+          booleanExpressionType: TextBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: lastName
+          booleanExpressionType: TextBoolExp
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: MembersBoolExp_1
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: MembersAggExp
+  operand:
+    object:
+      aggregatedType: Members
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: dob
+          aggregateExpression: DateAggExp
+        - fieldName: firstName
+          aggregateExpression: TextAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: lastName
+          aggregateExpression: TextAggExp
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: MembersAggExp_1
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: MembersOrderByExp
+  operand:
+    object:
+      orderedType: Members
+      orderableFields:
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: dob
+          orderByExpression: DateOrderByExp
+        - fieldName: firstName
+          orderByExpression: String1OrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: lastName
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestamptzOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: MembersOrderByExp_1
+
+---
+kind: Model
+version: v2
+definition:
+  name: Members
+  objectType: Members
+  source:
+    dataConnectorName: member_sample_data
+    collection: members
+  filterExpressionType: MembersBoolExp
+  aggregateExpression: MembersAggExp
+  orderByExpression: MembersOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: members_1
+      subscription:
+        rootField: members_1
+    selectUniques:
+      - queryRootField: membersById_1
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: membersById_1
+    filterInputTypeName: MembersFilterInput_1
+    aggregate:
+      queryRootField: membersAggregate_1
+      subscription:
+        rootField: membersAggregate_1
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Members
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

@@ -9,7 +9,7 @@ definition:
     default:
       project: hopeful-monkey-8713
       supergraph: ../supergraph.yaml
-      subgraph: ../app/subgraph.yaml
+      subgraph: ../member/subgraph.yaml
       localEnvFile: ../.env
       cloudEnvFile: ../.env.cloud
   scripts:

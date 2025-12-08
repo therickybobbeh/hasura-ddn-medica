@@ -1,0 +1,19 @@
+kind: Subgraph
+version: v2
+definition:
+  name: member
+  generator:
+    rootPath: .
+    namingConvention: graphql
+  includePaths:
+    - metadata
+  envMapping:
+    MEMBER_MEMBER_SAMPLE_DATA_AUTHORIZATION_HEADER:
+      fromEnv: MEMBER_MEMBER_SAMPLE_DATA_AUTHORIZATION_HEADER
+    MEMBER_MEMBER_SAMPLE_DATA_READ_URL:
+      fromEnv: MEMBER_MEMBER_SAMPLE_DATA_READ_URL
+    MEMBER_MEMBER_SAMPLE_DATA_WRITE_URL:
+      fromEnv: MEMBER_MEMBER_SAMPLE_DATA_WRITE_URL
+  connectors:
+    - path: connector/member_sample_data/connector.yaml
+      connectorLinkName: member_sample_data

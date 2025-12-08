@@ -1,0 +1,14 @@
+services:
+  member_member_sample_data:
+    build:
+      context: .
+      dockerfile: .hasura-connector/Dockerfile.member_sample_data
+    environment:
+      CONNECTION_URI: $MEMBER_MEMBER_SAMPLE_DATA_CONNECTION_URI
+      HASURA_SERVICE_TOKEN_SECRET: $MEMBER_MEMBER_SAMPLE_DATA_HASURA_SERVICE_TOKEN_SECRET
+      OTEL_EXPORTER_OTLP_ENDPOINT: $MEMBER_MEMBER_SAMPLE_DATA_OTEL_EXPORTER_OTLP_ENDPOINT
+      OTEL_SERVICE_NAME: $MEMBER_MEMBER_SAMPLE_DATA_OTEL_SERVICE_NAME
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    ports:
+      - 9499:8080

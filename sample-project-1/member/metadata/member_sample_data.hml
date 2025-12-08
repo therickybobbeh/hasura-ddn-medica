@@ -1,0 +1,1437 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: member_sample_data
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: MEMBER_MEMBER_SAMPLE_DATA_READ_URL
+      write:
+        valueFromEnv: MEMBER_MEMBER_SAMPLE_DATA_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: MEMBER_MEMBER_SAMPLE_DATA_AUTHORIZATION_HEADER
+  schema:
+    version: v0.2
+    schema:
+      capabilities:
+        query:
+          aggregates:
+            count_scalar_type: int8
+      collections:
+        - arguments: {}
+          name: claims
+          type: claims
+          uniqueness_constraints:
+            claims_pkey:
+              unique_columns:
+                - id
+        - arguments: {}
+          name: members
+          type: members
+          uniqueness_constraints:
+            members_pkey:
+              unique_columns:
+                - id
+        - arguments: {}
+          name: provider
+          type: provider
+          uniqueness_constraints:
+            provider_pkey:
+              unique_columns:
+                - id
+      functions: []
+      object_types:
+        claims:
+          fields:
+            allowed_cents:
+              type:
+                name: int4
+                type: named
+            charge_cents:
+              type:
+                name: int4
+                type: named
+            cpt:
+              type:
+                name: text
+                type: named
+            created_at:
+              type:
+                name: timestamptz
+                type: named
+            denial_reason:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            dos:
+              type:
+                name: date
+                type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            member_id:
+              type:
+                name: uuid
+                type: named
+            provider_id:
+              type:
+                name: uuid
+                type: named
+            status:
+              type:
+                name: text
+                type: named
+            updated_at:
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys:
+            claims_member_id_fkey:
+              column_mapping:
+                member_id:
+                  - id
+              foreign_collection: members
+            claims_provider_id_fkey:
+              column_mapping:
+                provider_id:
+                  - id
+              foreign_collection: provider
+        delete_claims_by_id_response:
+          description: Responses from the 'delete_claims_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: claims
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_members_by_id_response:
+          description: Responses from the 'delete_members_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: members
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_provider_by_id_response:
+          description: Responses from the 'delete_provider_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: provider
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_claims_object:
+          fields:
+            allowed_cents:
+              type:
+                name: int4
+                type: named
+            charge_cents:
+              type:
+                name: int4
+                type: named
+            cpt:
+              type:
+                name: text
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            denial_reason:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            dos:
+              type:
+                name: date
+                type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            member_id:
+              type:
+                name: uuid
+                type: named
+            provider_id:
+              type:
+                name: uuid
+                type: named
+            status:
+              type:
+                name: text
+                type: named
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        insert_claims_response:
+          description: Responses from the 'insert_claims' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: claims
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_members_object:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            dob:
+              type:
+                name: date
+                type: named
+            first_name:
+              type:
+                name: text
+                type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            last_name:
+              type:
+                name: text
+                type: named
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        insert_members_response:
+          description: Responses from the 'insert_members' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: members
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_provider_object:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            name:
+              type:
+                name: text
+                type: named
+            specialty:
+              type:
+                name: text
+                type: named
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        insert_provider_response:
+          description: Responses from the 'insert_provider' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: provider
+                  type: named
+                type: array
+          foreign_keys: {}
+        members:
+          fields:
+            created_at:
+              type:
+                name: timestamptz
+                type: named
+            dob:
+              type:
+                name: date
+                type: named
+            first_name:
+              type:
+                name: text
+                type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            last_name:
+              type:
+                name: text
+                type: named
+            updated_at:
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        provider:
+          fields:
+            created_at:
+              type:
+                name: timestamptz
+                type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            name:
+              type:
+                name: text
+                type: named
+            specialty:
+              type:
+                name: text
+                type: named
+            updated_at:
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_claims_by_id_response:
+          description: Responses from the 'update_claims_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: claims
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_claims_by_id_update_columns:
+          description: Update the columns of the 'claims' collection
+          fields:
+            allowed_cents:
+              description: Update the 'allowed_cents' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_allowed_cents
+                  type: named
+            charge_cents:
+              description: Update the 'charge_cents' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_charge_cents
+                  type: named
+            cpt:
+              description: Update the 'cpt' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_cpt
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_created_at
+                  type: named
+            denial_reason:
+              description: Update the 'denial_reason' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_denial_reason
+                  type: named
+            dos:
+              description: Update the 'dos' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_dos
+                  type: named
+            id:
+              description: Update the 'id' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_id
+                  type: named
+            member_id:
+              description: Update the 'member_id' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_member_id
+                  type: named
+            provider_id:
+              description: Update the 'provider_id' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_provider_id
+                  type: named
+            status:
+              description: Update the 'status' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_status
+                  type: named
+            updated_at:
+              description: Update the 'updated_at' column in the 'claims' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_claims_updated_at
+                  type: named
+          foreign_keys: {}
+        update_column_claims_allowed_cents:
+          description: Update the 'allowed_cents' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: int4
+                type: named
+          foreign_keys: {}
+        update_column_claims_charge_cents:
+          description: Update the 'charge_cents' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: int4
+                type: named
+          foreign_keys: {}
+        update_column_claims_cpt:
+          description: Update the 'cpt' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_claims_created_at:
+          description: Update the 'created_at' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_claims_denial_reason:
+          description: Update the 'denial_reason' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
+        update_column_claims_dos:
+          description: Update the 'dos' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: date
+                type: named
+          foreign_keys: {}
+        update_column_claims_id:
+          description: Update the 'id' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_claims_member_id:
+          description: Update the 'member_id' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_claims_provider_id:
+          description: Update the 'provider_id' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_claims_status:
+          description: Update the 'status' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_claims_updated_at:
+          description: Update the 'updated_at' column in the 'claims' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_members_created_at:
+          description: Update the 'created_at' column in the 'members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_members_dob:
+          description: Update the 'dob' column in the 'members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: date
+                type: named
+          foreign_keys: {}
+        update_column_members_first_name:
+          description: Update the 'first_name' column in the 'members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_members_id:
+          description: Update the 'id' column in the 'members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_members_last_name:
+          description: Update the 'last_name' column in the 'members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_members_updated_at:
+          description: Update the 'updated_at' column in the 'members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_provider_created_at:
+          description: Update the 'created_at' column in the 'provider' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_column_provider_id:
+          description: Update the 'id' column in the 'provider' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_provider_name:
+          description: Update the 'name' column in the 'provider' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_provider_specialty:
+          description: Update the 'specialty' column in the 'provider' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_provider_updated_at:
+          description: Update the 'updated_at' column in the 'provider' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: timestamptz
+                type: named
+          foreign_keys: {}
+        update_members_by_id_response:
+          description: Responses from the 'update_members_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: members
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_members_by_id_update_columns:
+          description: Update the columns of the 'members' collection
+          fields:
+            created_at:
+              description: Update the 'created_at' column in the 'members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_members_created_at
+                  type: named
+            dob:
+              description: Update the 'dob' column in the 'members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_members_dob
+                  type: named
+            first_name:
+              description: Update the 'first_name' column in the 'members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_members_first_name
+                  type: named
+            id:
+              description: Update the 'id' column in the 'members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_members_id
+                  type: named
+            last_name:
+              description: Update the 'last_name' column in the 'members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_members_last_name
+                  type: named
+            updated_at:
+              description: Update the 'updated_at' column in the 'members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_members_updated_at
+                  type: named
+          foreign_keys: {}
+        update_provider_by_id_response:
+          description: Responses from the 'update_provider_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: provider
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_provider_by_id_update_columns:
+          description: Update the columns of the 'provider' collection
+          fields:
+            created_at:
+              description: Update the 'created_at' column in the 'provider' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_provider_created_at
+                  type: named
+            id:
+              description: Update the 'id' column in the 'provider' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_provider_id
+                  type: named
+            name:
+              description: Update the 'name' column in the 'provider' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_provider_name
+                  type: named
+            specialty:
+              description: Update the 'specialty' column in the 'provider' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_provider_specialty
+                  type: named
+            updated_at:
+              description: Update the 'updated_at' column in the 'provider' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_provider_updated_at
+                  type: named
+          foreign_keys: {}
+      procedures:
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'claims' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: claims
+                  type: predicate
+          description: Delete any row on the 'claims' collection using the 'id' key
+          name: delete_claims_by_id
+          result_type:
+            name: delete_claims_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: members
+                  type: predicate
+          description: Delete any row on the 'members' collection using the 'id' key
+          name: delete_members_by_id
+          result_type:
+            name: delete_members_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'provider' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: provider
+                  type: predicate
+          description: Delete any row on the 'provider' collection using the 'id' key
+          name: delete_provider_by_id
+          result_type:
+            name: delete_provider_by_id_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_claims_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'claims' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: claims
+                  type: predicate
+          description: Insert into the claims table
+          name: insert_claims
+          result_type:
+            name: insert_claims_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_members_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: members
+                  type: predicate
+          description: Insert into the members table
+          name: insert_members
+          result_type:
+            name: insert_members_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_provider_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'provider' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: provider
+                  type: predicate
+          description: Insert into the provider table
+          name: insert_provider
+          result_type:
+            name: insert_provider_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'claims' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: claims
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'claims' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: claims
+                  type: predicate
+            update_columns:
+              type:
+                name: update_claims_by_id_update_columns
+                type: named
+          description: Update any row on the 'claims' collection using the 'id' key
+          name: update_claims_by_id
+          result_type:
+            name: update_claims_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: members
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: members
+                  type: predicate
+            update_columns:
+              type:
+                name: update_members_by_id_update_columns
+                type: named
+          description: Update any row on the 'members' collection using the 'id' key
+          name: update_members_by_id
+          result_type:
+            name: update_members_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'provider' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: provider
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'provider' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: provider
+                  type: predicate
+            update_columns:
+              type:
+                name: update_provider_by_id_update_columns
+                type: named
+          description: Update any row on the 'provider' collection using the 'id' key
+          name: update_provider_by_id
+          result_type:
+            name: update_provider_by_id_response
+            type: named
+      request_arguments: null
+      scalar_types:
+        date:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: date
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: date
+        int4:
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            bit_and:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int4
+                  type: named
+              type: custom
+            bit_or:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int4
+                  type: named
+              type: custom
+            bit_xor:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int4
+                  type: named
+              type: custom
+            max:
+              type: max
+            min:
+              type: min
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            sum:
+              result_type: int8
+              type: sum
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: int4
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: int32
+        int8:
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            bit_and:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int8
+                  type: named
+              type: custom
+            bit_or:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int8
+                  type: named
+              type: custom
+            bit_xor:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: int8
+                  type: named
+              type: custom
+            max:
+              type: max
+            min:
+              type: min
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            sum:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: int8
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: int64
+        numeric:
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            max:
+              type: max
+            min:
+              type: min
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            sum:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: numeric
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: bigdecimal
+        text:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _ilike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _in:
+              type: in
+            _iregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _like:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nilike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _niregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nlike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _regex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            starts_with:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            ts_match_tt:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: string
+        timestamptz:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: timestamptz
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: timestamptz
+        uuid:
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: uuid
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: uuid
+    capabilities:
+      capabilities:
+        mutation:
+          explain: {}
+          transactional: {}
+        query:
+          aggregates: {}
+          exists:
+            nested_collections: {}
+          explain: {}
+          nested_fields:
+            aggregates: {}
+            filter_by: {}
+            order_by: {}
+          variables: {}
+        relationships:
+          nested:
+            array: {}
+          order_by_aggregate: {}
+          relation_comparisons: {}
+      version: 0.2.4

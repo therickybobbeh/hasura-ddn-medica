@@ -1,0 +1,169 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Provider
+  fields:
+    - name: createdAt
+      type: Timestamptz!
+    - name: id
+      type: Uuid!
+    - name: name
+      type: String_1!
+    - name: specialty
+      type: String_1!
+    - name: updatedAt
+      type: Timestamptz!
+  graphql:
+    typeName: Provider
+    inputTypeName: ProviderInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: member_sample_data
+      dataConnectorObjectType: provider
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        name:
+          column:
+            name: name
+        specialty:
+          column:
+            name: specialty
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Provider
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - name
+          - specialty
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ProviderBoolExp
+  operand:
+    object:
+      type: Provider
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: name
+          booleanExpressionType: TextBoolExp
+        - fieldName: specialty
+          booleanExpressionType: TextBoolExp
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ProviderBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ProviderAggExp
+  operand:
+    object:
+      aggregatedType: Provider
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: name
+          aggregateExpression: TextAggExp
+        - fieldName: specialty
+          aggregateExpression: TextAggExp
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: ProviderAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: ProviderOrderByExp
+  operand:
+    object:
+      orderedType: Provider
+      orderableFields:
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: name
+          orderByExpression: String1OrderByExp
+        - fieldName: specialty
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestamptzOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: ProviderOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: Provider
+  objectType: Provider
+  source:
+    dataConnectorName: member_sample_data
+    collection: provider
+  filterExpressionType: ProviderBoolExp
+  aggregateExpression: ProviderAggExp
+  orderByExpression: ProviderOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: provider
+      subscription:
+        rootField: provider
+    selectUniques:
+      - queryRootField: providerById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: providerById
+    filterInputTypeName: ProviderFilterInput
+    aggregate:
+      queryRootField: providerAggregate
+      subscription:
+        rootField: providerAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Provider
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

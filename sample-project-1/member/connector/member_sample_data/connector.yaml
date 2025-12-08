@@ -1,0 +1,18 @@
+kind: Connector
+version: v2
+definition:
+  name: member_sample_data
+  subgraph: member
+  source: hasura/postgres:v3.1.0
+  context: .
+  envMapping:
+    CONNECTION_URI:
+      fromEnv: MEMBER_MEMBER_SAMPLE_DATA_CONNECTION_URI
+    HASURA_CONNECTOR_PORT:
+      fromEnv: MEMBER_MEMBER_SAMPLE_DATA_HASURA_CONNECTOR_PORT
+    HASURA_SERVICE_TOKEN_SECRET:
+      fromEnv: MEMBER_MEMBER_SAMPLE_DATA_HASURA_SERVICE_TOKEN_SECRET
+    OTEL_EXPORTER_OTLP_ENDPOINT:
+      fromEnv: MEMBER_MEMBER_SAMPLE_DATA_OTEL_EXPORTER_OTLP_ENDPOINT
+    OTEL_SERVICE_NAME:
+      fromEnv: MEMBER_MEMBER_SAMPLE_DATA_OTEL_SERVICE_NAME

@@ -1,0 +1,241 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Claims
+  fields:
+    - name: allowedCents
+      type: Int32!
+    - name: chargeCents
+      type: Int32!
+    - name: cpt
+      type: String_1!
+    - name: createdAt
+      type: Timestamptz!
+    - name: denialReason
+      type: String_1
+    - name: dos
+      type: Date!
+    - name: id
+      type: Uuid!
+    - name: memberId
+      type: Uuid!
+    - name: providerId
+      type: Uuid!
+    - name: status
+      type: String_1!
+    - name: updatedAt
+      type: Timestamptz!
+  graphql:
+    typeName: Claims_1
+    inputTypeName: ClaimsInput_1
+  dataConnectorTypeMapping:
+    - dataConnectorName: member_sample_data
+      dataConnectorObjectType: claims
+      fieldMapping:
+        allowedCents:
+          column:
+            name: allowed_cents
+        chargeCents:
+          column:
+            name: charge_cents
+        cpt:
+          column:
+            name: cpt
+        createdAt:
+          column:
+            name: created_at
+        denialReason:
+          column:
+            name: denial_reason
+        dos:
+          column:
+            name: dos
+        id:
+          column:
+            name: id
+        memberId:
+          column:
+            name: member_id
+        providerId:
+          column:
+            name: provider_id
+        status:
+          column:
+            name: status
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Claims
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - allowedCents
+          - chargeCents
+          - cpt
+          - createdAt
+          - denialReason
+          - dos
+          - id
+          - memberId
+          - providerId
+          - status
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ClaimsBoolExp
+  operand:
+    object:
+      type: Claims
+      comparableFields:
+        - fieldName: allowedCents
+          booleanExpressionType: Int4BoolExp
+        - fieldName: chargeCents
+          booleanExpressionType: Int4BoolExp
+        - fieldName: cpt
+          booleanExpressionType: TextBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: denialReason
+          booleanExpressionType: TextBoolExp
+        - fieldName: dos
+          booleanExpressionType: DateBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: memberId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: providerId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: status
+          booleanExpressionType: TextBoolExp
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ClaimsBoolExp_1
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ClaimsAggExp
+  operand:
+    object:
+      aggregatedType: Claims
+      aggregatableFields:
+        - fieldName: allowedCents
+          aggregateExpression: Int4AggExp
+        - fieldName: chargeCents
+          aggregateExpression: Int4AggExp
+        - fieldName: cpt
+          aggregateExpression: TextAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: denialReason
+          aggregateExpression: TextAggExp
+        - fieldName: dos
+          aggregateExpression: DateAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: memberId
+          aggregateExpression: UuidAggExp
+        - fieldName: providerId
+          aggregateExpression: UuidAggExp
+        - fieldName: status
+          aggregateExpression: TextAggExp
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: ClaimsAggExp_1
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: ClaimsOrderByExp
+  operand:
+    object:
+      orderedType: Claims
+      orderableFields:
+        - fieldName: allowedCents
+          orderByExpression: Int32OrderByExp
+        - fieldName: chargeCents
+          orderByExpression: Int32OrderByExp
+        - fieldName: cpt
+          orderByExpression: String1OrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: denialReason
+          orderByExpression: String1OrderByExp
+        - fieldName: dos
+          orderByExpression: DateOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: memberId
+          orderByExpression: UuidOrderByExp
+        - fieldName: providerId
+          orderByExpression: UuidOrderByExp
+        - fieldName: status
+          orderByExpression: String1OrderByExp
+        - fieldName: updatedAt
+          orderByExpression: TimestamptzOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: ClaimsOrderByExp_1
+
+---
+kind: Model
+version: v2
+definition:
+  name: Claims
+  objectType: Claims
+  source:
+    dataConnectorName: member_sample_data
+    collection: claims
+  filterExpressionType: ClaimsBoolExp
+  aggregateExpression: ClaimsAggExp
+  orderByExpression: ClaimsOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: claims_1
+      subscription:
+        rootField: claims_1
+    selectUniques:
+      - queryRootField: claimsById_1
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: claimsById_1
+    filterInputTypeName: ClaimsFilterInput_1
+    aggregate:
+      queryRootField: claimsAggregate_1
+      subscription:
+        rootField: claimsAggregate_1
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Claims
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+
